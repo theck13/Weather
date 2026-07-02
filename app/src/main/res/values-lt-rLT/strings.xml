@@ -315,6 +315,6 @@
     <string name="setting_app_font">Šriftas</string>
     <string name="setting_system_font">Sisteminis šriftas</string>
     <string name="weather_minimum">Minimalus</string>
-    <string name="error_no_results_found">No results found</string>
+    <string name="error_no_results_found">Nieko nerasta</string>
 </resources>
 <!--<string name=""></string>-->
