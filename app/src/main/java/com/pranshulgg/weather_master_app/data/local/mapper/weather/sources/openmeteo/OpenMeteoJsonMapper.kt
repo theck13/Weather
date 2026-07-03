@@ -1,5 +1,6 @@
 package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.openmeteo
 
+import android.util.Log
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
@@ -16,6 +17,9 @@ import com.pranshulgg.weather_master_app.core.utils.weather.astronomy.getMoonTim
 import com.pranshulgg.weather_master_app.core.utils.weather.astronomy.getSunTimings
 import com.pranshulgg.weather_master_app.core.utils.weather.computing.computeDailyWeatherCondition
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findHourlyIndexForTime
+import kotlin.collections.drop
+import kotlin.collections.indexOfFirst
+import kotlin.collections.map
 import kotlin.uuid.ExperimentalUuidApi
 
 // ---------------------------- JSON TO DOMAIN ----------------------------
@@ -82,9 +86,16 @@ fun OpenMeteoWeatherJson.toDomain(location: Location): Weather {
         },
         daily = List(daily.time.size) {
 
+
+            val meanCondition = getHourlyConditionsForDay(
+                hourly,
+                daily.time[it]
+            ).groupingBy { condition -> condition }
+                .eachCount().entries.maxByOrNull { map -> map.key }?.key
+
             val condition = computeDailyWeatherCondition(
                 getHourlyConditionsForDay(hourly, daily.time[it]),
-                OpenMeteoWeatherConditionMap.getCondition(daily.weatherCode[it])
+                meanCondition ?: OpenMeteoWeatherConditionMap.getCondition(daily.weatherCode[it])
             )
 
 
@@ -119,12 +130,16 @@ private fun getHourlyConditionsForDay(
     data: OpenMeteoHourlyForecastJson,
     time: Long
 ): List<WeatherCondition> {
+
     val startIndex =
         data.time.indexOfFirst { it.secondsToMilliseconds() >= time.secondsToMilliseconds() }
             .takeIf { it != -1 } ?: 0
 
-    val conditions = data.weatherCode.drop(maxOf(0, startIndex - 1)).take(24)
+    val conditions = data.weatherCode.drop(maxOf(0, startIndex)).take(24)
         .map { OpenMeteoWeatherConditionMap.getCondition(it) }
 
+
     return conditions
+
+
 }
