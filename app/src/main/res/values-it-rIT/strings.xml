@@ -57,7 +57,7 @@
     <string name="weather_no_condition">Nessuna condizione fornita</string>
     <string name="weather_uv_low">Min</string>
     <string name="weather_uv_moderate">Moderato</string>
-    <string name="weather_uv_high">Max</string>
+    <string name="weather_uv_high">Alto</string>
     <string name="weather_uv_very_high">Molto Alto</string>
     <string name="weather_uv_extreme">Estremo</string>
     <string name="setting_appearance">Aspetto</string>
