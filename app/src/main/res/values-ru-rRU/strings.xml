@@ -44,7 +44,7 @@
         <item quantity="other">%d дн. назад </item>
     </plurals>
     <string name="time_just_now">Только что</string>
-    <string name="time_last_updated">Обновлено в %1$s</string>
+    <string name="time_last_updated">Обновлено: %1$s</string>
     <string name="weather_no_data">Нет данных о погоде</string>
     <string name="weather_clear_sky">Ясно</string>
     <string name="weather_overcast">Пасмурно</string>
