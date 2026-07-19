@@ -1,0 +1,91 @@
+package com.heckofanapp.weather.core.di.network
+
+import com.heckofanapp.weather.core.network.github.GithubApi
+import com.heckofanapp.weather.core.network.sources.address.nominatim.NominatimApi
+import com.heckofanapp.weather.core.network.sources.airquality.openmeteo.OpenMeteoAqiApi
+import com.heckofanapp.weather.core.network.sources.search.geonames.GeoNamesSearchApi
+import com.heckofanapp.weather.core.network.sources.search.geonames.timezone.GeoNamesTimezoneApi
+import com.heckofanapp.weather.core.network.sources.search.openmeteo.OpenMeteoSearchApi
+import com.heckofanapp.weather.core.network.sources.weather.bmkg.BmkgApi
+import com.heckofanapp.weather.core.network.sources.weather.china.ChinaApi
+import com.heckofanapp.weather.core.network.sources.weather.dwd.DwdApi
+import com.heckofanapp.weather.core.network.sources.weather.eccc.EcccApi
+import com.heckofanapp.weather.core.network.sources.weather.fmi.FmiApi
+import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFranceApi
+import com.heckofanapp.weather.core.network.sources.weather.metnorway.MetNorwayApi
+import com.heckofanapp.weather.core.network.sources.weather.nws.NwsApi
+import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoApi
+import com.heckofanapp.weather.core.network.sources.weather.smhi.SmhiApi
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object ApiModule {
+    @Provides
+    @Singleton
+    fun provideOpenMeteoApi(): OpenMeteoApi = OpenMeteoApi.create()
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoSearchApi(): OpenMeteoSearchApi = OpenMeteoSearchApi.create()
+
+    @Provides
+    @Singleton
+    fun provideGeoNamesSearchApi(): GeoNamesSearchApi = GeoNamesSearchApi.create()
+
+    @Provides
+    @Singleton
+    fun provideGeoNamesTimezoneApi(): GeoNamesTimezoneApi = GeoNamesTimezoneApi.create()
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoAqiApi(): OpenMeteoAqiApi = OpenMeteoAqiApi.create()
+
+    @Provides
+    @Singleton
+    fun provideNwsApi(): NwsApi = NwsApi.create()
+
+    @Provides
+    @Singleton
+    fun provideMetNorwayApi(): MetNorwayApi = MetNorwayApi.create()
+
+    @Provides
+    @Singleton
+    fun provideSmhiApi(): SmhiApi = SmhiApi.create()
+
+    @Provides
+    @Singleton
+    fun provideGithubApi(): GithubApi = GithubApi.create()
+
+    @Provides
+    @Singleton
+    fun provideNominatimApi(): NominatimApi = NominatimApi.create()
+
+    @Provides
+    @Singleton
+    fun provideDwdApi(): DwdApi = DwdApi.create()
+
+    @Provides
+    @Singleton
+    fun provideMeteoFranceApi(): MeteoFranceApi = MeteoFranceApi.create()
+
+    @Provides
+    @Singleton
+    fun provideEcccApi(): EcccApi = EcccApi.create()
+
+    @Provides
+    @Singleton
+    fun provideFmiApi(): FmiApi = FmiApi.create()
+
+    @Provides
+    @Singleton
+    fun provideChinaApi(): ChinaApi = ChinaApi.create()
+
+    @Provides
+    @Singleton
+    fun provideBmkgApi(): BmkgApi = BmkgApi.create()
+}

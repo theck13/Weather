@@ -1,6 +1,6 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.pranshulgg.weather_master_app.widgets.ActivityWidgetConfig"
+    android:configure="com.heckofanapp.weather.widgets.ActivityWidgetConfig"
     android:maxResizeHeight="300dp"
     android:maxResizeWidth="600dp"
     android:minHeight="40dp"

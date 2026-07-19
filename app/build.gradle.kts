@@ -28,21 +28,25 @@ val developer_domain = localProps.getProperty("DEVELOPER_DOMAIN") ?: System.gete
 val developer_email = localProps.getProperty("DEVELOPER_EMAIL") ?: System.getenv("DEVELOPER_EMAIL") ?: "developer@email.com"
 val developer_name = localProps.getProperty("DEVELOPER_NAME") ?: System.getenv("DEVELOPER_NAME") ?: "Developer"
 
+val package_name = "${developer_domain}.weather"
+val version_code = (project.property("VERSION_CODE") as String).toInt()
+val version_name = project.property("VERSION_NAME") as String
+
 android {
-    namespace = "com.pranshulgg.weather_master_app"
+    android.buildFeatures.buildConfig = true
+    namespace = package_name
+
     compileSdk {
         version = release(37)
     }
-    android.buildFeatures.buildConfig = true
 
     defaultConfig {
-        applicationId = "com.pranshulgg.weather_master_app"
+        applicationId = package_name
         minSdk = 26
-        targetSdk = 36
-        versionCode = 55
-        versionName = "3.6.0"
+        targetSdk = 37
+        versionCode = version_code
+        versionName = version_name
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField(
             "String",
@@ -87,6 +91,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+        }
+
         release {
             isMinifyEnabled = false
 
@@ -103,7 +112,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-//        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
@@ -117,6 +125,16 @@ android {
     bundle {
         language {
             enableSplit = false
+        }
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.outputs.onEach { output ->
+            if (output is com.android.build.api.variant.impl.VariantOutputImpl) {
+                output.outputFileName = "${package_name}-${version_code}(${version_name}).apk"
+            }
         }
     }
 }
@@ -158,7 +176,6 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.reorderable)
-    implementation(libs.androidx.foundation.layout)
     implementation(libs.androidx.animation.core)
     implementation(libs.core.splashscreen)
 

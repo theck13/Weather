@@ -1,0 +1,14 @@
+package com.heckofanapp.weather.data.local.entity.airquality
+
+import androidx.room.Embedded
+import androidx.room.Relation
+
+data class AirQualityWithRelations(
+    @Embedded val current: CurrentAirQualityEntity?,
+
+    @Relation(
+        entityColumn = "locationId",
+        parentColumn = "locationId",
+    )
+    val hourly: List<HourlyAirQualityEntity> = emptyList()
+)

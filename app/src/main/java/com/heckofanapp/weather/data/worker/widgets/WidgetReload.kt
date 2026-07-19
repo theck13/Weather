@@ -1,0 +1,40 @@
+package com.heckofanapp.weather.data.worker.widgets
+
+import android.content.Context
+import com.heckofanapp.weather.core.model.weather.WeatherResult
+import com.heckofanapp.weather.data.provider.WeatherRepositoryProvider
+import com.heckofanapp.weather.data.repository.LocationsRepository
+import com.heckofanapp.weather.data.repository.WeatherUnitsRepository
+import jakarta.inject.Inject
+
+class WidgetReload @Inject constructor(
+    private val repositoryProvider: WeatherRepositoryProvider,
+    private val locationsRepository: LocationsRepository,
+    private val weatherUnitsRepository: WeatherUnitsRepository
+) {
+    suspend fun reload(context: Context) {
+        val locations = locationsRepository.getLocationsOnce()
+        val defaultLocation = locations.find { it.isDefault }
+        val units = weatherUnitsRepository.getUnitsOnce()
+
+        if (defaultLocation == null || units == null) return
+
+        val repo = repositoryProvider.getRepository(defaultLocation.source)
+
+        val result = repo.getWeather(
+            isForceRefresh = false,
+            isManualRefresh = false,
+            location = defaultLocation,
+        )
+
+        val weather = (result as? WeatherResult.Success)?.weather ?: return
+
+        WeatherWidgetUpdater(context).update(
+            json = widgetWeatherMapper(
+                applicationContext = context,
+                units = units,
+                weather = weather,
+            ),
+        )
+    }
+}
