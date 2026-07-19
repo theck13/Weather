@@ -24,6 +24,10 @@ val mfKey = providers.gradleProperty("MF_KEY").orNull ?: System.getenv("MF_KEY")
 val keystoreFile = file("../keystore/release.jks")
 val hasKeystore = keystoreFile.exists()
 
+val developer_domain = localProps.getProperty("DEVELOPER_DOMAIN") ?: System.getenv("DEVELOPER_DOMAIN") ?: "com.developer"
+val developer_email = localProps.getProperty("DEVELOPER_EMAIL") ?: System.getenv("DEVELOPER_EMAIL") ?: "developer@email.com"
+val developer_name = localProps.getProperty("DEVELOPER_NAME") ?: System.getenv("DEVELOPER_NAME") ?: "Developer"
+
 android {
     namespace = "com.pranshulgg.weather_master_app"
     compileSdk {
@@ -50,6 +54,24 @@ android {
             "String",
             "MF_KEY",
             "\"$mfKey\""
+        )
+
+        buildConfigField(
+            "String",
+            "DEVELOPER_DOMAIN",
+            "\"$developer_domain\""
+        )
+
+        buildConfigField(
+            "String",
+            "DEVELOPER_EMAIL",
+            "\"$developer_email\""
+        )
+
+        buildConfigField(
+            "String",
+            "DEVELOPER_NAME",
+            "\"$developer_name\""
         )
     }
 

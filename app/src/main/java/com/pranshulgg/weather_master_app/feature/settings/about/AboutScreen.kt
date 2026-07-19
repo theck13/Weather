@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.pranshulgg.weather_master_app.BuildConfig
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
@@ -163,7 +164,7 @@ fun AboutScreen(
                         },
                         onClick = {
                             uriHandler.openUri(
-                                uri = "mailto:pranshul.devmain@gmail.com?subject=$appName",
+                                uri = "mailto:${BuildConfig.DEVELOPER_EMAIL}?subject=$appName",
                             )
                         },
                         title = stringResource(R.string.about_email),

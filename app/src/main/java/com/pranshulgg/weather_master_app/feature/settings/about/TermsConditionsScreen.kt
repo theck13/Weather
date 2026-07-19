@@ -19,6 +19,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pranshulgg.weather_master_app.BuildConfig
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
 import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
@@ -78,7 +79,7 @@ fun TermsConditionsScreen(
                             fontWeight = FontWeight.Bold,
                         ),
                     ) {
-                        append("Pranshul Devmain")
+                        append(BuildConfig.DEVELOPER_NAME)
                     }
 
                     append(" as an open-source application.  By using the Application, you agree to the following:")
@@ -237,7 +238,7 @@ fun TermsConditionsScreen(
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyLarge,
                 text = buildAnnotatedString {
-                    append("• The Service Provider (Pranshul Devmain) is ")
+                    append("• The Service Provider (${BuildConfig.DEVELOPER_NAME}) is ")
 
                     withStyle(
                         style = SpanStyle(
@@ -349,7 +350,7 @@ fun TermsConditionsScreen(
 
                     withLink(
                         link = LinkAnnotation.Url(
-                            url = "mailto:pranshul.devmain@gmail.com?subject=$appName Terms %26 Conditions"
+                            url = "mailto:${BuildConfig.DEVELOPER_EMAIL}?subject=$appName Terms %26 Conditions"
                         ),
                     ) {
                         withStyle(
@@ -360,7 +361,7 @@ fun TermsConditionsScreen(
                             ),
                         ) {
                             append(
-                                text = "pranshul.devmain@gmail.com",
+                                text = BuildConfig.DEVELOPER_EMAIL,
                             )
                         }
                     }

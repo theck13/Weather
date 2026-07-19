@@ -19,6 +19,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pranshulgg.weather_master_app.BuildConfig
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
 import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
@@ -196,7 +197,7 @@ fun PrivacyPolicyScreen(
 
                     withLink(
                         link =  LinkAnnotation.Url(
-                            url = "mailto:pranshul.devmain@gmail.com?subject=$appName Privacy Policy"
+                            url = "mailto:${BuildConfig.DEVELOPER_EMAIL}?subject=$appName Privacy Policy"
                         ),
                     ) {
                         withStyle(
@@ -206,7 +207,7 @@ fun PrivacyPolicyScreen(
                                 textDecoration = TextDecoration.Underline,
                             ),
                         ) {
-                            append("pranshul.devmain@gmail.com")
+                            append(BuildConfig.DEVELOPER_EMAIL)
                         }
                     }
                 },
