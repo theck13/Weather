@@ -2,14 +2,14 @@ package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.smhi
 
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.model.weather.DistanceUnit
 import com.pranshulgg.weather_master_app.core.model.weather.PrecipitationUnit
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
-import com.pranshulgg.weather_master_app.core.model.weather.WindSpeedUnit
+import com.pranshulgg.weather_master_app.core.model.weather.WindUnit
 import com.pranshulgg.weather_master_app.core.model.weather.wind.WindDirection
 import com.pranshulgg.weather_master_app.core.network.sources.weather.smhi.SmhiWeatherConditionMap
 import com.pranshulgg.weather_master_app.core.network.sources.weather.smhi.json.SmhiForecastJson
@@ -23,10 +23,11 @@ import com.pranshulgg.weather_master_app.core.utils.weather.computing.computeDai
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findHourlyIndexForTime
 import kotlin.math.roundToInt
 
-
-fun SmhiForecastJson.toDomain(location: Location): Weather {
+fun SmhiForecastJson.toDomain(
+    location: Location,
+): Weather {
     val currentHour = findHourlyIndexForTime(
-        this.timeSeries.map { it.time.iso8601TimestampToMilliseconds() }
+        time = this.timeSeries.map { it.time.iso8601TimestampToMilliseconds() },
     )
     val current = this.timeSeries[currentHour].data
     val currentTime = this.timeSeries[currentHour].time.iso8601TimestampToMilliseconds()
@@ -38,28 +39,33 @@ fun SmhiForecastJson.toDomain(location: Location): Weather {
 
     return Weather(
         location = location,
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = current.temperature,
             humidity = current.humidity?.toDouble() ?: 0.0,
-            windSpeed = WindSpeedUnit.MPS.convert(current.windSpeed, WindSpeedUnit.KPH),
+            windSpeed = WindUnit.MPS.convert(
+                from = current.windSpeed,
+                to = WindUnit.KPH,
+            ),
             windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
             pressureMsl = current.pressureMsl,
-            visibility = DistanceUnit.KM.convert(current.visibility, DistanceUnit.M)?.roundToInt(),
+            visibility = DistanceUnit.KM.convert(
+                from = current.visibility,
+                to = DistanceUnit.M,
+            )?.roundToInt(),
             cloudCover = null, // NOT USED IN THE APP
-            uvIndex = null,
+            ultraviolet = null,
             weatherCondition = SmhiWeatherConditionMap.getCondition(current.symbolCode),
             feelsLike = computeApparentTemperature(
-                current.temperature,
-                current.humidity?.toDouble(),
-                current.windSpeed
+                tempC = current.temperature,
+                humidity = current.humidity?.toDouble(),
+                windMs = current.windSpeed,
             ),
             time = currentTime,
             dewPoint = null,
             utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis()
+            lastUpdatedInMilli = System.currentTimeMillis(),
         ),
         hourly = this.timeSeries.map { item ->
-
             val data = item.data
 
             /**
@@ -68,37 +74,47 @@ fun SmhiForecastJson.toDomain(location: Location): Weather {
              * Source: https://opendata.smhi.se/metfcst/snow1gv1/parameters#precipitation-type
              */
             val rain = if (data.precipitationType in rainTypes) data.precipitationAmountMax else 0.0
-            val snowfall = if (data.precipitationType in snowTypes)
-                PrecipitationUnit.MM.convert(
-                    data.precipitationAmountMax,
-                    PrecipitationUnit.CM
-                ) else 0.0
+            val snowfall =
+                if (data.precipitationType in snowTypes) {
+                    PrecipitationUnit.MM.convert(
+                        from = data.precipitationAmountMax,
+                        to = PrecipitationUnit.CM,
+                    )
+                } else {
+                    0.0
+                }
 
             WeatherHourly(
                 temperature = data.temperature,
-                windSpeed = WindSpeedUnit.MPS.convert(data.windSpeed, WindSpeedUnit.KPH),
+                windSpeed = WindUnit.MPS.convert(
+                    from = data.windSpeed,
+                    to = WindUnit.KPH,
+                ),
                 windDirection = WindDirection.toWindDirectionFromDegrees(data.windDirection),
                 rain = rain,
                 snowfall = snowfall,
-                uvIndex = null,
+                ultraviolet = null,
                 weatherCondition = SmhiWeatherConditionMap.getCondition(data.symbolCode),
                 time = item.time.iso8601TimestampToMilliseconds(),
                 precipitationProbability = data.precipitationProbability,
                 pressureMsl = data.pressureMsl,
                 humidity = data.humidity?.toDouble(),
-                visibility = DistanceUnit.KM.convert(data.visibility, DistanceUnit.M)?.roundToInt(),
-                dewPoint = null
+                visibility = DistanceUnit.KM.convert(
+                    from = data.visibility,
+                    to = DistanceUnit.M,
+                )?.roundToInt(),
+                dewPoint = null,
             )
         },
-        daily = daily
+        daily = daily,
     )
-
 }
 
-private fun computeDaily(data: SmhiForecastJson, location: Location): List<WeatherDaily> {
-
+private fun computeDaily(
+    data: SmhiForecastJson,
+    location: Location,
+): List<WeatherDaily> {
     val daily = data.timeSeries
-
     val zoneId = location.timezone
 
     val rainTypes = listOf(1, 2, 3, 11, 12, 4, 7)
@@ -127,10 +143,7 @@ private fun computeDaily(data: SmhiForecastJson, location: Location): List<Weath
         location.longitude
     )
 
-
     return groupedByDay.map { dailyIt ->
-
-
         val minTemperature = dailyIt.value.minOf { it.data.temperature }
         val maxTemperature = dailyIt.value.maxOf { it.data.temperature }
         val windSpeed = dailyIt.value.map { it.data.windSpeed }.average()
@@ -161,11 +174,17 @@ private fun computeDaily(data: SmhiForecastJson, location: Location): List<Weath
         WeatherDaily(
             temperatureMin = minTemperature,
             temperatureMax = maxTemperature,
-            windSpeed = WindSpeedUnit.MPS.convert(windSpeed, WindSpeedUnit.KPH),
+            windSpeed = WindUnit.MPS.convert(
+                from = windSpeed,
+                to = WindUnit.KPH,
+            ),
             windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
             rainSum = rainSum,
-            snowfallSum = PrecipitationUnit.MM.convert(snowfallSum, PrecipitationUnit.CM),
-            uvIndexMax = null,
+            snowfallSum = PrecipitationUnit.MM.convert(
+                from = snowfallSum,
+                to = PrecipitationUnit.CM,
+            ),
+            ultravioletMaximum = null,
             weatherCondition = condition,
             time = time,
             precipitationProbabilityMax = precipitationProbabilityMax,
@@ -177,22 +196,23 @@ private fun computeDaily(data: SmhiForecastJson, location: Location): List<Weath
             dawn = sunTimings[index].dawn ?: 0L,
             dusk = sunTimings[index].dusk ?: 0L,
             pressureMsl = avgPressure,
-            visibility = DistanceUnit.KM.convert(minVisibility, DistanceUnit.M)?.roundToInt(),
+            visibility = DistanceUnit.KM.convert(
+                from = minVisibility,
+                to = DistanceUnit.M,
+            )?.roundToInt(),
             humidity = avgHumidity,
-            dewPoint = null
+            dewPoint = null,
         )
     }
-
 }
 
 private fun getHourlyConditionsForDay(
     data: List<SmhiForecastTimeSeriesJson>,
-    time: Long
+    time: Long,
 ): List<WeatherCondition> {
     val startIndex =
         data.indexOfFirst { it.time.iso8601TimestampToMilliseconds() >= time }
             .takeIf { it != -1 } ?: 0
-
 
     val conditions =
         data.drop(maxOf(0, startIndex - 1)).take(WeatherSource.SMHI.hourlyAggregationLimitHours)
@@ -202,4 +222,3 @@ private fun getHourlyConditionsForDay(
 
     return conditions
 }
-

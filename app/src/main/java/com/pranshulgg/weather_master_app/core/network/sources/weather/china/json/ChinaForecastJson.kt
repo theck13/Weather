@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class ChinaForecastJson(
     val current: ChinaCurrentForecastJson,
     val forecastHourly: ChinaHourlyForecastJson,
-    val forecastDaily: ChinaDailyForecastJson
+    val forecastDaily: ChinaDailyForecastJson,
 )
 
 data class ChinaCurrentForecastJson(
@@ -17,67 +17,65 @@ data class ChinaCurrentForecastJson(
     val uvIndex: String?,
     val visibility: ChinaCurrentForecastVisibilityJson,
     val weather: String?,
-    val wind: ChinaCurrentForecastWindJson
+    val wind: ChinaCurrentForecastWindJson,
 )
 
 data class ChinaCurrentForecastFeelsLikeJson(
-    val value: String?
+    val value: String?,
 )
 
 data class ChinaCurrentForecastHumidityJson(
-    val value: String?
+    val value: String?,
 )
 
 data class ChinaCurrentForecastPressureJson(
-    val value: String?
+    val value: String?,
 )
 
 data class ChinaCurrentForecastTemperatureJson(
-    val value: String?
+    val value: String?,
 )
 
 data class ChinaCurrentForecastVisibilityJson(
-    val value: String?
+    val value: String?,
 )
 
 data class ChinaCurrentForecastWindJson(
     val speed: ChinaCurrentForecastWindSpeedJson,
-    val direction: ChinaCurrentForecastWindDirectionJson
+    val direction: ChinaCurrentForecastWindDirectionJson,
 )
 
 data class ChinaCurrentForecastWindSpeedJson(
-    val value: String?
+    val value: String?,
 )
 
 data class ChinaCurrentForecastWindDirectionJson(
-    val value: String?
+    val value: String?,
 )
 
 // HOURLY
 data class ChinaHourlyForecastJson(
     val temperature: ChinaHourlyForecastTemperatureJson,
     val weather: ChinaHourlyForecastWeatherJson,
-    val wind: ChinaHourlyForecastWindJson
+    val wind: ChinaHourlyForecastWindJson,
 )
 
 data class ChinaHourlyForecastTemperatureJson(
-    val value: List<Int>
+    val value: List<Int>,
 )
-
 
 data class ChinaHourlyForecastWeatherJson(
-    val value: List<Int>
+    val value: List<Int>,
 )
 
-
 data class ChinaHourlyForecastWindJson(
-    val value: List<ChinaHourlyForecastWindValueJson>
+    val value: List<ChinaHourlyForecastWindValueJson>,
 )
 
 data class ChinaHourlyForecastWindValueJson(
     val datetime: String,
     val direction: String?,
-    val speed: String?
+    val speed: String?,
 )
 
 // DAILY
@@ -86,15 +84,15 @@ data class ChinaDailyForecastJson(
     val pubTime: String,
     val temperature: ChinaDailyForecastTemperatureJson,
     val weather: ChinaDailyForecastWeatherJson,
-    val wind: ChinaDailyForecastWindJson
+    val wind: ChinaDailyForecastWindJson,
 )
 
 data class ChinaDailyForecastPrecipitationProbabilityJson(
-    val value: List<String?>
+    val value: List<String?>,
 )
 
 data class ChinaDailyForecastTemperatureJson(
-    val value: List<ChinaDailyForecastTemperatureValueJson>
+    val value: List<ChinaDailyForecastTemperatureValueJson>,
 )
 
 data class ChinaDailyForecastTemperatureValueJson(
@@ -103,7 +101,7 @@ data class ChinaDailyForecastTemperatureValueJson(
 )
 
 data class ChinaDailyForecastWeatherJson(
-    val value: List<ChinaDailyForecastWeatherValueJson>
+    val value: List<ChinaDailyForecastWeatherValueJson>,
 )
 
 data class ChinaDailyForecastWeatherValueJson(
@@ -113,11 +111,11 @@ data class ChinaDailyForecastWeatherValueJson(
 
 data class ChinaDailyForecastWindJson(
     val direction: ChinaDailyForecastWindDirectionJson,
-    val speed: ChinaDailyForecastWindSpeedJson
+    val speed: ChinaDailyForecastWindSpeedJson,
 )
 
 data class ChinaDailyForecastWindDirectionJson(
-    val value: List<ChinaDailyForecastWindDirectionValueJson>
+    val value: List<ChinaDailyForecastWindDirectionValueJson>,
 )
 
 data class ChinaDailyForecastWindDirectionValueJson(
@@ -126,7 +124,7 @@ data class ChinaDailyForecastWindDirectionValueJson(
 )
 
 data class ChinaDailyForecastWindSpeedJson(
-    val value: List<ChinaDailyForecastWindSpeedValueJson>
+    val value: List<ChinaDailyForecastWindSpeedValueJson>,
 )
 
 data class ChinaDailyForecastWindSpeedValueJson(

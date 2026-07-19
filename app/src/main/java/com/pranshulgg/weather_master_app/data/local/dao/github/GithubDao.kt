@@ -6,19 +6,23 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pranshulgg.weather_master_app.data.local.entity.github.GithubEntity
 
-
 @Dao
 interface GithubDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: GithubEntity)
-    suspend fun insertGithubEntity(currentTag: String, lastFetchedTag: String, time: Long) {
+    suspend fun insert(
+        entity: GithubEntity,
+    )
+    suspend fun insertGithubEntity(
+        currentTag: String,
+        lastFetchedTag: String,
+        time: Long,
+    ) {
         insert(
             GithubEntity(
                 id = 1,
                 currentTag = currentTag,
                 lastFetchedTag = lastFetchedTag,
-                lastFetchedTime = time
+                lastFetchedTime = time,
             )
         )
     }

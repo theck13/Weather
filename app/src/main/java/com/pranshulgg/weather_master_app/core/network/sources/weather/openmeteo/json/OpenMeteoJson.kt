@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.openmeteo
 
 import com.google.gson.annotations.SerializedName
 
-
 data class OpenMeteoWeatherJson(
     val latitude: Double,
     val longitude: Double,
@@ -10,9 +9,8 @@ data class OpenMeteoWeatherJson(
     val utcOffsetSeconds: Long,
     val current: OpenMeteoCurrentForecastJson,
     val hourly: OpenMeteoHourlyForecastJson,
-    val daily: OpenMeteoDailyForecastJson
+    val daily: OpenMeteoDailyForecastJson,
 )
-
 
 data class OpenMeteoCurrentForecastJson(
     val time: Long,
@@ -52,7 +50,7 @@ data class OpenMeteoCurrentForecastJson(
     val cloudCover: Double,
 
     @SerializedName("uv_index")
-    val uvIndex: Double
+    val uvIndex: Double,
 )
 
 data class OpenMeteoHourlyForecastJson(
@@ -104,7 +102,6 @@ data class OpenMeteoDailyForecastJson(
     @SerializedName("temperature_2m_max")
     val temperatureMax: List<Double>,
 
-
     @SerializedName("rain_sum")
     val rainSum: List<Double>,
 
@@ -144,6 +141,5 @@ data class OpenMeteoDailyForecastJson(
     @SerializedName("dew_point_2m_mean") val dewPoint: List<Double?>,
 
     @SerializedName("wind_speed_10m_mean")
-    val windSpeedMean: List<Double>
+    val windSpeedMean: List<Double>,
 )
-

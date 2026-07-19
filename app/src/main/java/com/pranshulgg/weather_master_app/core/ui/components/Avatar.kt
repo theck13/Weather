@@ -67,14 +67,13 @@ fun AvatarIcon(
 
         ) {
             Symbol(
-                icon,
                 color = contentColor,
-                size = iconSize
+                icon = icon,
+                size = iconSize,
             )
         }
     }
 }
-
 
 @Composable
 fun AvatarCheck(
@@ -90,7 +89,10 @@ fun AvatarCheck(
             modifier = Modifier.size(40.dp)
 
         ) {
-            Symbol(R.drawable.check_24px, color = contentColor)
+            Symbol(
+                color = contentColor,
+                icon = R.drawable.ic_check_24,
+            )
         }
     }
 

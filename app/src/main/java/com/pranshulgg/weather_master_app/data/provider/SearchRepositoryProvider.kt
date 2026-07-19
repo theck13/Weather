@@ -8,15 +8,14 @@ import javax.inject.Inject
 
 class SearchRepositoryProvider @Inject constructor(
     private val openMeteoSearchRepository: OpenMeteoSearchRepository,
-    private val geoNamesSearchRepository: GeoNamesSearchRepository
-
+    private val geoNamesSearchRepository: GeoNamesSearchRepository,
 ) {
-
-    fun getRepository(provider: SearchSource): SearchRepository {
+    fun getRepository(
+        provider: SearchSource,
+    ): SearchRepository {
         return when (provider) {
             SearchSource.OPEN_METEO -> openMeteoSearchRepository
             SearchSource.GEO_NAMES -> geoNamesSearchRepository
         }
     }
-
 }

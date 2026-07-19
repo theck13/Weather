@@ -33,71 +33,40 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(
+    SingletonComponent::class,
+)
 object WeatherRepositoryModule {
     @Provides
     @Singleton
-    fun provideOpenMeteoRepository(
+    fun provideBmkgRepository(
         dao: LocationsDao,
-        api: OpenMeteoApi,
-        weatherDao: WeatherDao
-    ): OpenMeteoRepository = OpenMeteoRepository(dao, weatherDao, api)
-
-    @Provides
-    @Singleton
-    fun provideOpenMeteoAqiRepository(
-        api: OpenMeteoAqiApi,
-        dao: AirQualityDao
-    ): OpenMeteoAqiRepository =
-        OpenMeteoAqiRepository(api, dao)
-
-    @Provides
-    @Singleton
-    fun provideNwsRepository(
-        api: NwsApi,
-        dao: LocationsDao,
+        api: BmkgApi,
         weatherDao: WeatherDao,
-        nwsDao: NwsDao
-    ): NwsRepository = NwsRepository(dao, weatherDao, nwsDao, api)
+    ): BmkgRepository = BmkgRepository(dao, weatherDao, api)
 
     @Provides
     @Singleton
-    fun provideMetNorwayRepository(
+    fun provideChinaRepository(
         dao: LocationsDao,
-        api: MetNorwayApi,
-        weatherDao: WeatherDao
-    ): MetNorwayRepository = MetNorwayRepository(dao, weatherDao, api)
-
-    @Provides
-    @Singleton
-    fun provideSmhiRepository(
-        dao: LocationsDao,
-        api: SmhiApi,
-        weatherDao: WeatherDao
-    ): SmhiRepository = SmhiRepository(dao, weatherDao, api)
+        api: ChinaApi,
+        weatherDao: WeatherDao,
+    ): ChinaRepository = ChinaRepository(dao, weatherDao, api)
 
     @Provides
     @Singleton
     fun provideDwdRepository(
         dao: LocationsDao,
         api: DwdApi,
-        weatherDao: WeatherDao
+        weatherDao: WeatherDao,
     ): DwdRepository = DwdRepository(dao, weatherDao, api)
-
-    @Provides
-    @Singleton
-    fun provideMeteoFranceRepository(
-        dao: LocationsDao,
-        api: MeteoFranceApi,
-        weatherDao: WeatherDao
-    ): MeteoFranceRepository = MeteoFranceRepository(dao, weatherDao, api)
 
     @Provides
     @Singleton
     fun provideEcccRepository(
         dao: LocationsDao,
         api: EcccApi,
-        weatherDao: WeatherDao
+        weatherDao: WeatherDao,
     ): EcccRepository = EcccRepository(dao, weatherDao, api)
 
     @Provides
@@ -105,22 +74,54 @@ object WeatherRepositoryModule {
     fun provideFmiRepository(
         dao: LocationsDao,
         api: FmiApi,
-        weatherDao: WeatherDao
+        weatherDao: WeatherDao,
     ): FmiRepository = FmiRepository(dao, weatherDao, api)
 
     @Provides
     @Singleton
-    fun provideChinaRepository(
+    fun provideMeteoFranceRepository(
         dao: LocationsDao,
-        api: ChinaApi,
-        weatherDao: WeatherDao
-    ): ChinaRepository = ChinaRepository(dao, weatherDao, api)
+        api: MeteoFranceApi,
+        weatherDao: WeatherDao,
+    ): MeteoFranceRepository = MeteoFranceRepository(dao, weatherDao, api)
 
     @Provides
     @Singleton
-    fun provideBmkgRepository(
+    fun provideMetNorwayRepository(
         dao: LocationsDao,
-        api: BmkgApi,
-        weatherDao: WeatherDao
-    ): BmkgRepository = BmkgRepository(dao, weatherDao, api)
+        api: MetNorwayApi,
+        weatherDao: WeatherDao,
+    ): MetNorwayRepository = MetNorwayRepository(dao, weatherDao, api)
+
+    @Provides
+    @Singleton
+    fun provideNwsRepository(
+        api: NwsApi,
+        dao: LocationsDao,
+        weatherDao: WeatherDao,
+        nwsDao: NwsDao,
+    ): NwsRepository = NwsRepository(dao, weatherDao, nwsDao, api)
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoAqiRepository(
+        api: OpenMeteoAqiApi,
+        dao: AirQualityDao,
+    ): OpenMeteoAqiRepository = OpenMeteoAqiRepository(api, dao)
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoRepository(
+        dao: LocationsDao,
+        api: OpenMeteoApi,
+        weatherDao: WeatherDao,
+    ): OpenMeteoRepository = OpenMeteoRepository(dao, weatherDao, api)
+
+    @Provides
+    @Singleton
+    fun provideSmhiRepository(
+        dao: LocationsDao,
+        api: SmhiApi,
+        weatherDao: WeatherDao,
+    ): SmhiRepository = SmhiRepository(dao, weatherDao, api)
 }

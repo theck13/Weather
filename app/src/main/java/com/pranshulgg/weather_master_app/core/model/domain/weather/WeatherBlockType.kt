@@ -21,162 +21,158 @@ enum class WeatherBlockType {
 data class WeatherBlock(
     val id: Long,
     val isDaily: Boolean,
-    val type: WeatherBlockType,
     val isHidden: Boolean,
-    val position: Int
+    val position: Int,
+    val type: WeatherBlockType,
 ) {
     companion object {
         fun getDefault() = listOf(
             WeatherBlock(
-                type = WeatherBlockType.SUN_BLOCK,
+                id = 0,
+                isDaily = false,
                 isHidden = false,
                 position = 0,
-                isDaily = false,
-                id = 0
+                type = WeatherBlockType.SUN_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.MOON_BLOCK,
+                id = 1,
+                isDaily = false,
                 isHidden = false,
                 position = 1,
-                isDaily = false,
-                id = 1
+                type = WeatherBlockType.MOON_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.HUMIDITY_BLOCK,
+                id = 2,
+                isDaily = false,
                 isHidden = false,
                 position = 2,
-                isDaily = false,
-                id = 2
+                type = WeatherBlockType.WIND_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.VISIBILITY_BLOCK,
+                id = 3,
+                isDaily = false,
                 isHidden = false,
                 position = 3,
-                isDaily = false,
-                id = 3
+                type = WeatherBlockType.HUMIDITY_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.PRESSURE_BLOCK,
+                id = 4,
+                isDaily = false,
                 isHidden = false,
                 position = 4,
-                isDaily = false,
-                id = 4
+                type = WeatherBlockType.VISIBILITY_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.UV_INDEX_BLOCK,
+                id = 5,
+                isDaily = false,
                 isHidden = false,
                 position = 5,
-                isDaily = false,
-                id = 5
+                type = WeatherBlockType.RAIN_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.AIR_QUALITY_BLOCK,
+                id = 6,
+                isDaily = false,
                 isHidden = false,
                 position = 6,
-                isDaily = false,
-                id = 6
+                type = WeatherBlockType.PRESSURE_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.RAIN_BLOCK,
+                id = 7,
+                isDaily = false,
                 isHidden = false,
                 position = 7,
-                isDaily = false,
-                id = 7
+                type = WeatherBlockType.SNOW_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.SNOW_BLOCK,
+                id = 8,
+                isDaily = false,
                 isHidden = false,
                 position = 8,
-                isDaily = false,
-                id = 8
+                type = WeatherBlockType.UV_INDEX_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.WIND_BLOCK,
+                id = 9,
+                isDaily = false,
                 isHidden = false,
                 position = 9,
-                isDaily = false,
-                id = 9
-            )
+                type = WeatherBlockType.AIR_QUALITY_BLOCK,
+            ),
         )
 
         fun getDefaultForDaily() = listOf(
             WeatherBlock(
-                type = WeatherBlockType.SUN_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 0,
-                isDaily = true,
-                id = (999L..2000L).random() // Being safe 🫠
+                type = WeatherBlockType.SUN_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.MOON_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 1,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.MOON_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.RAIN_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 2,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.WIND_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.UV_INDEX_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 3,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.HUMIDITY_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.SNOW_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 4,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.VISIBILITY_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.WIND_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 5,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.RAIN_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.HUMIDITY_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 6,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.PRESSURE_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.PRESSURE_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 7,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.SNOW_BLOCK,
             ),
             WeatherBlock(
-                type = WeatherBlockType.VISIBILITY_BLOCK,
+                id = (999L..2000L).random(),
+                isDaily = true,
                 isHidden = false,
                 position = 8,
-                isDaily = true,
-                id = (999L..2000L).random()
+                type = WeatherBlockType.UV_INDEX_BLOCK,
             ),
         )
-
     }
 }
 
-
 fun WeatherBlockEntity.toDomain(): WeatherBlock {
     return WeatherBlock(
-        type = type,
+        id = id,
+        isDaily = isDaily,
         isHidden = isHidden,
         position = position,
-        isDaily = isDaily,
-        id = id
+        type = type,
     )
 }
-
-

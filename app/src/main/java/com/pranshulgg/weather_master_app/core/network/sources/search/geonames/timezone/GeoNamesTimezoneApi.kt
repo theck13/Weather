@@ -4,7 +4,6 @@ import com.pranshulgg.weather_master_app.BuildConfig
 import com.pranshulgg.weather_master_app.core.network.sources.search.geonames.json.GeoNamesTimezoneItemJson
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,19 +17,20 @@ interface GeoNamesTimezoneApi {
     suspend fun getTimezone(
         @Query("lat") latitude: Double,
         @Query("lng") longitude: Double,
-        @Query("append_to_response") append: String = "maxRows=10"
+        @Query("append_to_response") append: String = "maxRows=10",
     ): Response<GeoNamesTimezoneItemJson>
 
     companion object {
-
         private const val BASE_URL = "https://secure.geonames.org/"
 
         fun create(): GeoNamesTimezoneApi {
-
             val auth = Interceptor { chain ->
                 val original = chain.request()
                 val newUrl = original.url.newBuilder()
-                    .addQueryParameter("username", BuildConfig.GEO_NAMES_USERNAME)
+                    .addQueryParameter(
+                        name = "username",
+                        value = BuildConfig.GEO_NAMES_USERNAME,
+                    )
                     .build()
                 val request = original.newBuilder().url(newUrl).build()
                 chain.proceed(request)
@@ -38,8 +38,14 @@ interface GeoNamesTimezoneApi {
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(auth)
-                .callTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .callTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
+                .readTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
                 .build()
 
             return Retrofit.Builder()
@@ -48,9 +54,6 @@ interface GeoNamesTimezoneApi {
                 .client(client)
                 .build()
                 .create(GeoNamesTimezoneApi::class.java)
-
         }
-
     }
-
 }

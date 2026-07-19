@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.metnorway
 
 import com.pranshulgg.weather_master_app.core.network.sources.weather.metnorway.json.MetNorwayForecastJson
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,20 +11,16 @@ import java.util.concurrent.TimeUnit
 
 interface MetNorwayApi {
 
-
     @GET("locationforecast/2.0/complete")
     suspend fun fetchWeather(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
     ): Response<MetNorwayForecastJson>
 
-
     companion object {
         const val BASE_URL = "https://api.met.no/weatherapi/"
 
         fun create(): MetNorwayApi {
-
-
             val client = OkHttpClient.Builder()
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
@@ -37,8 +32,14 @@ interface MetNorwayApi {
 
                     chain.proceed(request)
                 }
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
+                .readTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
                 .build()
 
             return Retrofit.Builder()
@@ -49,5 +50,4 @@ interface MetNorwayApi {
                 .create(MetNorwayApi::class.java)
         }
     }
-
 }

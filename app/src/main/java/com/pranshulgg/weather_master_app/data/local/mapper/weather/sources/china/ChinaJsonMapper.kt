@@ -1,32 +1,24 @@
 package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.china
 
-import android.util.Log
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
-import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.model.weather.DistanceUnit
-import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
 import com.pranshulgg.weather_master_app.core.model.weather.wind.WindDirection
 import com.pranshulgg.weather_master_app.core.network.sources.weather.china.ChinaWeatherConditionMap
 import com.pranshulgg.weather_master_app.core.network.sources.weather.china.json.ChinaForecastJson
-import com.pranshulgg.weather_master_app.core.network.sources.weather.china.json.ChinaHourlyForecastJson
-import com.pranshulgg.weather_master_app.core.network.sources.weather.dwd.json.bundle.DwdWeatherJsonBundle
-import com.pranshulgg.weather_master_app.core.network.sources.weather.nws.NwsWeatherConditionMap
-import com.pranshulgg.weather_master_app.core.network.sources.weather.nws.json.NwsHourlyForecastPeriodsJson
 import com.pranshulgg.weather_master_app.core.utils.extensions.DateTimeExtensions.iso8601TimestampToMilliseconds
 import com.pranshulgg.weather_master_app.core.utils.extensions.DateTimeExtensions.normalizeToDay
-import com.pranshulgg.weather_master_app.core.utils.extensions.DateTimeExtensions.secondsToMilliseconds
 import com.pranshulgg.weather_master_app.core.utils.formatters.toSafeDouble
 import com.pranshulgg.weather_master_app.core.utils.weather.astronomy.getMoonTimings
 import com.pranshulgg.weather_master_app.core.utils.weather.astronomy.getSunTimings
-import com.pranshulgg.weather_master_app.core.utils.weather.computing.computeDailyWeatherCondition
 import kotlin.math.roundToInt
 
-
-fun ChinaForecastJson.toDomain(location: Location): Weather {
+fun ChinaForecastJson.toDomain(
+    location: Location,
+): Weather {
     val current = this.current
     val hourly = this.forecastHourly
     val daily = this.forecastDaily
@@ -41,7 +33,7 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
     val moonTimings = getMoonTimings(
@@ -50,12 +42,12 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
     return Weather(
         location = location,
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = current.temperature.value.toSafeDouble(),
             humidity = current.humidity.value.toSafeDouble() ?: 0.0,
             windSpeed = current.wind.speed.value.toSafeDouble(),
@@ -64,11 +56,11 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
             ),
             pressureMsl = current.pressure.value.toSafeDouble(),
             visibility = DistanceUnit.KM.convert(
-                current.visibility.value.toSafeDouble(),
-                DistanceUnit.M
+                from = current.visibility.value.toSafeDouble(),
+                to = DistanceUnit.M,
             )?.roundToInt(),
             cloudCover = null, // NOT USED IN THE APP
-            uvIndex = current.uvIndex.toSafeDouble(),
+            ultraviolet = current.uvIndex.toSafeDouble(),
             weatherCondition = ChinaWeatherConditionMap.getCondition(
                 current.weather.toSafeDouble()?.toInt()
             ),
@@ -76,7 +68,7 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
             time = current.pubTime.iso8601TimestampToMilliseconds(),
             dewPoint = null,
             utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis()
+            lastUpdatedInMilli = System.currentTimeMillis(),
         ),
         hourly = List(hourly.wind.value.size) {
             WeatherHourly(
@@ -87,18 +79,17 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
                 ),
                 rain = 0.0,
                 snowfall = null,
-                uvIndex = null,
+                ultraviolet = null,
                 pressureMsl = null,
                 visibility = null,
                 humidity = null,
                 dewPoint = null,
                 weatherCondition = ChinaWeatherConditionMap.getCondition(hourly.weather.value[it]),
                 time = hourly.wind.value[it].datetime.iso8601TimestampToMilliseconds(),
-                precipitationProbability = null
+                precipitationProbability = null,
             )
         },
         daily = List(daily.temperature.value.size) {
-
             val dailyTime = time + (it * msDay)
             val avgWindSpeed = listOf(
                 daily.wind.speed.value[it].from.toSafeDouble() ?: -1.0,
@@ -110,7 +101,6 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
                 daily.wind.direction.value[it].to.toSafeDouble() ?: -1.0
             ).average()
 
-
             WeatherDaily(
                 temperatureMin = daily.temperature.value[it].min.toSafeDouble(),
                 temperatureMax = daily.temperature.value[it].max.toSafeDouble(),
@@ -118,7 +108,7 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
                 windDirection = WindDirection.toWindDirectionFromDegrees(windDirection.roundToInt()),
                 rainSum = 0.0,
                 snowfallSum = null,
-                uvIndexMax = null,
+                ultravioletMaximum = null,
                 weatherCondition = ChinaWeatherConditionMap.getCondition(
                     daily.weather.value[it].from?.toSafeDouble()?.toInt()
                 ),
@@ -136,9 +126,8 @@ fun ChinaForecastJson.toDomain(location: Location): Weather {
                 moonset = moonTimings[it].moonset ?: -1L,
                 moonPhase = moonTimings[it].phase,
                 dawn = sunTimings[it].dawn ?: -1L,
-                dusk = sunTimings[it].dusk ?: -1L
+                dusk = sunTimings[it].dusk ?: -1L,
             )
-
-        }
+        },
     )
 }

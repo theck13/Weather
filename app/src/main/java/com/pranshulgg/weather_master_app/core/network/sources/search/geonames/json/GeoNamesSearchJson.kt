@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.search.geonames.j
 
 import com.google.gson.annotations.SerializedName
 
-
 data class GeoNamesSearchJson(
     val geonames: List<GeoNamesSearchItemJson>?
 )
@@ -25,7 +24,6 @@ data class GeoNamesSearchItemJson(
 
 )
 
-
 data class GeoNamesTimezoneItemJson(
     val timezoneId: String
 )
@@ -37,4 +35,3 @@ data class GeoNamesTimezoneItem(
 fun GeoNamesTimezoneItemJson.toDomain(): GeoNamesTimezoneItem {
     return GeoNamesTimezoneItem(timezone = timezoneId)
 }
-

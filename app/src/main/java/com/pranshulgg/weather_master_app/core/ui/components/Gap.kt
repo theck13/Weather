@@ -9,10 +9,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Gap(vertical: Dp = 0.dp, horizontal: Dp = 0.dp) {
+fun Gap(
+    horizontal: Dp = 0.dp,
+    vertical: Dp = 0.dp,
+) {
     Spacer(
         Modifier
-            .height(vertical)
-            .width(horizontal)
+            .height(
+                height = vertical,
+            )
+            .width(
+                width = horizontal,
+            ),
     )
 }

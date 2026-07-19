@@ -7,7 +7,6 @@ import com.pranshulgg.weather_master_app.core.utils.ids.UuidGenerator
 import com.pranshulgg.weather_master_app.data.local.entity.location.WeatherLocationEntity
 
 fun OpenMeteoSearchJson.toDomain(): List<Location> {
-
     if (results.isNullOrEmpty()) {
         return emptyList()
     }
@@ -16,19 +15,18 @@ fun OpenMeteoSearchJson.toDomain(): List<Location> {
 
     return List(filtered.size) {
         Location(
+            country = filtered[it].country!!,
+            countryCode = filtered[it].countryCode,
             id = UuidGenerator.generateId(),
-            name = filtered[it].name,
+            isDefault = false,
             latitude = filtered[it].latitude,
             longitude = filtered[it].longitude,
-            country = filtered[it].country!!,
-            timezone = filtered[it].timezone,
-            countryCode = filtered[it].countryCode,
+            name = filtered[it].name,
             state = filtered[it].state ?: filtered[it].state2 ?: "",
-            isDefault = false
+            timezone = filtered[it].timezone,
         )
     }
 }
-
 
 fun GeoNamesSearchJson.toDomain(): List<Location> {
     if (geonames.isNullOrEmpty()) {
@@ -39,34 +37,34 @@ fun GeoNamesSearchJson.toDomain(): List<Location> {
 
     return List(filtered.size) {
         Location(
+            country = filtered[it].countryName!!,
+            countryCode = filtered[it].countryCode,
             id = UuidGenerator.generateId(),
-            name = filtered[it].name,
+            isDefault = false,
             latitude = filtered[it].latitude,
             longitude = filtered[it].longitude,
-            country = filtered[it].countryName!!,
-            timezone = "",
-            countryCode = filtered[it].countryCode,
+            name = filtered[it].name,
             state = filtered[it].state ?: "",
-            isDefault = false
+            timezone = "",
         )
     }
 }
 
 fun Location.toEntity(): WeatherLocationEntity =
     WeatherLocationEntity(
-        id = id,
-        name = name,
         country = country,
+        countryCode = countryCode,
+        id = id,
+        isDefault = isDefault,
+        isDeviceLocation = isDeviceLocation,
+        isFavorite = false,
+        isPinned = false,
         lat = latitude,
         lon = longitude,
-        timezone = timezone,
+        name = name,
         source = source,
         state = state,
-        countryCode = countryCode,
-        isPinned = false,
-        isFavorite = false,
-        isDefault = isDefault,
-        isDeviceLocation = isDeviceLocation
+        timezone = timezone,
     )
 
 fun List<WeatherLocationEntity>.toDomain(): List<Location> =
@@ -76,17 +74,17 @@ fun List<WeatherLocationEntity>.toDomain(): List<Location> =
 
 fun WeatherLocationEntity.toDomain(): Location =
     Location(
-        id = id,
-        name = name,
-        latitude = lat,
-        longitude = lon,
         country = country,
-        timezone = timezone,
         countryCode = countryCode,
-        state = state ?: "",
-        source = source,
+        id = id,
+        isDefault = isDefault,
+        isDeviceLocation = isDeviceLocation,
         isFavorite = isFavorite,
         isPinned = isPinned,
-        isDefault = isDefault,
-        isDeviceLocation = isDeviceLocation
+        latitude = lat,
+        longitude = lon,
+        name = name,
+        source = source,
+        state = state ?: "",
+        timezone = timezone,
     )

@@ -1,9 +1,8 @@
 package com.pranshulgg.weather_master_app.data.local.mapper.weather
 
-import android.util.Log
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
@@ -11,7 +10,6 @@ import com.pranshulgg.weather_master_app.core.utils.formatters.safeZoneId
 import com.pranshulgg.weather_master_app.data.local.entity.weather.DailyWeatherEntity
 import com.pranshulgg.weather_master_app.data.local.entity.weather.WeatherWithRelations
 import java.time.Instant
-import java.time.ZoneId
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -38,9 +36,9 @@ fun WeatherWithRelations.toDomain(): Weather {
             source = location.source,
             isFavorite = location.isFavorite,
             isPinned = location.isPinned,
-            isDefault = location.isDefault
+            isDefault = location.isDefault,
         ),
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = current?.temperature,
             humidity = current?.humidity ?: 0.0,
             windSpeed = current?.windSpeed,
@@ -48,13 +46,13 @@ fun WeatherWithRelations.toDomain(): Weather {
             pressureMsl = current?.pressureMsl,
             visibility = current?.visibility,
             cloudCover = current?.cloudCover,
-            uvIndex = current?.uvIndex,
+            ultraviolet = current?.uvIndex,
             weatherCondition = current?.weatherCondition ?: WeatherCondition.NO_CONDITION_FOUND,
             feelsLike = current?.feelsLike,
             time = current?.time ?: System.currentTimeMillis(),
             dewPoint = current?.dewPoint,
             utcOffsetSeconds = current?.utcOffsetSeconds,
-            lastUpdatedInMilli = current?.lastUpdatedInMilli ?: -1L
+            lastUpdatedInMilli = current?.lastUpdatedInMilli ?: -1L,
         ),
         hourly = List(hourly.size) {
             WeatherHourly(
@@ -63,14 +61,14 @@ fun WeatherWithRelations.toDomain(): Weather {
                 windDirection = hourly[it].windDirection,
                 rain = hourly[it].rain,
                 snowfall = hourly[it].snowfall ?: 0.0,
-                uvIndex = hourly[it].uvIndex,
+                ultraviolet = hourly[it].uvIndex,
                 weatherCondition = hourly[it].weatherCondition,
                 time = hourly[it].time,
                 precipitationProbability = hourly[it].precipitationProbability,
                 pressureMsl = hourly[it].pressureMsl,
                 humidity = hourly[it].humidity,
                 visibility = hourly[it].visibility,
-                dewPoint = hourly[it].dewPoint
+                dewPoint = hourly[it].dewPoint,
             )
         },
         daily = List(daily.size) {
@@ -81,7 +79,7 @@ fun WeatherWithRelations.toDomain(): Weather {
                 windDirection = daily[it].windDirection,
                 rainSum = daily[it].rainSum,
                 snowfallSum = daily[it].snowfallSum ?: 0.0,
-                uvIndexMax = daily[it].uvIndexMax,
+                ultravioletMaximum = daily[it].uvIndexMax,
                 weatherCondition = daily[it].weatherCondition,
                 time = daily[it].time,
                 precipitationProbabilityMax = daily[it].precipitationProbabilityMax,
@@ -97,19 +95,18 @@ fun WeatherWithRelations.toDomain(): Weather {
                 humidity = daily[it].humidity,
                 dewPoint = daily[it].dewPoint,
             )
-
-        }.drop(todayIndex)
+        }.drop(todayIndex),
     )
 }
 
 private fun getDailyIndexForToday(
     targetTimeMillis: Long,
     dailyList: List<DailyWeatherEntity>,
-    timezone: String
+    timezone: String,
 ): Int {
-
-    val zoneId = safeZoneId(timezone)
-
+    val zoneId = safeZoneId(
+        id = timezone,
+    )
 
     val targetDate = Instant.ofEpochMilli(targetTimeMillis)
         .atZone(zoneId)
@@ -120,5 +117,4 @@ private fun getDailyIndexForToday(
             .atZone(zoneId)
             .toLocalDate() == targetDate
     }.coerceAtLeast(0)
-
 }

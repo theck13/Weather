@@ -1,9 +1,7 @@
 package com.pranshulgg.weather_master_app.core.prefs
 
-import com.google.gson.annotations.Until
 import com.pranshulgg.weather_master_app.core.model.sources.SearchSource
-import com.pranshulgg.weather_master_app.core.ui.theme.ThemeVariantType
-
+import com.pranshulgg.weather_master_app.core.ui.theme.ThemeVariant
 
 data class AppPrefsState(
     val appTheme: String,
@@ -13,13 +11,16 @@ data class AppPrefsState(
     val setCustomThemeColor: (String) -> Unit,
 
     val isCustomTheme: Boolean,
-    val setUseCustomTheme: (Boolean) -> Unit,
+    val setIsCustomTheme: (Boolean) -> Unit,
 
     val isDynamicTheme: Boolean,
-    val setDynamicColor: (Boolean) -> Unit,
+    val setIsDynamicColor: (Boolean) -> Unit,
 
-    val themeVariantType: ThemeVariantType,
-    val setThemeVariantType: (ThemeVariantType) -> Unit,
+    val themeVariant: ThemeVariant,
+    val setThemeVariantType: (ThemeVariant) -> Unit,
+
+    val timeFormat: String,
+    val setTimeFormat: (String) -> Unit,
 
     val searchSource: SearchSource,
     val setSearchSource: (SearchSource) -> Unit,
@@ -31,22 +32,17 @@ data class AppPrefsState(
     val setBackgroundUpdatesInterval: (Int) -> Unit,
 
     val isFroggyLayout: Boolean,
-    val setFroggyLayout: (Boolean) -> Unit,
+    val setIsFroggyLayout: (Boolean) -> Unit,
 
     val isShowWeatherAnimations: Boolean,
-    val setShowWeatherAnimations: (Boolean) -> Unit,
+    val setIsShowWeatherAnimations: (Boolean) -> Unit,
 
     val isWeatherBasedTheme: Boolean,
     val setIsWeatherBasedTheme: (Boolean) -> Unit,
 
-    val is24HrTimeFormat: Boolean,
-    val set24HrTimeFormat: (Boolean) -> Unit,
-
     val isShowSummary: Boolean,
-    val setShowSummary: (Boolean) -> Unit,
+    val setIsShowSummary: (Boolean) -> Unit,
 
     val isGoogleSansFlex: Boolean,
-    val setGoogleSansFlex: (Boolean) -> Unit
+    val setIsGoogleSansFlex: (Boolean) -> Unit
 )
-
-

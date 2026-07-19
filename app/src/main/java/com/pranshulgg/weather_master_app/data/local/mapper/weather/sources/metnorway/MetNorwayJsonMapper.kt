@@ -2,7 +2,7 @@ package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.metn
 
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
@@ -22,16 +22,16 @@ import kotlin.math.roundToInt
 
 // ---------------------------- JSON TO DOMAIN ----------------------------
 
-fun MetNorwayForecastJson.toDomain(location: Location): Weather {
-
+fun MetNorwayForecastJson.toDomain(
+    location: Location,
+): Weather {
     val currentHour = findHourlyIndexForTime(
-        this.properties.data.map { it.time.iso8601TimestampToMilliseconds() }
+        time = this.properties.data.map { it.time.iso8601TimestampToMilliseconds() },
     )
 
     val current = this.properties.data[currentHour].data
     val currentTime = this.properties.data[currentHour].time.iso8601TimestampToMilliseconds()
     val daily = computeDaily(this, location)
-
 
     val nextHour = this.properties.data.map {
         it.data.nextHour
@@ -40,7 +40,7 @@ fun MetNorwayForecastJson.toDomain(location: Location): Weather {
     }
 
     return Weather(
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = current.instant.details.temperature,
             humidity = current.instant.details.relativeHumidity ?: 0.0,
             windSpeed = current.instant.details.windSpeed,
@@ -48,7 +48,7 @@ fun MetNorwayForecastJson.toDomain(location: Location): Weather {
             pressureMsl = current.instant.details.pressureMsl,
             visibility = null,
             cloudCover = null, // NOT USED IN THE APP
-            uvIndex = current.instant.details.uvIndex,
+            ultraviolet = current.instant.details.uvIndex,
             weatherCondition = MetNorwayWeatherConditionMap.getCondition(nextHour[currentHour]?.summary?.symbolCode),
             feelsLike = computeApparentTemperature(
                 current.instant.details.temperature,
@@ -58,11 +58,10 @@ fun MetNorwayForecastJson.toDomain(location: Location): Weather {
             time = currentTime,
             dewPoint = current.instant.details.dewPoint,
             utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis()
+            lastUpdatedInMilli = System.currentTimeMillis(),
         ),
         location = location,
         hourly = this.properties.data.map { item ->
-
             val data = item.data.instant.details
 
             val nextHourDetails =
@@ -81,24 +80,25 @@ fun MetNorwayForecastJson.toDomain(location: Location): Weather {
                 windDirection = WindDirection.toWindDirectionFromDegrees(data.windDirection.roundToInt()),
                 rain = nextHourDetails?.precipitationAmount ?: 0.0,
                 snowfall = null,
-                uvIndex = data.uvIndex,
+                ultraviolet = data.uvIndex,
                 weatherCondition = MetNorwayWeatherConditionMap.getCondition(icon),
                 time = item.time.iso8601TimestampToMilliseconds(),
                 precipitationProbability = null,
                 pressureMsl = data.pressureMsl,
                 humidity = data.relativeHumidity,
                 visibility = null,
-                dewPoint = data.dewPoint
+                dewPoint = data.dewPoint,
             )
         },
-        daily = daily
+        daily = daily,
     )
 }
 
-private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<WeatherDaily> {
-
+private fun computeDaily(
+    data: MetNorwayForecastJson,
+    location: Location,
+): List<WeatherDaily> {
     val daily = data.properties.data
-
     val zoneId = location.timezone
 
     val groupedByDay = daily.groupBy {
@@ -112,7 +112,7 @@ private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
     val moonTimings = getMoonTimings(
@@ -121,14 +121,10 @@ private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
-
-
     return groupedByDay.map { dailyIt ->
-
-
         val nextHourDetails = dailyIt.value.map {
             it.data.nextHour?.details
                 ?: it.data.next6Hours?.details
@@ -141,14 +137,11 @@ private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<
                 ?: it.data.next12Hours?.summary
         }
 
-
         val minTemperature = dailyIt.value.minOf { it.data.instant.details.temperature }
         val maxTemperature = dailyIt.value.maxOf { it.data.instant.details.temperature }
         val windSpeed = dailyIt.value.map { it.data.instant.details.windSpeed }.average()
-        val windDirection =
-            dailyIt.value.map { it.data.instant.details.windDirection }.average().roundToInt()
-        val rainSum =
-            nextHourDetails.sumOf { it?.precipitationAmount ?: 0.0 } ?: 0.0
+        val windDirection = dailyIt.value.map { it.data.instant.details.windDirection }.average().roundToInt()
+        val rainSum = nextHourDetails.sumOf { it?.precipitationAmount ?: 0.0 } ?: 0.0
         val uvIndexMax = dailyIt.value.maxOf { it.data.instant.details.uvIndex }
         val time = dailyIt.key
         val icon = nextHourSummary.map { it?.symbolCode }.groupingBy { it }
@@ -159,11 +152,9 @@ private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<
             MetNorwayWeatherConditionMap.getCondition(icon?.key)
         )
 
-        val avgHumidity =
-            dailyIt.value.map { it.data.instant.details.relativeHumidity ?: -1.0 }.average()
+        val avgHumidity = dailyIt.value.map { it.data.instant.details.relativeHumidity ?: -1.0 }.average()
         val avgDewPoint = dailyIt.value.map { it.data.instant.details.dewPoint ?: -1.0 }.average()
-        val avgPressure =
-            dailyIt.value.map { it.data.instant.details.pressureMsl ?: -1.0 }.average()
+        val avgPressure = dailyIt.value.map { it.data.instant.details.pressureMsl ?: -1.0 }.average()
 
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
@@ -174,7 +165,7 @@ private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<
             windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
             rainSum = rainSum,
             snowfallSum = null,
-            uvIndexMax = uvIndexMax,
+            ultravioletMaximum = uvIndexMax,
             weatherCondition = condition,
             time = time,
             precipitationProbabilityMax = null,
@@ -188,23 +179,21 @@ private fun computeDaily(data: MetNorwayForecastJson, location: Location): List<
             pressureMsl = avgPressure,
             visibility = null,
             humidity = avgHumidity,
-            dewPoint = avgDewPoint
+            dewPoint = avgDewPoint,
         )
     }.take(4)
-
 }
 
 private fun getHourlyConditionsForDay(
     data: List<MetNorwayForecastTimeSeriesJson>,
-    time: Long
+    time: Long,
 ): List<WeatherCondition> {
     val startIndex =
         data.indexOfFirst { it.time.iso8601TimestampToMilliseconds() >= time }
             .takeIf { it != -1 } ?: 0
 
-
     val conditions = data.drop(maxOf(0, startIndex - 1))
-        .take(WeatherSource.MET_NORWAY.hourlyAggregationLimitHours)
+        .take(WeatherSource.MET.hourlyAggregationLimitHours)
         .map {
             MetNorwayWeatherConditionMap.getCondition(
                 it.data.nextHour?.summary?.symbolCode
@@ -215,4 +204,3 @@ private fun getHourlyConditionsForDay(
 
     return conditions
 }
-

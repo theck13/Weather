@@ -2,11 +2,8 @@ package com.pranshulgg.weather_master_app.feature.daily
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -24,37 +21,37 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherBlock
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.prefs.LocalAppPrefs
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
-import com.pranshulgg.weather_master_app.core.ui.components.LargeTopBarScaffold
-import com.pranshulgg.weather_master_app.core.ui.components.NavigateUpBtn
-import com.pranshulgg.weather_master_app.core.utils.formatters.safeZoneId
-import com.pranshulgg.weather_master_app.feature.daily.ui.DailyDaysHeader
-import com.pranshulgg.weather_master_app.feature.daily.ui.DailyForecastHeroHeader
+import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
+import com.pranshulgg.weather_master_app.core.ui.components.TopBarScaffold
 import com.pranshulgg.weather_master_app.feature.shared.components.blocks.WeatherBlocks
 import com.pranshulgg.weather_master_app.feature.shared.ui.HourlyCard
 import com.pranshulgg.weather_master_app.feature.shared.ui.SummaryCard
-import java.time.ZonedDateTime
 
 data class DailyScreenUiState(
-    val weather: Weather? = null,
+    val blocks: List<WeatherBlock> = WeatherBlock.getDefaultForDaily(),
     val units: WeatherUnits = WeatherUnits.getDefault(),
-    val blocks: List<WeatherBlock> = WeatherBlock.getDefaultForDaily()
+    val weather: Weather? = null,
 )
 
 @Composable
-fun DailyScreen(navController: NavController, index: Int = 0, locationId: String) {
-
+fun DailyScreen(
+    index: Int = 0,
+    locationId: String,
+    navController: NavController,
+) {
     val viewModel: DailyScreenViewModel = hiltViewModel()
+
     val uiState = viewModel.uiState.value
     val weather = remember(uiState.weather) { uiState.weather }
     val units = uiState.units
     val context = LocalContext.current
-    val prefs = LocalAppPrefs.current
-    val isShowSummary = prefs.isShowSummary
+    val preferences = LocalAppPrefs.current
+    val isShowSummary = preferences.isShowSummary
 
     var selectedIndex by rememberSaveable { mutableIntStateOf(index) }
 
@@ -64,7 +61,6 @@ fun DailyScreen(navController: NavController, index: Int = 0, locationId: String
         viewModel.getDailyWeather(locationId)
     }
 
-
     if (weather == null) return
 
     var selectedDaily by remember { mutableStateOf(weather.daily[index]) }
@@ -73,59 +69,84 @@ fun DailyScreen(navController: NavController, index: Int = 0, locationId: String
         selectedDaily = weather.daily[selectedIndex]
     }
 
-
-
-
-    LargeTopBarScaffold(
+    TopBarScaffold(
+        navigationIcon = {
+            NavigateBackButton(navController)
+        },
         title = stringResource(R.string.weather_daily_forecast),
-        navigationIcon = { NavigateUpBtn(navController) },
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(top = paddingValues.calculateTopPadding())
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(
+                    state = rememberScrollState(),
+                )
+                .padding(
+                    paddingValues = paddingValues,
+                ),
         ) {
             DailyDaysHeader(
-                weather,
-                units,
-                onSelect = { selectedIndex = it },
-                selectedIndex
+                onSelect = {
+                    selectedIndex = it
+                },
+                selectedIndex = selectedIndex,
+                units = units,
+                weather = weather,
             )
 
+            DailyForecastHeroHeader(
+                daily = selectedDaily,
+                location = weather.location,
+                units = units,
+            )
 
-            DailyForecastHeroHeader(selectedDaily, weather.location, units)
+            Gap(
+                vertical = 8.dp,
+            )
 
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                modifier = Modifier.padding(
+                    bottom = 8.dp,
+                    end = 16.dp,
+                    start = 16.dp,
+                    top = 16.dp,
+                ),
+                verticalArrangement = Arrangement.spacedBy(
+                    space = 8.dp,
+                ),
             ) {
                 if (isShowSummary) {
                     SummaryCard(
-                        weather, context = context,
+                        context = context,
                         dailyIndex = selectedIndex,
                         units = units,
+                        weather = weather,
+                    )
+
+                    Gap (
+                        vertical = 16.dp,
                     )
                 }
+
                 HourlyCard(
-                    weather,
-                    units,
-                    if (selectedIndex != 0) selectedDaily.time else weather.current.time
-                )
-                WeatherBlocks(
-                    weather,
-                    null,
-                    units,
-                    context,
-                    uiState.blocks,
-                    true,
-                    updatedBlockOrder = { viewModel.updateBlocksOrder(it) },
-                    selectedIndex,
-                    navController
+                    currentMilli = if (selectedIndex != 0) selectedDaily.time else weather.current.time,
+                    units = units,
+                    weather = weather,
                 )
 
-                Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding())
+                WeatherBlocks(
+                    airQuality = null,
+                    blocks = uiState.blocks,
+                    dailyIndex = selectedIndex,
+                    context = context,
+                    isDaily = true,
+                    navController = navController,
+                    units = units,
+                    updatedBlockOrder = {
+                        viewModel.updateBlocksOrder(it)
+                    },
+                    weather = weather,
+                )
             }
         }
     }

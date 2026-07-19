@@ -18,7 +18,7 @@ interface LocationsDao {
         weatherLocation: WeatherLocationEntity
     )
 
-    @Query("SELECT * FROM weather_locations ORDER BY isDefault DESC")
+    @Query("SELECT * FROM weather_locations ORDER BY sortOrder ASC")
     fun getLocations(): Flow<List<WeatherLocationEntity>>
 
     @Query("DELETE FROM weather_locations WHERE id = :id")
@@ -61,15 +61,18 @@ interface LocationsDao {
     @Query("UPDATE weather_locations SET source = :source WHERE id = :id")
     suspend fun updateSourceForLocation(id: String, source: WeatherSource)
 
+    @Query("UPDATE weather_locations SET sortOrder = :sortOrder WHERE id = :id")
+    suspend fun updateLocationOrder(id: String, sortOrder: Int)
+
     @Query("DELETE FROM weather_daily WHERE locationId = :id")
     suspend fun deleteDailyDataForLocation(id: String)
 
     @Query("DELETE FROM weather_hourly WHERE locationId = :id")
     suspend fun deleteHourlyDataForLocation(id: String)
 
-    @Query("SELECT * FROM weather_locations ORDER BY isDefault DESC")
+    @Query("SELECT * FROM weather_locations ORDER BY sortOrder ASC")
     suspend fun getLocationsOnce(): List<WeatherLocationEntity>
 
     @Query("SELECT * FROM weather_locations WHERE isDeviceLocation = 1 LIMIT 1")
-    suspend fun getDeviceLocation(): WeatherLocationEntity
+    suspend fun getDeviceLocation(): WeatherLocationEntity?
 }

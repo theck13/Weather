@@ -29,10 +29,8 @@ interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertCurrentWeather(currentWeather: CurrentWeatherEntity)
 
-
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertHourlyWeather(hourlyWeather: List<HourlyWeatherEntity>)
-
 
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertDailyWeather(dailyWeather: List<DailyWeatherEntity>)

@@ -8,10 +8,8 @@ import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
  */
 fun computeDailyWeatherCondition(
     data: List<WeatherCondition>,
-    defaultFallBack: WeatherCondition
+    defaultFallBack: WeatherCondition,
 ): WeatherCondition {
-
-
     /**
      * We group what count as Rain, Snow, Cloud, Clear
      * Leave conditions like THUNDERSTORM, they need more importance
@@ -19,12 +17,12 @@ fun computeDailyWeatherCondition(
     val rain = listOf(
         WeatherCondition.RAIN,
         WeatherCondition.HEAVY_RAIN,
-        WeatherCondition.LIGHT_RAIN
+        WeatherCondition.LIGHT_RAIN,
     )
     val snow = listOf(
         WeatherCondition.SNOW,
         WeatherCondition.HEAVY_SNOW,
-        WeatherCondition.LIGHT_SNOW
+        WeatherCondition.LIGHT_SNOW,
     )
     val cloudy = listOf(WeatherCondition.OVERCAST, WeatherCondition.PARTLY_CLOUDY)
     val clear = listOf(WeatherCondition.CLEAR_SKY, WeatherCondition.MOSTLY_CLEAR)
@@ -53,8 +51,7 @@ fun computeDailyWeatherCondition(
         .groupingBy { it }
         .fold(0) { acc, w -> acc + weight(w) }
 
-
-    // Pick the top primary, we keep the order as is so they don't flip, ignore weak stuff
+    // Pick top primary, keep order as is so they don't flip, ignore weak stuff.
     val topPrimary = counts
         .filter { it.value > 2 }
         .keys
@@ -68,12 +65,9 @@ fun computeDailyWeatherCondition(
     val topSecondary = counts.keys.sortedByDescending { it }.take(1)
 
     val primary = topPrimary.getOrNull(0)
-    val secondary = topSecondary.getOrNull(0)
-
-
     val primaryCount = primary?.let { counts[it] } ?: 0
+    val secondary = topSecondary.getOrNull(0)
     val secondaryCount = secondary?.let { counts[it] } ?: 0
-
 
     val firstSecondaryIndex = data.indexOf(secondary)
 

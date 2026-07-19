@@ -20,47 +20,73 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.pranshulgg.weather_master_app.R
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
 fun ErrorContainer(
-    showRetryAction: Boolean = true,
-    onRetry: () -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     errorDescription: String = "Something went wrong",
+    onRetry: () -> Unit = {},
+    showRetryAction: Boolean = true,
 ) {
     Column(
         modifier = Modifier
+            .background(
+                color = containerColor,
+            )
             .fillMaxSize()
-            .padding(16.dp)
-            .zIndex(100000f)
-            .background(containerColor),
+            .padding(
+                all = 16.dp,
+            )
+            .zIndex(
+                zIndex = 100000.00f,
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
-        Symbol(R.drawable.info_24px, color = MaterialTheme.colorScheme.error, size = 54.dp)
-        Gap(26.dp)
+        Symbol(
+            color = MaterialTheme.colorScheme.error,
+            icon = R.drawable.ic_info_24,
+            size = 54.dp,
+        )
+
+        Gap(
+            vertical = 26.dp,
+        )
+
         Text(
-            "Error occurred",
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface
+            text = "Error occurred",
         )
-        Gap(8.dp)
+
+        Gap(
+            vertical = 8.dp,
+        )
+
         Text(
-            errorDescription,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            text = errorDescription,
         )
+
         if (showRetryAction) {
-            Gap(34.dp)
-            M3eButton(
+            Gap(
+                vertical = 34.dp,
+            )
+
+            ExpressiveButton(
+                icon = R.drawable.ic_refresh_24,
+                onClick = {
+                    onRetry()
+                },
                 size = ButtonDefaults.MediumContainerHeight,
                 text = "Try again",
-                onClick = { onRetry() },
-                icon = R.drawable.refresh_24px
             )
         }
     }

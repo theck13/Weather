@@ -17,12 +17,10 @@ import javax.inject.Inject
 class DailyScreenViewModel @Inject constructor(
     private val locationsRepo: LocationsRepository,
     private val weatherBlocksRepository: WeatherBlocksRepository,
-    private val weatherUnitsRepository: WeatherUnitsRepository
+    private val weatherUnitsRepository: WeatherUnitsRepository,
 ) : ViewModel() {
-
     private var _uiState = mutableStateOf(DailyScreenUiState())
     val uiState: State<DailyScreenUiState> = _uiState
-
 
     fun getDailyWeather(locationId: String) {
         viewModelScope.launch {
@@ -38,7 +36,6 @@ class DailyScreenViewModel @Inject constructor(
         }
     }
 
-
     // TODO: Duplicate from `WeatherViewModel`
     fun loadBlocks() {
         viewModelScope.launch {
@@ -50,5 +47,4 @@ class DailyScreenViewModel @Inject constructor(
     fun updateBlocksOrder(blocks: List<WeatherBlock>) {
         _uiState.value = _uiState.value.copy(blocks = blocks)
     }
-
 }

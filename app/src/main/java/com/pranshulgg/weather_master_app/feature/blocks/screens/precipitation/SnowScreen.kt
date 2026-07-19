@@ -1,11 +1,9 @@
 package com.pranshulgg.weather_master_app.feature.blocks.screens.precipitation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -19,21 +17,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.ui.components.Gap
-import com.pranshulgg.weather_master_app.core.ui.components.LargeTopBarScaffold
-import com.pranshulgg.weather_master_app.core.ui.components.NavigateUpBtn
+import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
+import com.pranshulgg.weather_master_app.core.ui.components.TopBarScaffold
 import com.pranshulgg.weather_master_app.core.utils.formatters.toDateString
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findMatchingHourly
 import com.pranshulgg.weather_master_app.feature.blocks.BlocksScreenViewModel
 import com.pranshulgg.weather_master_app.feature.blocks.components.AboutCard
 import com.pranshulgg.weather_master_app.feature.blocks.components.AboutCardText
-import com.pranshulgg.weather_master_app.feature.blocks.screens.precipitation.components.RainHourlyCard
-import com.pranshulgg.weather_master_app.feature.blocks.screens.precipitation.components.SnowHourlyCard
-
 
 @Composable
-fun SnowScreen(navController: NavController, index: Int = 0, locationId: String) {
-
+fun SnowScreen(
+    index: Int = 0,
+    locationId: String,
+    navController: NavController,
+) {
+    val context = LocalContext.current
     val viewModel: BlocksScreenViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
@@ -41,52 +39,71 @@ fun SnowScreen(navController: NavController, index: Int = 0, locationId: String)
         viewModel.getWeather(locationId)
     }
 
-
     val uiState = viewModel.uiState.value
-    val weather = uiState.weather
-    val hourly = weather?.hourly ?: return
-    val context = LocalContext.current
     val units = uiState.units
-    val zoneId = weather.location.timezone
-    val time = if (index != 0) weather.daily[index].time else weather.current.time
+    val weather = uiState.weather
 
+    val hourly = weather?.hourly ?: return
+    val time = if (index != 0) weather.daily[index].time else weather.current.time
+    val zoneId = weather.location.timezone
 
     val data = findMatchingHourly(
-        hourly,
-        time,
-        weather.location.source,
+        currentMilli = time,
+        data = hourly,
+        source = weather.location.source,
+    )
+    val date = toDateString(
+        timeMilli = weather.daily[index].time,
+        zoneId = weather.location.timezone,
+    )
 
-        )
-    val date = toDateString(weather.daily[index].time, weather.location.timezone)
-
-
-
-    LargeTopBarScaffold(
-        title = stringResource(R.string.weather_snow_block),
-        navigationIcon = { NavigateUpBtn(navController) },
+    TopBarScaffold(
         actions = {
             Text(
-                date,
-                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(
+                    end = 16.dp,
+                ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(end = 16.dp)
+                style = MaterialTheme.typography.titleMedium,
+                text = date,
             )
-        }
+        },
+        navigationIcon = {
+            NavigateBackButton(
+                navController = navController,
+            )
+        },
+        title = stringResource(R.string.weather_snow_block)
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(
+                    state = rememberScrollState(),
+                )
+                .padding(
+                    paddingValues = paddingValues,
+                )
+                .padding(
+                    bottom = 16.dp,
+                    top = 2.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 14.dp,
+            ),
         ) {
+            SnowHourlyCard(
+                context = context,
+                data = data,
+                unit = units.precipitation,
+                zoneId = zoneId,
+            )
 
-            SnowHourlyCard(data, zoneId, units.precipitationUnit, context)
-            Gap(14.dp)
-            AboutCard { AboutCardText(stringResource(R.string.weather_about_snowfall)) }
-            Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 30.dp)
+            AboutCard {
+                AboutCardText(
+                    text = stringResource(R.string.weather_about_snowfall),
+                )
+            }
         }
-
-
     }
 }

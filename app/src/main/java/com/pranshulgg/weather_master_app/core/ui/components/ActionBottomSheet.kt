@@ -3,7 +3,6 @@ package com.pranshulgg.weather_master_app.core.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,7 +45,7 @@ fun ActionBottomSheet(
     enableHandle: Boolean = true,
     hideConfirmBtn: Boolean = false,
     removeBottomInset: Boolean = false,
-    content: @Composable (hide: () -> Unit) -> Unit
+    content: @Composable (hide: () -> Unit) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -59,13 +60,15 @@ fun ActionBottomSheet(
     }
 
     ModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = onCancel,
         contentWindowInsets = {
-            if (removeBottomInset) BottomSheetDefaults.modalWindowInsets
-                .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top) else BottomSheetDefaults.modalWindowInsets
+            if (removeBottomInset) {
+                BottomSheetDefaults.modalWindowInsets.only(
+                    sides = WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                )
+            } else {
+                BottomSheetDefaults.modalWindowInsets
+            }
         },
-        scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.7f),
         dragHandle = {
             if (enableHandle) {
                 Surface(
@@ -79,62 +82,106 @@ fun ActionBottomSheet(
             } else {
                 null
             }
-        }
+        },
+        onDismissRequest = onCancel,
+        scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.7f),
+        sheetState = sheetState,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 800.dp)
+            modifier = Modifier.fillMaxWidth(),
         ) {
-
-            content { hide() }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(
+                        max = 800.dp,
+                    )
+                    .weight(
+                        fill = false,
+                        weight = 1.00f,
+                    )
+                    .verticalScroll(
+                        state = rememberScrollState(),
+                    ),
+            ) {
+                content {
+                    hide()
+                }
+            }
 
             if (showActions) {
-                Spacer(Modifier.height(12.dp))
+                Gap(
+                    vertical = 12.dp,
+                )
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 16.dp, start = 16.dp, bottom = 10.dp),
-                    horizontalArrangement = if (hideConfirmBtn) Arrangement.End else Arrangement.SpaceBetween
+                        .padding(
+                            bottom = 10.dp,
+                            end = 16.dp,
+                            start = 16.dp,
+                        ),
+                    horizontalArrangement = if (hideConfirmBtn) Arrangement.End else Arrangement.SpaceBetween,
                 ) {
                     Button(
-                        modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                        modifier = Modifier.defaultMinSize(
+                            minHeight = 45.dp,
+                            minWidth = 90.dp,
+                        ),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(
+                                alpha = 0.10f,
+                            ),
+                        ),
                         onClick = {
                             hide()
                         },
                         shapes = ButtonDefaults.shapes(),
                     ) {
                         Text(
-                            cancelText,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
-                            fontSize = 16.sp
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            text = cancelText,
                         )
                     }
+
                     if (!hideConfirmBtn) {
                         if (confirmBtnMaxWidth) {
-                            Spacer(Modifier.width(8.dp))
+                            Gap(
+                                horizontal = 8.dp,
+                            )
                         }
+
                         Button(
+                            modifier =
+                                if (confirmBtnMaxWidth) {
+                                    Modifier
+                                        .defaultMinSize(
+                                            minHeight = 45.dp,
+                                        )
+                                        .fillMaxWidth()
+                                } else {
+                                    Modifier.defaultMinSize(
+                                        minHeight = 45.dp,
+                                        minWidth = 90.dp,
+                                    )
+                                },
+                            enabled = isConfirmDisabled.not(),
                             onClick = {
                                 onConfirm()
                                 hide()
                             },
-                            enabled = !isConfirmDisabled,
                             shapes = ButtonDefaults.shapes(),
-                            modifier = if (confirmBtnMaxWidth) Modifier
-                                .fillMaxWidth()
-                                .defaultMinSize(minHeight = 45.dp)
-                            else
-                                Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
                         ) {
-                            Text(confirmText, fontSize = 16.sp)
+                            Text(
+                                fontSize = 16.sp,
+                                text = confirmText,
+                            )
                         }
                     }
                 }
             }
-
         }
     }
 }
-

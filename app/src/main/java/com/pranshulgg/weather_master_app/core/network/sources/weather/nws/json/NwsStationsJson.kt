@@ -1,19 +1,18 @@
 package com.pranshulgg.weather_master_app.core.network.sources.weather.nws.json
 
-
 data class NwsStationsJson(
-    val features: List<NwsStationsListJson>
+    val features: List<NwsStationsListJson>,
 )
 
 data class NwsStationsListJson(
-    val properties: NwsStationJson
+    val properties: NwsStationJson,
 )
 
 data class NwsStationJson(
     val stationIdentifier: String,
-    val distance: NwsStationDistanceJson?
+    val distance: NwsStationDistanceJson?,
 )
 
 data class NwsStationDistanceJson(
-    val value: Double?
+    val value: Double?,
 )

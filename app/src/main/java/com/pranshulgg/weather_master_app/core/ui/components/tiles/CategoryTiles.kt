@@ -63,7 +63,10 @@ fun IconContainer(color: Color, icon: Int, iconColor: Color) {
                 .background(color = color),
             contentAlignment = Alignment.Center
         ) {
-            Symbol(icon, color = iconColor)
+            Symbol(
+                color = iconColor,
+                icon = icon,
+            )
         }
     }
 

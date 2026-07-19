@@ -16,7 +16,6 @@ import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.text.Text
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.data.worker.widgets.WidgetReload
 import dagger.hilt.EntryPoint
@@ -25,15 +24,19 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Inject
 
-
 @Composable
 fun ReloadButton() {
     Column(
-        modifier = GlanceModifier.fillMaxSize().appWidgetBackgroundShape(),
+        modifier = GlanceModifier
+            .appWidgetBackgroundShape()
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(text = "Reload", onClick = actionRunCallback<ReloadAction>())
+        Button(
+            onClick = actionRunCallback<ReloadAction>(),
+            text = "Reload",
+        )
     }
 }
 
@@ -43,11 +46,11 @@ class ReloadAction : ActionCallback {
     override suspend fun onAction(
         context: Context,
         glanceId: GlanceId,
-        parameters: ActionParameters
+        parameters: ActionParameters,
     ) {
         val widgetReload = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            WidgetReloadEntryPoint::class.java
+            context= context.applicationContext,
+            entryPoint = WidgetReloadEntryPoint::class.java,
         ).widgetReload()
 
         widgetReload.reload(context)
@@ -64,11 +67,16 @@ interface WidgetReloadEntryPoint {
 private fun GlanceModifier.appWidgetBackgroundShape(): GlanceModifier {
     return if (Build.VERSION.SDK_INT >= 31) {
         this
-            .cornerRadius(android.R.dimen.system_app_widget_background_radius)
-            .background(GlanceTheme.colors.widgetBackground)
+            .cornerRadius(
+                radius = android.R.dimen.system_app_widget_background_radius,
+            )
+            .background(
+                colorProvider = GlanceTheme.colors.widgetBackground,
+            )
     } else {
         this
-            .background(ImageProvider(R.drawable.weather_widget_background))
+            .background(
+                imageProvider = ImageProvider(R.drawable.il_widget_background),
+            )
     }
 }
-

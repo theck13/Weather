@@ -1,6 +1,7 @@
 package com.pranshulgg.weather_master_app.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,246 +30,294 @@ import com.pranshulgg.weather_master_app.core.ui.theme.ShapeRadius
 sealed class SettingTile {
     abstract val title: String
     abstract val description: String?
+    open val enabled: Boolean = true
 
     data class TextTile(
-        override val title: String,
         override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
         val descriptionMaxLines: Int = Int.MAX_VALUE,
         val leading: (@Composable (() -> Unit))? = null,
     ) : SettingTile()
 
-
-    data class SwitchTile(
-        override val title: String,
-        override val description: String? = null,
-        val leading: (@Composable (() -> Unit))? = null,
-        val checked: Boolean,
-        val onCheckedChange: (Boolean) -> Unit,
-        val enabled: Boolean = true
-    ) : SettingTile()
-
-    data class SingleSwitchTile(
-        override val title: String,
-        override val description: String? = null,
-        val leading: (@Composable (() -> Unit))? = null,
-        val checked: Boolean,
-        val onCheckedChange: (Boolean) -> Unit,
-        val enabled: Boolean = true
-    ) : SettingTile()
-
-    data class CategoryTile(
-        override val title: String,
-        override val description: String? = null,
-        val leading: Int,
-        val color: Color,
-        val onColor: Color,
-        val onClick: () -> Unit
-
-    ) : SettingTile()
-
-    data class DialogOptionTile(
-        override val title: String,
-        override val description: String? = null,
-        val leading: (@Composable (() -> Unit))? = null,
-        val options: List<DialogOption<String>>,
-        val selectedOption: String?,
-        val onOptionSelected: (String) -> Unit,
-        val dialogTitle: String? = null
-    ) : SettingTile()
-
     data class ActionTile(
-        override val title: String,
         override val description: String? = null,
-        val leading: (@Composable (() -> Unit))? = null,
-        val onClick: () -> Unit,
+        override val enabled: Boolean = true,
+        override val title: String,
         val colorDesc: Color = Color.Unspecified,
         val danger: Boolean = false,
+        val leading: (@Composable (() -> Unit))? = null,
+        val onClick: () -> Unit,
         val selected: Boolean = false,
         val trailing: (@Composable (() -> Unit))? = null,
     ) : SettingTile()
 
+    data class CategoryTile(
+        override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
+        val color: Color,
+        val leading: Int,
+        val onClick: () -> Unit,
+        val onColor: Color,
+    ) : SettingTile()
+
+    data class DialogOptionTile(
+        override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
+        val dialogTitle: String? = null,
+        val leading: (@Composable (() -> Unit))? = null,
+        val onOptionChange: (String) -> Unit = {},
+        val onOptionSelected: (String) -> Unit,
+        val options: List<DialogOption<String>>,
+        val selectedOption: String?,
+    ) : SettingTile()
+
+    data class DialogSliderTile(
+        override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
+        val dialogTitle: String,
+        val initialValue: Float = 0.5f,
+        val isDescriptionAsValue: Boolean = false,
+        val labelFormatter: (Float) -> String = { it.toString() },
+        val leading: (@Composable (() -> Unit))? = null,
+        val onValueChange: (Float) -> Unit = {},
+        val onValueSubmitted: (Float) -> Unit,
+        val steps: Int = 0,
+        val valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    ) : SettingTile()
 
     data class DialogTextFieldTile(
-        override val title: String,
         override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
+        val initialText: String = "",
         val leading: (@Composable (() -> Unit))? = null,
         val onTextSubmitted: (String) -> Unit,
         val placeholder: String,
         val placeholderTextField: String,
-        val initialText: String = ""
     ) : SettingTile()
 
-    data class DialogSliderTile(
-        override val title: String,
+    data class SingleSwitchTile(
         override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
+        val checked: Boolean,
         val leading: (@Composable (() -> Unit))? = null,
-        val onValueSubmitted: (Float) -> Unit,
-        val initialValue: Float = 0.5f,
-        val valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-        val steps: Int = 0,
-        val labelFormatter: (Float) -> String = { it.toString() },
-        val dialogTitle: String,
-        val isDescriptionAsValue: Boolean = false
-
+        val onCheckedChange: (Boolean) -> Unit,
     ) : SettingTile()
 
+    data class SwitchTile(
+        override val description: String? = null,
+        override val enabled: Boolean = true,
+        override val title: String,
+        val checked: Boolean,
+        val leading: (@Composable (() -> Unit))? = null,
+        val onCheckedChange: (Boolean) -> Unit,
+    ) : SettingTile()
 }
-
 
 @Composable
 fun SettingSection(
+    isModalOption: Boolean = false,
+    noPadding: Boolean = false,
+    primarySwitch: Boolean = false,
     tiles: List<SettingTile?>,
     title: String? = null,
-    primarySwitch: Boolean = false,
-    noPadding: Boolean = false,
-    errorTile: Boolean = false,
-    isModalOption: Boolean = false,
 ) {
-
-    val itemBgColor =
-        if (isModalOption) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceBright
+    val background =
+        if (isModalOption) {
+            MaterialTheme.colorScheme.surfaceContainerHigh
+        } else {
+            MaterialTheme.colorScheme.surfaceContainer
+        }
 
     Column(
-        modifier = Modifier
-            .padding(horizontal = if (noPadding) 0.dp else 16.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        modifier = Modifier.padding(
+            horizontal =
+                if (noPadding) {
+                    0.dp
+                } else {
+                    16.dp
+                },
+        ),
+        verticalArrangement = Arrangement.spacedBy(
+            space = 2.dp,
+        ),
     ) {
         title?.let {
             Text(
-                text = it,
-                modifier = Modifier.padding(bottom = 5.dp, top = 5.dp, start = 3.dp),
-                fontSize = 16.sp,
+                modifier = Modifier.padding(
+                    bottom = 5.dp,
+                    start = 3.dp,
+                    top = 5.dp,
+                ),
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.W700
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W700,
+                text = it,
             )
         }
-
 
         val nonNullTiles = tiles.filterNotNull()
 
         nonNullTiles.forEachIndexed { index, tile ->
-            val isFirst = index == 0
-            val isLast = index == nonNullTiles.lastIndex
             val isOnly = nonNullTiles.size == 1
+            val isFirst = nonNullTiles.size > 1 && index == 0
+            val isLast = nonNullTiles.size > 1 && index == nonNullTiles.lastIndex
             val primarySwitch = primarySwitch
 
-
             val shape = when {
-                primarySwitch -> RoundedCornerShape(ShapeRadius.Full)
-                isOnly -> RoundedCornerShape(ShapeRadius.Large)
                 isFirst -> RoundedCornerShape(
-                    topStart = ShapeRadius.Large,
-                    topEnd = ShapeRadius.Large,
+                    bottomEnd = ShapeRadius.ExtraSmall,
                     bottomStart = ShapeRadius.ExtraSmall,
-                    bottomEnd = ShapeRadius.ExtraSmall
+                    topEnd = ShapeRadius.Large,
+                    topStart = ShapeRadius.Large,
                 )
 
                 isLast -> RoundedCornerShape(
-                    topStart = ShapeRadius.ExtraSmall,
-                    topEnd = ShapeRadius.ExtraSmall,
+                    bottomEnd = ShapeRadius.Large,
                     bottomStart = ShapeRadius.Large,
-                    bottomEnd = ShapeRadius.Large
+                    topEnd = ShapeRadius.ExtraSmall,
+                    topStart = ShapeRadius.ExtraSmall,
                 )
 
-                else -> RoundedCornerShape(ShapeRadius.ExtraSmall)
+                isOnly -> RoundedCornerShape(
+                    size = ShapeRadius.Large,
+                )
+
+                primarySwitch -> RoundedCornerShape(
+                    size = ShapeRadius.Full,
+                )
+
+                else -> RoundedCornerShape(
+                    size = ShapeRadius.ExtraSmall,
+                )
             }
 
-            when (tile) {
-                is SettingTile.TextTile -> TextTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    shapes = shape,
-                    itemBgColor = itemBgColor,
-                    descriptionMaxLines = tile.descriptionMaxLines
-                )
+            val modifier =
+                if (tile.enabled) {
+                    Modifier
+                } else {
+                    Modifier
+                        .graphicsLayer {
+                            alpha = 0.38f
+                        }
+                        .pointerInput(Unit) {
+                            awaitPointerEventScope {
+                                while (true) {
+                                    awaitPointerEvent(
+                                        pass = PointerEventPass.Initial,
+                                    ).changes.forEach {
+                                        it.consume()
+                                    }
+                                }
+                            }
+                        }
+                }
 
-                is SettingTile.CategoryTile -> CategoryTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    shapes = shape,
-                    color = tile.color,
-                    iconColor = tile.onColor,
-                    onClick = tile.onClick,
-                    itemBgColor = itemBgColor
-                )
+            Box(
+                modifier = modifier,
+            ) {
+                when (tile) {
+                    is SettingTile.TextTile -> TextTile(
+                        description = tile.description,
+                        descriptionMaxLines = tile.descriptionMaxLines,
+                        headline = tile.title,
+                        itemBgColor = background,
+                        leading = tile.leading,
+                        shapes = shape,
+                    )
 
+                    is SettingTile.CategoryTile -> CategoryTile(
+                        color = tile.color,
+                        description = tile.description,
+                        headline = tile.title,
+                        iconColor = tile.onColor,
+                        itemBgColor = background,
+                        leading = tile.leading,
+                        onClick = tile.onClick,
+                        shapes = shape,
+                    )
 
-                is SettingTile.DialogOptionTile -> DialogOptionTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    shapes = shape,
-                    options = tile.options,
-                    selectedOption = tile.selectedOption,
-                    onOptionSelected = tile.onOptionSelected,
-                    dialogTitle = tile.dialogTitle,
-                    itemBgColor = itemBgColor
-                )
+                    is SettingTile.DialogOptionTile -> DialogOptionTile(
+                        description = tile.description,
+                        dialogTitle = tile.dialogTitle,
+                        headline = tile.title,
+                        itemBackgroundColor = background,
+                        leading = tile.leading,
+                        onOptionChange = tile.onOptionChange,
+                        onOptionSelected = tile.onOptionSelected,
+                        options = tile.options,
+                        selectedOption = tile.selectedOption,
+                        shapes = shape,
+                    )
 
-                is SettingTile.ActionTile -> ActionTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    shapes = shape,
-                    onClick = tile.onClick,
-                    colorDesc = tile.colorDesc,
-                    danger = tile.danger,
-                    itemBgColor = itemBgColor,
-                    selected = tile.selected,
-                    trailing = tile.trailing
-                )
+                    is SettingTile.ActionTile -> ActionTile(
+                        colorDesc = tile.colorDesc,
+                        danger = tile.danger,
+                        description = tile.description,
+                        headline = tile.title,
+                        itemBgColor = background,
+                        leading = tile.leading,
+                        onClick = tile.onClick,
+                        selected = tile.selected,
+                        shapes = shape,
+                        trailing = tile.trailing,
+                    )
 
-                is SettingTile.SwitchTile -> SwitchTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    checked = tile.checked,
-                    onCheckedChange = tile.onCheckedChange,
-                    shapes = shape,
-                    switchEnabled = tile.enabled,
-                    itemBgColor = itemBgColor
-                )
+                    is SettingTile.SwitchTile -> SwitchTile(
+                        checked = tile.checked,
+                        description = tile.description,
+                        enabled = tile.enabled,
+                        headline = tile.title,
+                        itemBgColor = background,
+                        leading = tile.leading,
+                        onCheckedChange = tile.onCheckedChange,
+                        shapes = shape,
+                    )
 
-                is SettingTile.SingleSwitchTile -> SingleSwitchTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    checked = tile.checked,
-                    onCheckedChange = tile.onCheckedChange,
-                    switchEnabled = tile.enabled,
-                    itemBgColor = itemBgColor
-                )
+                    is SettingTile.SingleSwitchTile -> SingleSwitchTile(
+                        checked = tile.checked,
+                        description = tile.description,
+                        headline = tile.title,
+                        itemBgColor = background,
+                        onCheckedChange = tile.onCheckedChange,
+                        leading = tile.leading,
+                        enabled = tile.enabled,
+                    )
 
-                is SettingTile.DialogTextFieldTile -> DialogTextFieldTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    shapes = shape,
-                    onTextSubmitted = tile.onTextSubmitted,
-                    placeholder = tile.placeholder,
-                    placeholderTextField = tile.placeholderTextField,
-                    initialText = tile.initialText,
-                    itemBgColor = itemBgColor
-                )
+                    is SettingTile.DialogTextFieldTile -> DialogTextFieldTile(
+                        description = tile.description,
+                        headline = tile.title,
+                        initialText = tile.initialText,
+                        itemBgColor = background,
+                        leading = tile.leading,
+                        onTextSubmitted = tile.onTextSubmitted,
+                        placeholder = tile.placeholder,
+                        placeholderTextField = tile.placeholderTextField,
+                        shapes = shape,
+                    )
 
-                is SettingTile.DialogSliderTile -> DialogSliderTile(
-                    headline = tile.title,
-                    description = tile.description,
-                    leading = tile.leading,
-                    shapes = shape,
-                    onValueSubmitted = tile.onValueSubmitted,
-                    initialValue = tile.initialValue,
-                    valueRange = tile.valueRange,
-                    steps = tile.steps,
-                    labelFormatter = tile.labelFormatter,
-                    dialogTitle = tile.dialogTitle,
-                    isDescriptionAsValue = tile.isDescriptionAsValue,
-                    itemBgColor = itemBgColor
-                )
+                    is SettingTile.DialogSliderTile -> DialogSliderTile(
+                        description = tile.description,
+                        dialogTitle = tile.dialogTitle,
+                        headline = tile.title,
+                        initialValue = tile.initialValue,
+                        isDescriptionAsValue = tile.isDescriptionAsValue,
+                        itemBgColor = background,
+                        labelFormatter = tile.labelFormatter,
+                        leading = tile.leading,
+                        onValueChange = tile.onValueChange,
+                        onValueSubmitted = tile.onValueSubmitted,
+                        shapes = shape,
+                        steps = tile.steps,
+                        valueRange = tile.valueRange,
+                    )
+                }
             }
         }
     }
 }
-

@@ -1,32 +1,30 @@
 package com.pranshulgg.weather_master_app.widgets.model
 
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
-import com.pranshulgg.weather_master_app.core.model.weather.uv.UvIndex
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class WidgetWeather(
-    val currentTemp: String,
     val currentCondition: String,
-    val currentIcon: Int,
     val currentFrog: Int,
-    val hourly: List<WidgetHourlyItem>,
+    val currentIcon: Int,
+    val currentTemp: String,
     val daily: List<WidgetDailyItem>,
+    val hourly: List<WidgetHourlyItem>,
     val locationName: String,
-    val summary: String
+    val summary: String,
 )
 
 @Serializable
 data class WidgetHourlyItem(
-    val temp: String,
-    val conditionIcon: Int,
-    val time: String
+    val icon: Int,
+    val temperature: String,
+    val time: String,
 )
 
 @Serializable
 data class WidgetDailyItem(
-    val tempMax: String,
-    val tempMin: String,
-    val conditionIcon: Int,
-    val time: String
+    val icon: Int,
+    val temperatureMaximum: String,
+    val temperatureMinimum: String,
+    val time: String,
 )

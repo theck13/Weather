@@ -20,173 +20,227 @@ import com.pranshulgg.weather_master_app.core.model.weather.DistanceUnit
 import com.pranshulgg.weather_master_app.core.model.weather.PrecipitationUnit
 import com.pranshulgg.weather_master_app.core.model.weather.PressureUnit
 import com.pranshulgg.weather_master_app.core.model.weather.TemperatureUnit
-import com.pranshulgg.weather_master_app.core.model.weather.WindSpeedUnit
+import com.pranshulgg.weather_master_app.core.model.weather.WindUnit
 import com.pranshulgg.weather_master_app.core.model.weather.toName
-import com.pranshulgg.weather_master_app.core.ui.components.LargeTopBarScaffold
-import com.pranshulgg.weather_master_app.core.ui.components.NavigateUpBtn
+import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
 import com.pranshulgg.weather_master_app.core.ui.components.SettingSection
 import com.pranshulgg.weather_master_app.core.ui.components.SettingTile
 import com.pranshulgg.weather_master_app.core.ui.components.SettingsTileIcon
+import com.pranshulgg.weather_master_app.core.ui.components.TopBarScaffold
 import com.pranshulgg.weather_master_app.core.ui.components.tiles.DialogOption
 import com.pranshulgg.weather_master_app.feature.settings.SettingsScreenViewModel
 
 @Composable
-fun UnitsScreen(navController: NavController) {
-
+fun UnitsScreen(
+    navController: NavController,
+) {
+    val context = LocalContext.current
     val viewModel: SettingsScreenViewModel = hiltViewModel()
     val units by viewModel.weatherUnits.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-
     val currentUnits = units
 
-
-
-    LargeTopBarScaffold(
+    TopBarScaffold(
+        navigationIcon = {
+            NavigateBackButton(navController)
+        },
         title = stringResource(R.string.setting_units),
-        navigationIcon = { NavigateUpBtn(navController) },
     ) { paddingValues ->
-
         if (currentUnits != null) {
-
             Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(paddingValues),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(
+                        state = rememberScrollState(),
+                    )
+                    .padding(
+                        paddingValues = paddingValues,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(
+                    space = 10.dp,
+                ),
             ) {
-
                 SettingSection(
                     tiles = listOf(
                         SettingTile.DialogOptionTile(
-                            leading = { SettingsTileIcon(R.drawable.device_thermostat_24px) },
-                            title = stringResource(R.string.setting_temperature_unit),
-                            options = listOf(
-                                DialogOption(
-                                    TemperatureUnit.CELSIUS.toString(),
-                                    TemperatureUnit.CELSIUS.toName(context)
-                                ),
-                                DialogOption(
-                                    TemperatureUnit.FAHRENHEIT.toString(),
-                                    TemperatureUnit.FAHRENHEIT.toName(context)
+                            leading = {
+                                SettingsTileIcon(
+                                    icon = R.drawable.ic_straighten_24,
                                 )
-                            ),
-                            selectedOption = currentUnits.tempUnit.toString(),
+                            },
                             onOptionSelected = {
-                                viewModel.updateTemperatureUnit(
-                                    TemperatureUnit.valueOf(it.uppercase())
+                                viewModel.updateDistanceUnit(
+                                    distanceUnit = DistanceUnit.valueOf(it),
                                 )
-                            }
-                        ),
-
-                        SettingTile.DialogOptionTile(
-                            leading = { SettingsTileIcon(R.drawable.air_24px) },
-                            title = stringResource(R.string.setting_wind_speed_unit),
+                            },
                             options = listOf(
                                 DialogOption(
-                                    WindSpeedUnit.MPS.toString(),
-                                    WindSpeedUnit.MPS.toName(context)
+                                    label = DistanceUnit.KM.toName(
+                                        context = context,
+                                    ),
+                                    value = DistanceUnit.KM.toString(),
                                 ),
                                 DialogOption(
-                                    WindSpeedUnit.MPH.toString(),
-                                    WindSpeedUnit.MPH.toName(context)
+                                    label = DistanceUnit.M.toName(
+                                        context = context
+                                    ),
+                                    value = DistanceUnit.M.toString(),
                                 ),
                                 DialogOption(
-                                    WindSpeedUnit.KPH.toString(),
-                                    WindSpeedUnit.KPH.toName(context)
-                                ),
-                                DialogOption(
-                                    WindSpeedUnit.BFT.toString(),
-                                    WindSpeedUnit.BFT.toName(context)
-                                ),
-                                DialogOption(
-                                    WindSpeedUnit.KT.toString(),
-                                    WindSpeedUnit.KT.toName(context)
+                                    label = DistanceUnit.MI.toName(
+                                        context = context
+                                    ),
+                                    value = DistanceUnit.MI.toString(),
                                 ),
                             ),
-                            selectedOption = currentUnits.windUnit.toString(),
+                            selectedOption = currentUnits.distance.toString(),
+                            title = stringResource(R.string.setting_distance_unit),
+                        ),
+                        SettingTile.DialogOptionTile(
+                            leading = {
+                                SettingsTileIcon(
+                                    icon = R.drawable.ic_water_drop_24,
+                                )
+                            },
                             onOptionSelected = {
-                                viewModel.updateWindSpeedUnit(
-                                    WindSpeedUnit.valueOf(it)
+                                viewModel.updatePrecipitationUnit(
+                                    precipitationUnit = PrecipitationUnit.valueOf(it),
                                 )
-                            }
-                        ),
-
-                        SettingTile.DialogOptionTile(
-                            leading = { SettingsTileIcon(R.drawable.compress_24px) },
-                            title = stringResource(R.string.setting_pressure_unit),
+                            },
                             options = listOf(
                                 DialogOption(
-                                    PressureUnit.HPA.toString(),
-                                    PressureUnit.HPA.toName(context = context),
+                                    label = PrecipitationUnit.CM.toName(
+                                        context = context,
+                                    ),
+                                    value = PrecipitationUnit.CM.toString(),
                                 ),
                                 DialogOption(
-                                    PressureUnit.INHG.toString(),
-                                    PressureUnit.INHG.toName(context = context)
+                                    label = PrecipitationUnit.IN.toName(
+                                        context = context,
+                                    ),
+                                    value = PrecipitationUnit.IN.toString(),
                                 ),
                                 DialogOption(
-                                    PressureUnit.MMHG.toString(),
-                                    PressureUnit.MMHG.toName(context = context)
+                                    label = PrecipitationUnit.MM.toName(
+                                        context = context,
+                                    ),
+                                    value = PrecipitationUnit.MM.toString(),
                                 )
-
                             ),
-                            selectedOption = currentUnits.pressureUnit.toString(),
+                            selectedOption = currentUnits.precipitation.toString(),
+                            title = stringResource(R.string.setting_precipitation_unit),
+                        ),
+                        SettingTile.DialogOptionTile(
+                            leading = {
+                                SettingsTileIcon(
+                                    icon = R.drawable.ic_compress_24,
+                                )
+                            },
                             onOptionSelected = {
                                 viewModel.updatePressureUnit(
                                     PressureUnit.valueOf(it)
                                 )
-                            }
-                        ),
-
-                        SettingTile.DialogOptionTile(
-                            leading = { SettingsTileIcon(R.drawable.visibility_24px) },
-                            title = stringResource(R.string.setting_distance_unit),
+                            },
                             options = listOf(
                                 DialogOption(
-                                    DistanceUnit.KM.toString(),
-                                    DistanceUnit.KM.toName(context = context)
+                                    label = PressureUnit.HPA.toName(
+                                        context = context,
+                                    ),
+                                    value = PressureUnit.HPA.toString(),
                                 ),
                                 DialogOption(
-                                    DistanceUnit.M.toString(),
-                                    DistanceUnit.M.toName(context = context)
+                                    label = PressureUnit.INHG.toName(
+                                        context = context,
+                                    ),
+                                    value = PressureUnit.INHG.toString(),
                                 ),
                                 DialogOption(
-                                    DistanceUnit.MI.toString(),
-                                    DistanceUnit.MI.toName(context = context)
-                                )
+                                    label = PressureUnit.MMHG.toName(
+                                        context = context,
+                                    ),
+                                    value = PressureUnit.MMHG.toString(),
+                                ),
                             ),
-                            selectedOption = currentUnits.distanceUnit.toString(),
-                            onOptionSelected = {
-                                viewModel.updateDistanceUnit(
-                                    DistanceUnit.valueOf(it)
-                                )
-                            }
+                            selectedOption = currentUnits.pressure.toString(),
+                            title = stringResource(R.string.setting_pressure_unit),
                         ),
                         SettingTile.DialogOptionTile(
-                            leading = { SettingsTileIcon(R.drawable.water_drop_24px) },
-                            title = stringResource(R.string.setting_precipitation_unit),
+                            leading = {
+                                SettingsTileIcon(
+                                    icon = R.drawable.ic_air_24,
+                                )
+                            },
+                            onOptionSelected = {
+                                viewModel.updateWindUnit(
+                                    WindUnit.valueOf(
+                                        value = it,
+                                    )
+                                )
+                            },
                             options = listOf(
                                 DialogOption(
-                                    PrecipitationUnit.CM.toString(),
-                                    PrecipitationUnit.CM.toName(context)
+                                    label = WindUnit.BFT.toName(
+                                        context = context
+                                    ),
+                                    value = WindUnit.BFT.toString(),
                                 ),
                                 DialogOption(
-                                    PrecipitationUnit.INCH.toString(),
-                                    PrecipitationUnit.INCH.toName(context)
+                                    label = WindUnit.KT.toName(
+                                        context = context,
+                                    ),
+                                    value = WindUnit.KT.toString(),
                                 ),
                                 DialogOption(
-                                    PrecipitationUnit.MM.toString(),
-                                    PrecipitationUnit.MM.toName(context)
-                                )
+                                    label = WindUnit.KPH.toName(
+                                        context = context
+                                    ),
+                                    value = WindUnit.KPH.toString(),
+                                ),
+                                DialogOption(
+                                    label = WindUnit.MPS.toName(
+                                        context = context
+                                    ),
+                                    value = WindUnit.MPS.toString(),
+                                ),
+                                DialogOption(
+                                    label = WindUnit.MPH.toName(
+                                        context = context
+                                    ),
+                                    value = WindUnit.MPH.toString(),
+                                ),
                             ),
-                            selectedOption = currentUnits.precipitationUnit.toString(),
-                            onOptionSelected = {
-                                viewModel.updatePrecipitationUnit(
-                                    PrecipitationUnit.valueOf(it)
+                            selectedOption = currentUnits.speed.toString(),
+                            title = stringResource(R.string.setting_wind_speed_unit),
+                        ),
+                        SettingTile.DialogOptionTile(
+                            leading = {
+                                SettingsTileIcon(
+                                    icon = R.drawable.ic_device_thermostat_24,
                                 )
-                            }
-                        )
+                            },
+                            onOptionSelected = {
+                                viewModel.updateTemperatureUnit(
+                                    TemperatureUnit.valueOf(
+                                        value = it.uppercase(),
+                                    )
+                                )
+                            },
+                            options = listOf(
+                                DialogOption(
+                                    label = TemperatureUnit.CELSIUS.toName(
+                                        context = context
+                                    ),
+                                    value = TemperatureUnit.CELSIUS.toString(),
+                                ),
+                                DialogOption(
+                                    label = TemperatureUnit.FAHRENHEIT.toName(
+                                        context = context
+                                    ),
+                                    value = TemperatureUnit.FAHRENHEIT.toString(),
+                                ),
+                            ),
+                            selectedOption = currentUnits.temperature.toString(),
+                            title = stringResource(R.string.setting_temperature_unit),
+                        ),
                     )
                 )
             }

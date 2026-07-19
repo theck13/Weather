@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_splash">
+
+    <target
+        android:name="silhouette_path"
+        android:animation="@drawable/av_splash_silhouette_path">
+    </target>
+
+    <target
+        android:name="top_cloud_path"
+        android:animation="@drawable/av_splash_top_cloud_path_1">
+    </target>
+
+    <target
+        android:name="base_cloud_path"
+        android:animation="@drawable/av_splash_base_cloud_path_1">
+    </target>
+
+    <target
+        android:name="cloud_gradient_path"
+        android:animation="@drawable/av_splash_cloud_gradient_path">
+    </target>
+
+    <target
+        android:name="main_sun_group"
+        android:animation="@drawable/av_splash_main_sun_group">
+    </target>
+
+    <target
+        android:name="mid_circle_group"
+        android:animation="@drawable/av_splash_mid_circle_group">
+    </target>
+
+<!--    <target-->
+<!--        android:name="center_circle_group"-->
+<!--        android:animation="@drawable/av_splash_center_circle_group">-->
+<!--    </target>-->
+
+    <target
+        android:name="base_cloud_path"
+        android:animation="@drawable/av_splash_base_cloud_path_2">
+    </target>
+
+    <target
+        android:name="top_cloud_path"
+        android:animation="@drawable/av_splash_top_cloud_path_2">
+    </target>
+
+    <target
+        android:name="cloud_group"
+        android:animation="@drawable/av_splash_cloud_group_1">
+    </target>
+
+    <target
+        android:name="cloud_group"
+        android:animation="@drawable/av_splash_cloud_group_2">
+    </target>
+
+</animated-vector>

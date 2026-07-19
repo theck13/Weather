@@ -24,22 +24,20 @@ class WeatherRepositoryProvider @Inject constructor(
     private val ecccRepository: EcccRepository,
     private val fmiRepository: FmiRepository,
     private val chinaRepository: ChinaRepository,
-    private val bmkgRepository: BmkgRepository
+    private val bmkgRepository: BmkgRepository,
 ) {
-
     fun getRepository(source: WeatherSource): WeatherRepository {
         return when (source) {
-            WeatherSource.OPEN_METEO -> openMeteoRepository
-            WeatherSource.NWS -> nwsRepository
-            WeatherSource.MET_NORWAY -> metNorwayRepository
-            WeatherSource.SMHI -> smhiRepository
+            WeatherSource.BMKG -> bmkgRepository
+            WeatherSource.CNEMC -> chinaRepository
             WeatherSource.DWD -> dwdRepository
-            WeatherSource.METEO_FRANCE -> meteoFranceRepository
             WeatherSource.ECCC -> ecccRepository
             WeatherSource.FMI -> fmiRepository
-            WeatherSource.CHINA -> chinaRepository
-            WeatherSource.BMKG -> bmkgRepository
+            WeatherSource.MET -> metNorwayRepository
+            WeatherSource.METEO -> meteoFranceRepository
+            WeatherSource.NWS -> nwsRepository
+            WeatherSource.OPEN -> openMeteoRepository
+            WeatherSource.SMHI -> smhiRepository
         }
     }
-
 }

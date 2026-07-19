@@ -5,14 +5,18 @@ import com.pranshulgg.weather_master_app.core.network.sources.search.geonames.js
 import com.pranshulgg.weather_master_app.core.network.sources.search.geonames.timezone.GeoNamesTimezoneApi
 import jakarta.inject.Inject
 
-
-class GeoNamesTimezoneRepository @Inject constructor(private val api: GeoNamesTimezoneApi) {
-
-    suspend fun getTimeZone(latitude: Double, longitude: Double): GeoNamesTimezoneItem? {
-        val response = api.getTimezone(latitude, longitude)
-
+class GeoNamesTimezoneRepository @Inject constructor(
+    private val api: GeoNamesTimezoneApi,
+) {
+    suspend fun getTimeZone(
+        latitude: Double,
+        longitude: Double,
+    ): GeoNamesTimezoneItem? {
+        val response = api.getTimezone(
+            latitude = latitude,
+            longitude = longitude,
+        )
         val body = response.body() ?: return null
-
         val domain = body.toDomain()
 
         return domain

@@ -1,27 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <string name="app_name" translatable="false">WeatherMaster</string>
-    <string name="app_launcher_name">Weather</string>
-    <string name="weather_hourly_forecast">Hourly forecast</string>
+
+    <string name="app_name" translatable="false">Weather</string>
+    <string name="app_launcher_name" translatable="false">Weather</string>
+    <string name="weather_hourly_forecast">Hourly Forecast</string>
     <string name="action_save">Save</string>
     <string name="action_cancel">Cancel</string>
-    <string name="weather_daily_forecast">Daily forecast</string>
+    <string name="weather_daily_forecast">Daily Forecast</string>
     <string name="locations">Locations</string>
     <string name="location_default">Default location</string>
     <string name="weather_rain_today_amount">Today\'s amount</string>
     <string name="weather_precipitation_hours">Precipitation hours</string>
     <string name="time_now">Now</string>
     <string name="day_today">Today</string>
-    <string name="weather_refresh_delay">Please wait %1$d minutes before refreshing</string>
-    <string name="error_generic">Error occurred. Please try again</string>
+    <string name="weather_refresh_delay">Wait %1$d minutes before refreshing.</string>
+    <string name="error_generic">Error occurred. Try again.</string>
     <string name="weather_moon">Moon</string>
     <string name="weather_sun">Sun</string>
     <string name="weather_humidity">Humidity</string>
     <string name="weather_pressure">Pressure</string>
     <string name="weather_wind">Wind</string>
     <string name="weather_visibility">Visibility</string>
-    <string name="weather_air_quality">Air quality</string>
-    <string name="weather_uv_index">UV index</string>
+    <string name="weather_air">Air</string>
+    <string name="weather_ultraviolet">Ultraviolet</string>
     <string name="action_ok">OK</string>
+    <string name="arrow_back">Arrow Back</string>
+    <string name="navigate_back">Navigate Back</string>
+    <string name="show_list">Show List</string>
+    <string name="refresh">Refresh</string>
+    <string name="refresh_locations">Refresh Locations</string>
     <string name="settings">Settings</string>
     <string name="search">Search</string>
     <string name="location_current">Current location</string>
@@ -45,123 +53,156 @@
     <string name="time_just_now">Just now</string>
     <string name="time_last_updated">Last updated %1$s</string>
     <string name="weather_no_data">No weather data available</string>
-    <string name="weather_clear_sky">Clear sky</string>
+    <string name="weather_clear_sky">Clear Sky</string>
     <string name="weather_overcast">Overcast</string>
-    <string name="weather_partly_cloudy">Partly cloudy</string>
-    <string name="weather_heavy_rain">Heavy rain</string>
-    <string name="weather_light_rain">Light rain</string>
-    <string name="weather_light_snow">Light snow</string>
+    <string name="weather_partly_cloudy">Partly Cloudy</string>
+    <string name="weather_heavy_rain">Heavy Rain</string>
+    <string name="weather_light_rain">Light Rain</string>
+    <string name="weather_light_snow">Light Snow</string>
     <string name="weather_snow">Snowy</string>
-    <string name="weather_heavy_snow">Heavy snow</string>
-    <string name="weather_mostly_clear">Mostly clear</string>
+    <string name="weather_heavy_snow">Heavy Snow</string>
+    <string name="weather_mostly_clear">Mostly Clear</string>
     <string name="weather_thunderstorm">Thunderstorm</string>
-    <string name="weather_very_hot">Very hot</string>
-    <string name="weather_very_cold">Very cold</string>
+    <string name="weather_very_hot">Very Hot</string>
+    <string name="weather_very_cold">Very Cold</string>
     <string name="weather_haze">Haze</string>
     <string name="weather_rain">Rainy</string>
     <string name="weather_no_condition">No condition found</string>
-    <string name="weather_uv_low">Low</string>
-    <string name="weather_uv_moderate">Moderate</string>
-    <string name="weather_uv_high">High</string>
-    <string name="weather_uv_very_high">Very High</string>
-    <string name="weather_uv_extreme">Extreme</string>
+    <string name="weather_ultraviolet_scale_1">Low</string>
+    <string name="weather_ultraviolet_scale_2">Moderate</string>
+    <string name="weather_ultraviolet_scale_3">High</string>
+    <string name="weather_ultraviolet_scale_4">Very High</string>
+    <string name="weather_ultraviolet_scale_5">Extreme</string>
 
     <string name="setting_appearance">Appearance</string>
-    <string name="setting_appearance_secondary">Themes, animations and weather units</string>
+    <string name="setting_appearance_secondary">Styles, themes, and units.</string>
 
-    <string name="setting_language">Language</string>
+    <string name="setting_language">Application Languages</string>
 
-    <string name="setting_units">Units</string>
-    <string name="setting_units_secondary">Temperature, wind speed, pressure, distance and precipitation units</string>
+    <string name="setting_units">Unitation</string>
+    <string name="setting_units_secondary">Distance, precipitation, pressure, speed, and temperature units.</string>
 
-    <string name="setting_temperature_unit">Temperature unit</string>
-    <string name="setting_wind_speed_unit">Wind speed unit</string>
-    <string name="setting_pressure_unit">Pressure unit</string>
-    <string name="setting_distance_unit">Distance unit</string>
-    <string name="setting_precipitation_unit">Precipitation unit</string>
+    <string name="setting_temperature_unit">Temperature</string>
+    <string name="setting_wind_speed_unit">Speed</string>
+    <string name="setting_pressure_unit">Pressure</string>
+    <string name="setting_distance_unit">Distance</string>
+    <string name="setting_precipitation_unit">Precipitation</string>
     <string name="unit_temperature_celsius">Celsius</string>
     <string name="unit_temperature_fahrenheit">Fahrenheit</string>
-    <string name="unit_wind_mps">Meters per second</string>
-    <string name="unit_wind_mph">Miles per hour</string>
-    <string name="unit_wind_kph">Kilometers per hour</string>
+    <string name="unit_wind_bft">Beaufort</string>
+    <string name="unit_wind_bft_short" translatable="false">bft</string>
+    <string name="unit_wind_kph">Kilometers Per Hour</string>
+    <string name="unit_wind_kph_short" translatable="false">km/h</string>
+    <string name="unit_wind_kt">Knots</string>
+    <string name="unit_wind_kt_short" translatable="false">kt</string>
+    <string name="unit_wind_mph">Miles Per Hour</string>
+    <string name="unit_wind_mph_short" translatable="false">mi/h</string>
+    <string name="unit_wind_mps">Meters Per Second</string>
+    <string name="unit_wind_mps_short" translatable="false">m/s</string>
     <string name="unit_pressure_hpa">Hectopascals</string>
+    <string name="unit_pressure_hpa_short" translatable="false">hPa</string>
     <string name="unit_pressure_inhg">Inches of Mercury</string>
+    <string name="unit_pressure_inhg_short" translatable="false">inHg</string>
+    <string name="unit_pressure_mmhg">Millimeters of Mercury</string>
+    <string name="unit_pressure_mmhg_short" translatable="false">mmHg</string>
     <string name="unit_distance_km">Kilometers</string>
+    <string name="unit_distance_km_short" translatable="false">km</string>
     <string name="unit_distance_mi">Miles</string>
+    <string name="unit_distance_mi_short" translatable="false">mi</string>
     <string name="unit_distance_m">Meters</string>
+    <string name="unit_distance_m_short" translatable="false">m</string>
     <string name="unit_precipitation_mm">Millimeters</string>
+    <string name="unit_precipitation_mm_short" translatable="false">mm</string>
     <string name="unit_precipitation_inch">Inches</string>
+    <string name="unit_precipitation_inch_short" translatable="false">in</string>
     <string name="unit_precipitation_cm">Centimeters</string>
+    <string name="unit_precipitation_cm_short" translatable="false">cm</string>
 
-    <string name="weather_dew_point">Dew point</string>
+    <string name="weather_dew_point">Dew Point</string>
 
     <string name="setting_dark_theme">Dark</string>
     <string name="setting_light_theme">Light</string>
     <string name="setting_system_theme">System</string>
 
-    <string name="setting_app_theme">App theme</string>
+    <string name="setting_app_theme">Theme Mode</string>
 
-    <string name="search_empty_state_title">Search locations</string>
-    <string name="search_empty_state_secondary">Enter a city or location to view the weather</string>
+    <string name="setting_time_format">Time Format</string>
+    <string name="setting_time_format_description">Show time as 12-Hour or 24-Hour.</string>
+    <string name="setting_time_format_12">12-Hour</string>
+    <string name="setting_time_format_24">24-Hour</string>
 
-    <string name="action_set_default">Set as default</string>
-    <string name="action_delete">Delete</string>
+    <string name="search_empty_state_title">Search Locations</string>
+    <string name="search_empty_state_secondary">Enter city or location to view the weather.</string>
 
-    <string name="error_delete_default_location">Cannot delete default location</string>
+    <string name="action_set_default">Set Default</string>
+    <string name="action_delete_location">Delete Location</string>
+    <string name="action_reorder_locations">Reorder Locations</string>
+    <string name="action_done">Done</string>
+    <string name="message_delete_location">Do you want to delete this location from the list?</string>
+    <string name="message_deleted_location">Deleted %1$s from locations.</string>
+    <string name="title_location_actions">Location Actions</string>
+    <string name="title_choose_default_location">Set Default Location</string>
+    <string name="message_choose_default_location">Choose a new default location to replace %1$s.</string>
+    <string name="message_choose_default_location_fallback">default</string>
 
-    <string name="setting_app_looks">App looks</string>
+    <string name="error_delete_default_location">Cannot delete default location.</string>
+    <string name="error_delete_location">Cannot delete location.</string>
+    <string name="error_set_default_location">Could not set default location.</string>
 
-    <string name="temp_feels_like">Feels like %1$s</string>
+    <string name="setting_app_looks">Style</string>
 
-    <string name="temp_max">Max: %1$s</string>
-    <string name="temp_min">Min: %1$s</string>
+    <string name="temp_feels_like">Feels: %1$s</string>
 
-    <string name="search_results_provided">Search results provided by %1$s</string>
+    <string name="temp_max">High: %1$s</string>
+    <string name="temp_min">Low: %1$s</string>
+
+    <string name="search_results_provided">Source: %1$s</string>
     <string name="action_confirm">Confirm</string>
 
     <string name="weather">Weather</string>
 
-    <string name="setting_custom_color">Use custom color</string>
-    <string name="setting_custom_color_secondary">Select a seed color to generate the theme</string>
+    <string name="setting_custom_color">Custom Color</string>
+    <string name="setting_custom_color_secondary">Select color to generate theme.</string>
 
-    <string name="setting_dynamic_colors">Dynamic colors</string>
-    <string name="setting_dynamic_colors_secondary">Use wallpaper colors</string>
+    <string name="setting_dynamic_colors">Dynamic Color</string>
+    <string name="setting_dynamic_colors_secondary">Use wallpaper color for theme.</string>
 
-    <string name="weather_total_rain_day">Total rain for the day</string>
+    <string name="weather_total_rain_day">Today</string>
     <string name="error_network">Network unavailable</string>
-    <string name="weather_total_snow_day">Total snow for the day</string>
+    <string name="weather_total_snow_day">Today</string>
     <string name="weather_precipitation">Precipitation</string>
-    <string name="weather_air_quality_index">Air quality index</string>
-    <string name="setting_translate_app">Translate this app</string>
-    <string name="setting_translate_app_secondary">Contribute by translating the app into your language on Crowdin</string>
+    <string name="setting_translate_app">Add Translations</string>
+    <string name="setting_translate_app_secondary">Contribute by translating the app into your language on Crowdin.</string>
 
-    <string name="location_use_current">Use current location</string>
-    <string name="location_use_current_secondary">Detect your device’s current location automatically and add it to your list</string>
-    <string name="location_permission_required">Location permission is required</string>
+    <string name="location_permission_required">Location permission is required.</string>
+    <string name="location_use_current">Current Location</string>
+    <string name="location_use_current_secondary">Detect device location to add to list.</string>
 
-    <string name="current_location_not_found">Current location not found</string>
+    <string name="background_location_permission_required">Background location permission is required for widgets.</string>
+    <string name="background_location_use_current_secondary">Detect device location in for widgets.</string>
+
+    <string name="current_location_not_found">Current location not found.</string>
 
     <string name="error_server">Request couldn’t be completed. Try again shortly</string>
 
-    <string name="weather_airquality_good">Good</string>
-    <string name="weather_airquality_fair">Fair</string>
-    <string name="weather_airquality_moderate">Moderate</string>
-    <string name="weather_airquality_poor">Poor</string>
-    <string name="weather_airquality_very_poor">Very poor</string>
-    <string name="weather_airquality_hazardous">Hazardous</string>
+    <string name="weather_aqi_description_1">Air quality is satisfactory, and air pollution poses little or no risk.</string>
+    <string name="weather_aqi_description_2">Air quality is acceptable.  However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution.</string>
+    <string name="weather_aqi_description_3">Members of sensitive groups may experience health effects.  The general public is less likely to be affected.</string>
+    <string name="weather_aqi_description_4">Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects.</string>
+    <string name="weather_aqi_description_5">Health alert!  The risk of health effects is increased for everyone.</string>
+    <string name="weather_aqi_description_6">Health warning of emergency conditions!  Everyone is more likely to be affected.</string>
+    <string name="weather_aqi_level_1">Good</string>
+    <string name="weather_aqi_level_2">Fair</string>
+    <string name="weather_aqi_level_3">Moderate</string>
+    <string name="weather_aqi_level_4">Poor</string>
+    <string name="weather_aqi_level_5">Very poor</string>
+    <string name="weather_aqi_level_6">Hazardous</string>
 
-    <string name="weather_aqi_description_good">Air quality is satisfactory, and air pollution poses little or no risk.</string>
-    <string name="weather_aqi_description_fair">Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution.</string>
-    <string name="weather_aqi_description_moderate">Members of sensitive groups may experience health effects. The general public is less likely to be affected.</string>
-    <string name="weather_aqi_description_poor">Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects.</string>
-    <string name="weather_aqi_description_very_poor">Health alert: The risk of health effects is increased for everyone.</string>
-    <string name="weather_aqi_description_hazardous">Health warning of emergency conditions: everyone is more likely to be affected.</string>
-
-    <string name="weather_aqi_pm_description">Small solid particles and liquid droplets found in the air. It’s emitted from motor vehicles, wood heaters, and industry. Fires and dust storms can also produce high concentrations of Particulate Matter</string>
-    <string name="weather_aqi_no2_description">A gas and a major component of central city air pollution. It mainly comes from vehicles, industry, power stations, and heating</string>
-    <string name="weather_aqi_O3_description">A gas found in the stratosphere. It protects us from harmful ultraviolet radiation and the troposphere. Ozone is a harmful pollutant produced by a chemical reaction between the sun light, organic gasses, and nitrogen oxides (e.g. Cars, Power plants)</string>
-    <string name="weather_aqi_so2_description">A toxic gas with a pungent, irritating odor. It can come from electric industries that burn fossil fuels, petrol refineries, cement manufacturing, and volcano emissions</string>
-    <string name="weather_aqi_co_description">A gas from motor vehicles or machinery that burns fossil fuels</string>
+    <string name="weather_aqi_pm_description">Small solid particles and liquid droplets found in the air.  It’s emitted from motor vehicles, wood heaters, and industry.  Fires and dust storms can also produce high concentrations of Particulate Matter.</string>
+    <string name="weather_aqi_no2_description">A gas and a major component of central city air pollution.  It mainly comes from vehicles, industry, power stations, and heating.</string>
+    <string name="weather_aqi_O3_description">A gas found in the stratosphere.  It protects us from harmful ultraviolet radiation and the troposphere.  Ozone is a harmful pollutant produced by a chemical reaction between the sun light, organic gasses, and nitrogen oxides (e.g. Cars, Power plants).</string>
+    <string name="weather_aqi_so2_description">A toxic gas with a pungent, irritating odor.  It can come from electric industries that burn fossil fuels, petrol refineries, cement manufacturing, and volcano emissions.</string>
+    <string name="weather_aqi_co_description">A gas from motor vehicles or machinery that burns fossil fuels.</string>
 
     <string name="weather_airquality_about_index">Air quality indexes categorize raw data into a descriptive rating scale. These indexes make it easier to identify the level of pollution and if there’s any associated risk</string>
 
@@ -170,90 +211,90 @@
     <string name="weather_rain_block">Rain</string>
     <string name="weather_snow_block">Snow</string>
 
-    <string name="search_source">Search source</string>
-    <string name="weather_source">Weather source</string>
-    <string name="weather_sources">Weather sources</string>
+    <string name="search_source">Search Sources</string>
+    <string name="weather_source">Weather Source</string>
+    <string name="weather_sources">Weather Sources</string>
     <string name="sources">Sources</string>
     <string name="source">Source</string>
-    <string name="recommended_sources">Recommended sources</string>
+    <string name="recommended_sources">Recommended Sources</string>
 
-    <string name="global_sources">Global sources</string>
+    <string name="global_sources">Global Sources</string>
 
-    <string name="weather_clear_with_cloudy">Clear with cloudy</string>
-    <string name="weather_clear_with_rain">Clear with rain</string>
-    <string name="weather_clear_with_snow">Clear with snow</string>
-    <string name="weather_cloudy_with_clear">Cloudy with clear</string>
-    <string name="weather_cloudy_with_rain">Cloudy with rain</string>
-    <string name="weather_cloudy_with_snow">Cloudy with snow</string>
-    <string name="weather_rain_with_clear">Rain with clear</string>
-    <string name="weather_rain_with_cloudy">Rain with cloudy</string>
-    <string name="weather_rain_with_snow">Rain with snow</string>
-    <string name="weather_snow_with_clear">Snow with clear</string>
-    <string name="weather_snow_with_cloudy">Snow with cloudy</string>
-    <string name="weather_snow_with_rain">Snow with rain</string>
-    <string name="weather_clear_then_cloudy">Clear then cloudy</string>
-    <string name="weather_clear_then_rain">Clear then rain</string>
-    <string name="weather_clear_then_snow">Clear then snow</string>
-    <string name="weather_cloudy_then_clear">Cloudy then clear</string>
-    <string name="weather_cloudy_then_rain">Cloudy then rain</string>
-    <string name="weather_cloudy_then_snow">Cloudy then snow</string>
-    <string name="weather_rain_then_clear">Rain then clear</string>
-    <string name="weather_rain_then_cloudy">Rain then cloudy</string>
-    <string name="weather_rain_then_snow">Rain then snow</string>
-    <string name="weather_snow_then_clear">Snow then clear</string>
-    <string name="weather_snow_then_cloudy">Snow then cloudy</string>
-    <string name="weather_snow_then_rain">Snow then rain</string>
+    <string name="weather_clear_then_cloudy">Clear then Cloudy</string>
+    <string name="weather_clear_then_rain">Clear then Rain</string>
+    <string name="weather_clear_then_snow">Clear then Snow</string>
+    <string name="weather_cloudy_then_clear">Cloudy then Clear</string>
+    <string name="weather_cloudy_then_rain">Cloudy then Rain</string>
+    <string name="weather_cloudy_then_snow">Cloudy then Snow</string>
+    <string name="weather_rain_then_clear">Rain then Clear</string>
+    <string name="weather_rain_then_cloudy">Rain then Cloudy</string>
+    <string name="weather_rain_then_snow">Rain then Snow</string>
+    <string name="weather_snow_then_clear">Snow then Clear</string>
+    <string name="weather_snow_then_cloudy">Snow then Cloudy</string>
+    <string name="weather_snow_then_rain">Snow then Rain</string>
+    <string name="weather_clear_with_cloudy">Clear / Cloudy</string>
+    <string name="weather_clear_with_rain">Clear / Rain</string>
+    <string name="weather_clear_with_snow">Clear / Snow</string>
+    <string name="weather_cloudy_with_clear">Cloudy / Clear</string>
+    <string name="weather_cloudy_with_rain">Cloudy / Rain</string>
+    <string name="weather_cloudy_with_snow">Cloudy / Snow</string>
+    <string name="weather_rain_with_clear">Rain / Clear</string>
+    <string name="weather_rain_with_cloudy">Rain / Cloudy</string>
+    <string name="weather_rain_with_snow">Rain / Snow</string>
+    <string name="weather_snow_with_clear">Snow / Clear</string>
+    <string name="weather_snow_with_cloudy">Snow / Cloudy</string>
+    <string name="weather_snow_with_rain">Snow / Rain</string>
 
-    <string name="error_refresh_waiting_before_action">Please wait for the refresh to complete</string>
+    <string name="error_refresh_waiting_before_action">Wait for the refresh to complete.</string>
 
-    <string name="weather_total_amount">Total amount</string>
-    <string name="setting_background_updates">Background updates</string>
-    <string name="setting_background_updates_secondary">Update interval, battery optimization, help</string>
+    <string name="weather_total_amount">Total Amount</string>
+    <string name="setting_background_updates">Background Updates</string>
+    <string name="setting_background_updates_secondary">Battery optimization and update interval.</string>
 
-    <string name="setting_notification_permission_req">Notification permission required</string>
-    <string name="setting_notification_permission_secondary">The app sends you a notification whenever the weather updates in the background</string>
-    <string name="setting_notification">Notification</string>
+    <string name="setting_notification_permission_req">Notification permission required.</string>
+    <string name="setting_notification_permission_secondary">Notifications are required to update weather in the background.</string>
+    <string name="setting_notification">Notification Permission</string>
 
     <string name="time_hours">%1$s hours</string>
     <string name="time_hour">%1$s hour</string>
+    <string name="time_minutes">%1$s minutes</string>
 
-    <string name="info_already_ignoring_battery_opt">Already ignoring battery optimizations</string>
+    <string name="info_already_ignoring_battery_opt">Already ignoring battery optimizations.</string>
     <string name="setting_additional">Additional</string>
-    <string name="setting_update_interval">Update interval</string>
+    <string name="setting_update_interval">Refresh Interval</string>
     <string name="setting_updates">Updates</string>
-    <string name="setting_disable_battery_opt_title">Disable battery optimization</string>
-    <string name="setting_disable_battery_opt_secondary">If background updates aren\'t working, battery optimization may be restricting this app</string>
-    <string name="setting_dontkillmyapp_title">Background updates not working?</string>
-    <string name="setting_dontkillmyapp_secondary">Some device vendors restrict apps in the background. Check dontkillmyapp.com for steps to fix this</string>
-    <string name="setting_weather_sources_secondary">List of all the supported sources</string>
+    <string name="setting_disable_battery_opt_title">Battery Optimization</string>
+    <string name="setting_disable_battery_opt_secondary">The battery optimization setting may be restricting this app.</string>
+    <string name="setting_dontkillmyapp_title">Troubleshooting Help</string>
+    <string name="setting_dontkillmyapp_secondary">Some devices restrict apps in the background.  Check the website dontkillmyapp.com for steps to help.</string>
+    <string name="setting_weather_sources_secondary">List of all the supported sources.</string>
     <string name="setting_join_discord">Join the discord server</string>
 
-    <string name="setting_about_app_secondary">Version, terms, privacy, and more</string>
-    <string name="setting_about_app">About app</string>
+    <string name="setting_about_app_secondary">Privacy, terms, and version.</string>
+    <string name="setting_about_app">About</string>
 
     <string name="about_terms_conditions">Terms &amp; Conditions</string>
     <string name="about_privacy_policy">Privacy Policy</string>
-    <string name="about_create_issue">Create an issue</string>
+    <string name="about_create_issue">Report issues</string>
     <string name="about_view_on_github">View on github</string>
-    <string name="about_license">License</string>
-    <string name="message_new_version_available">New version available</string>
-    <string name="message_using_latest_version">You are using the latest version</string>
+    <string name="about_license">Legal License</string>
+    <string name="message_new_version_available">New version available!</string>
+    <string name="message_using_latest_version">The latest version is installed.</string>
 
     <string name="about_check_for_updates">Check for updates</string>
+    <string name="action_undo">Undo</string>
     <string name="action_view">View</string>
 
-    <string name="setting_weather_sources_info">Separate sources for each region are recommended based on the country code</string>
+    <string name="setting_weather_sources_info">Separate sources for each region are recommended based on the country code.</string>
 
-    <string name="setting_weather_animations">Weather animations</string>
-    <string name="setting_weather_animations_secondary">Canvas animations that change based on the current weather</string>
+    <string name="setting_weather_animations">Animation</string>
+    <string name="setting_weather_animations_secondary">Animate background based on current weather.</string>
 
-    <string name="setting_froggy_layout">Froggy layout</string>
-    <string name="setting_froggy_layout_secondary">Show the classic Google Weather frog card. Turn off to use the newer Pixel Weather style card</string>
+    <string name="setting_froggy_layout">Froggy</string>
+    <string name="setting_froggy_layout_secondary">Show classic Google Weather design.  Turn off for Pixel Weather design.</string>
     <string name="setting_layout">Layout</string>
-    <string name="setting_weather_based_theme">Weather based theme</string>
-    <string name="setting_weather_based_theme_secondary">Automatically adapts app colors based on current weather conditions.</string>
-
-    <string name="unit_pressure_mmhg">Millimeters of mercury</string>
+    <string name="setting_weather_based_theme">Adaptation</string>
+    <string name="setting_weather_based_theme_secondary">Adapt color based on current weather conditions.</string>
 
     <string name="summary_overview_template_1">%1$s through most of the day.</string>
     <string name="summary_overview_template_2">Expect %1$s conditions for the day.</string>
@@ -318,15 +359,22 @@
     <string name="summary_temp_cold_template_3">Very cold air will keep temperatures near %1$s.</string>
 
     <string name="weather_summary">Summary</string>
-    <string name="about_changelog">Changelog</string>
+    <string name="about_changelog">Read changes</string>
     <string name="about">About</string>
-    <string name="weather_max_for_the_day">Max for the day</string>
-    <string name="weather_about_uv_index">The UV index is a measure of the level of ultraviolet radiation. The values of the index range from zero upward - the higher the UV index, the greater the potential for damage to the skin and eye, and the less time it takes for harm to occur</string>
+    <string name="about_email">Email developer</string>
+    <string name="weather_max_for_the_day">Max for the Day</string>
+    <string name="weather_about_air">The air quality index describes how polluted the air currently is.  It is derived from the concentrations of pollutants such as carbon monoxide, nitrogen dioxide, sulphur dioxide, ozone, and particulate matter.  The higher the value, the greater the potential for adverse health effects.</string>
+    <string name="weather_about_ultraviolet">The ultraviolet index is a measure of the level of ultraviolet radiation.  The values of the index range from zero upward - the higher the ultraviolet index, the greater the potential for damage to the skin and eye, and the less time it takes for harm to occur.</string>
+    <string name="weather_ultraviolet_description_1">Low danger from UV rays for the average person.  No protection needed; you can safely stay outside.</string>
+    <string name="weather_ultraviolet_description_2">Moderate risk of harm from unprotected sun exposure.  Seek shade during midday hours, and wear sunscreen, a hat, and sunglasses.</string>
+    <string name="weather_ultraviolet_description_3">High risk of harm.  Reduce time in the sun from 10 AM to 4 PM.  Apply sunscreen and wear protective clothing, a hat, and sunglasses.</string>
+    <string name="weather_ultraviolet_description_4">Very high risk of harm.  Minimize sun exposure during midday hours.  Protection against skin and eye damage is essential.</string>
+    <string name="weather_ultraviolet_description_5">Extreme risk of harm.  Avoid the sun during midday hours.  Unprotected skin can burn in minutes.</string>
     <string name="text_scale">Scale</string>
-    <string name="weather_about_humidity">Humidity is the concentration of water vapor present in the air. Water vapor, the gaseous state of water, is generally invisible to the naked eye. Humidity indicates the likelihood for precipitation, dew, or fog to be present</string>
-    <string name="text_average_for_day">Average for the day</string>
-    <string name="weather_about_dewpoint">The dew point temperature is an important measure of humidity. As the dew point reaches 20 C/70 F degrees, almost everyone feels "sticky". Thus the dew point is the best predictor of energy use for cooling in the summer</string>
-    <string name="weather_visibility_about">Visibility indicates how far you can clearly see outdoors before objects become obscured by weather or atmospheric conditions</string>
+    <string name="weather_about_humidity">Humidity is the concentration of water vapor present in the air.  Water vapor, the gaseous state of water, is generally invisible to the naked eye.  Humidity indicates the likelihood for precipitation, dew, or fog to be present.</string>
+    <string name="text_average_for_day">Average for the Day</string>
+    <string name="weather_about_dewpoint">The dew point temperature is an important measure of humidity.  As the dew point reaches 20&#176;C/70&#176;F degrees, almost everyone feels "sticky".  Thus, the dew point is the best predictor of energy use for cooling in the summer.</string>
+    <string name="weather_visibility_about">Visibility indicates how far you can clearly see outdoors before objects become obscured by weather or atmospheric conditions.</string>
 
     <string name="text_excellent">Excellent</string>
     <string name="text_very_good">Very Good</string>
@@ -335,59 +383,97 @@
     <string name="text_poor">Poor</string>
     <string name="text_very_poor">Very Poor</string>
     <string name="text_dense_fog">Dense Fog</string>
-    <string name="visibility_description_excellent">Exceptional clarity; distant features easily visible</string>
-    <string name="visibility_description_very_good">Very clear conditions</string>
-    <string name="visibility_description_good">Standard clear daytime conditions</string>
-    <string name="visibility_description_moderate">Hazy; distant objects are slightly obscured</string>
-    <string name="visibility_description_poor">Significant reduction due to mist, smoke, or light fog</string>
-    <string name="visibility_description_very_poor">Heavy fog or precipitation; restricted travel conditions</string>
-    <string name="visibility_description_dense">Severe reduction; affects driving and airport operations</string>
+    <string name="visibility_description_excellent">Exceptional clarity; distant features easily visible.</string>
+    <string name="visibility_description_very_good">Very clear conditions.</string>
+    <string name="visibility_description_good">Standard clear daytime conditions.</string>
+    <string name="visibility_description_moderate">Hazy; distant objects are slightly obscured.</string>
+    <string name="visibility_description_poor">Significant reduction due to mist, smoke, or light fog.</string>
+    <string name="visibility_description_very_poor">Heavy fog or precipitation; restricted travel conditions.</string>
+    <string name="visibility_description_dense">Severe reduction; affects driving and airport operations.</string>
+
+    <string name="wind_description_1">Air is still or barely moving; smoke rises vertically.</string>
+    <string name="wind_description_2">Gentle air you can feel on the face; leaves rustle.</string>
+    <string name="wind_description_3">Raises dust and loose paper; small branches move.</string>
+    <string name="wind_description_4">Large branches sway; umbrellas are hard to use.</string>
+    <string name="wind_description_5">Whole trees in motion; walking against the wind is difficult.</string>
+    <string name="wind_description_6">Widespread structural damage possible; very rarely experienced inland.</string>
+    <string name="wind_scale_1">Calm</string>
+    <string name="wind_scale_2">Light</string>
+    <string name="wind_scale_3">Moderate</string>
+    <string name="wind_scale_4">Strong</string>
+    <string name="wind_scale_5">Gale</string>
+    <string name="wind_scale_6">Storm</string>
+
+    <string name="pressure_description_1">Strong high-pressure system; very settled weather, often clear skies and light winds.</string>
+    <string name="pressure_description_2">Above-average pressure that generally brings calm, clear, and stable conditions.</string>
+    <string name="pressure_description_3">Typical sea-level pressure, usually associated with fair, settled weather.</string>
+    <string name="pressure_description_4">Below-average pressure; clouds, rain, or changeable conditions are more likely.</string>
+    <string name="pressure_description_5">Deep low-pressure system, often bringing stormy, unsettled weather with strong winds and rain.</string>
+    <string name="pressure_scale_1">Very High</string>
+    <string name="pressure_scale_2">High</string>
+    <string name="pressure_scale_3">Normal</string>
+    <string name="pressure_scale_4">Low</string>
+    <string name="pressure_scale_5">Very Low</string>
 
     <string name="text_dawn">Dawn</string>
     <string name="text_dusk">Dusk</string>
-    <string name="text_day_length">Day length</string>
-    <string name="weather_sun_moon">Sun &amp; moon</string>
+    <string name="text_day_length">Duration</string>
+    <string name="weather_sun_moon">Sun &amp; Moon</string>
 
-    <string name="moonphase_new_moon">New moon</string>
-    <string name="moonphase_waxing_crescent">Waxing crescent</string>
-    <string name="moonphase_first_quarter">First quarter</string>
-    <string name="moonphase_waxing_gibbous">Waxing gibbous</string>
-    <string name="moonphase_full_moon">Full moon</string>
-    <string name="moonphase_waning_gibbous">Waning gibbous</string>
-    <string name="moonphase_last_quarter">Last quarter</string>
-    <string name="moonphase_waning_crescent">Waning crescent</string>
     <string name="moon_phase">Phase</string>
-    <string name="weather_about_sun_moon_rise_set">The rise time is when the sun or moon first appears above the horizon. The set time is when the sun or moon fully disappears below the horizon</string>
-    <string name="weather_about_dawn_dusk">Dawn is the period of light in the sky just before sunrise. Dusk is the period of fading light in the sky just after sunset</string>
-    <string name="weather_about_pressure">Mean sea level pressure, a measure of how much the atmosphere is pressing down, adjusted to sea level. Watching how it changes can provide an early indication of weather changes. Pressure falling usually means unsettled weather is approaching, while pressure rising often means conditions are becoming more stable</string>
-    <string name="weather_about_windspeed">Wind speed is the rate at which air moves horizontally past a specific point, driven by differences in atmospheric pressure and temperature</string>
+    <string name="moon_phases">Phases</string>
+    <string name="moon_phase_new_moon">New Moon</string>
+    <string name="moon_phase_new_moon_description">The side facing Earth is unilluminated and invisible.</string>
+    <string name="moon_phase_waxing_crescent">Waxing Crescent</string>
+    <string name="moon_phase_waxing_crescent_description">A thin sliver of light begins to appear and grow (wax).</string>
+    <string name="moon_phase_first_quarter">First Quarter</string>
+    <string name="moon_phase_first_quarter_description">Moon is exactly half-illuminated on the right side.</string>
+    <string name="moon_phase_waxing_gibbous">Waxing Gibbous</string>
+    <string name="moon_phase_waxing_gibbous_description">The illuminated portion continues to grow toward full.</string>
+    <string name="moon_phase_full_moon">Full Moon</string>
+    <string name="moon_phase_full_moon_description">The entire face of the Moon is fully illuminated.</string>
+    <string name="moon_phase_waning_gibbous">Waning Gibbous</string>
+    <string name="moon_phase_waning_gibbous_description">The illumination begins to shrink (wane) after the full moon.</string>
+    <string name="moon_phase_last_quarter">Last Quarter</string>
+    <string name="moon_phase_last_quarter_description">Moon is exactly half-illuminated on the left side.</string>
+    <string name="moon_phase_waning_crescent">Waning Crescent</string>
+    <string name="moon_phase_waning_crescent_description">A shrinking sliver of light remains before the next New Moon.</string>
+    <string name="weather_about_sun_moon_rise_set">The rise time is when the sun or moon first appears above the horizon.  The set time is when the sun or moon fully disappears below the horizon.</string>
+    <string name="weather_about_dawn_dusk">Dawn is the period of light in the sky just before sunrise.  Dusk is the period of fading light in the sky just after sunset.</string>
+    <string name="weather_about_pressure">Mean sea level pressure, a measure of how much the atmosphere is pressing down, adjusted to sea level.  Watching how it changes can provide an early indication of weather changes.  Pressure falling usually means unsettled weather is approaching, while pressure rising often means conditions are becoming more stable.</string>
+    <string name="weather_about_windspeed">Wind speed is the rate at which air moves horizontally past a specific point, driven by differences in atmospheric pressure and temperature.</string>
 
-    <string name="unit_wind_kt">Knots</string>
-    <string name="unit_wind_bft">Beaufort</string>
-    <string name="setting_day_summary">Day summary</string>
-    <string name="setting_day_summary_secondary">Show a daily summary generated from hourly data</string>
+    <string name="setting_day_summary">Summary</string>
+    <string name="setting_day_summary_secondary">Show daily summary generated from hourly data.</string>
 
     <string name="setting_system">System</string>
 
-
-    <string name="weather_about_precipitation">Precipitation shows the forecast amount of rainfall expected during each hour. Larger amounts indicate heavier rain</string>
-    <string name="weather_about_snowfall">Snowfall shows the forecast amount of snow expected during each hour. Higher values indicate greater snow accumulation</string>
+    <string name="weather_about_precipitation">Precipitation shows the forecast amount of rainfall expected during each hour.  Larger amounts indicate heavier rain.</string>
+    <string name="weather_about_snowfall">Snowfall shows the forecast amount of snow expected during each hour.  Higher values indicate greater snow accumulation.</string>
     <string name="color_transparent">Transparent</string>
 
-    <string name="setting_app_font">App font</string>
-    <string name="setting_system_font">System font</string>
+    <string name="setting_app_font">Font Type</string>
+    <string name="setting_system_font">System</string>
     <string name="weather_minimum">Minimum</string>
     <string name="error_no_results_found">No results found</string>
 
     <string name="text_time">Time</string>
     <string name="settings_24hr_time">Use 24hr time format</string>
-    <string name="about_email">Email</string>
-    <string name="settings_source_request_title">Want a source to be added? You can request it here</string>
+    <string name="settings_source_request_title">Want a source to be added?</string>
     <string name="action_request">Request</string>
     <string name="source_credits_label">%1$s and more</string>
     <string name="weather_wind_direction_from">From %1$s</string>
     <string name="day_length_hr">%1$s hrs</string>
     <string name="error_no_results">No results found</string>
-</resources>
 
-    <!--<string name=""></string>-->
+    <string name="notification_updating">Updating weather&#8230;</string>
+    <string name="notification_updating_location">Updating weather for %1$s&#8230;</string>
+
+    <string name="widget_card">Card</string>
+    <string name="widget_daily">Daily</string>
+    <string name="widget_hourly">Hourly</string>
+    <string name="widget_pill">Pill</string>
+    <string name="widget_summary">Summary</string>
+    <string name="widget_transparent">Transparent</string>
+
+</resources>

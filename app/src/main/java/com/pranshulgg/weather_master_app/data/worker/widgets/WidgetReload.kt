@@ -12,7 +12,6 @@ class WidgetReload @Inject constructor(
     private val locationsRepository: LocationsRepository,
     private val weatherUnitsRepository: WeatherUnitsRepository
 ) {
-
     suspend fun reload(context: Context) {
         val locations = locationsRepository.getLocationsOnce()
         val defaultLocation = locations.find { it.isDefault }
@@ -23,14 +22,19 @@ class WidgetReload @Inject constructor(
         val repo = repositoryProvider.getRepository(defaultLocation.source)
 
         val result = repo.getWeather(
-            location = defaultLocation,
+            isForceRefresh = false,
             isManualRefresh = false,
-            isForceRefresh = false
+            location = defaultLocation,
         )
 
         val weather = (result as? WeatherResult.Success)?.weather ?: return
 
-        val json = widgetWeatherMapper(weather, context, units)
-        WeatherWidgetUpdater(context).update(json)
+        WeatherWidgetUpdater(context).update(
+            json = widgetWeatherMapper(
+                applicationContext = context,
+                units = units,
+                weather = weather,
+            ),
+        )
     }
 }

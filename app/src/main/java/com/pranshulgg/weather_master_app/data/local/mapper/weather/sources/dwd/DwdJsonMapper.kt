@@ -1,9 +1,8 @@
 package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.dwd
 
-import android.util.Log
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
@@ -23,16 +22,16 @@ import kotlin.math.roundToInt
 
 // ---------------------------- JSON TO DOMAIN ----------------------------
 
-
-fun DwdWeatherJsonBundle.toDomain(location: Location): Weather {
-
+fun DwdWeatherJsonBundle.toDomain(
+    location: Location,
+): Weather {
     val current = this.current.weather
     val forecast = this.forecastJson.weather
     val daily = computeDaily(forecast, location)
 
     return Weather(
         location = location,
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = current.temperature,
             humidity = current.humidity?.toDouble() ?: 0.0,
             windSpeed = current.windSpeed,
@@ -40,17 +39,17 @@ fun DwdWeatherJsonBundle.toDomain(location: Location): Weather {
             pressureMsl = current.pressureMsl,
             visibility = current.visibility,
             cloudCover = null, // NOT USED IN THE APP
-            uvIndex = null,
+            ultraviolet = null,
             weatherCondition = DwdWeatherConditionMap.getCondition(current.icon),
             feelsLike = computeApparentTemperature(
-                current.temperature,
-                current.humidity?.toDouble(),
-                current.windSpeed?.kmhToMs()
+                tempC = current.temperature,
+                humidity = current.humidity?.toDouble(),
+                windMs = current.windSpeed?.kmhToMs()
             ),
             time = current.timestamp.iso8601TimestampToMilliseconds(),
             dewPoint = current.dewPoint,
             utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis()
+            lastUpdatedInMilli = System.currentTimeMillis(),
         ),
         hourly = forecast.map {
             WeatherHourly(
@@ -59,26 +58,24 @@ fun DwdWeatherJsonBundle.toDomain(location: Location): Weather {
                 windDirection = WindDirection.toWindDirectionFromDegrees(it.windDirection),
                 rain = it.precipitation ?: 0.0,
                 snowfall = null,
-                uvIndex = null,
+                ultraviolet = null,
                 pressureMsl = it.pressureMsl,
                 visibility = it.visibility,
                 humidity = it.humidity?.toDouble(),
                 dewPoint = it.dewPoint,
                 weatherCondition = DwdWeatherConditionMap.getCondition(it.icon),
                 time = it.timestamp.iso8601TimestampToMilliseconds(),
-                precipitationProbability = it.precipitationProbability
+                precipitationProbability = it.precipitationProbability,
             )
         },
-        daily = daily
+        daily = daily,
     )
 }
 
 private fun computeDaily(
     data: List<DwdWeatherForecastDataJson>,
-    location: Location
+    location: Location,
 ): List<WeatherDaily> {
-
-
     val zoneId = location.timezone
 
     val groupedByDay = data.groupBy {
@@ -86,21 +83,21 @@ private fun computeDaily(
     }
 
     val sunTimings = getSunTimings(
-        groupedByDay.map {
+        timeMilli = groupedByDay.map {
             it.key
         },
-        location.timezone,
-        location.latitude,
-        location.longitude
+        zoneId = location.timezone,
+        latitude = location.latitude,
+        longitude = location.longitude,
     )
 
     val moonTimings = getMoonTimings(
-        groupedByDay.map {
+        timeMilli = groupedByDay.map {
             it.key
         },
-        location.timezone,
-        location.latitude,
-        location.longitude
+        zoneId = location.timezone,
+        latitude = location.latitude,
+        longitude = location.longitude,
     )
 
     return groupedByDay.filter {(key, value) -> (value.size == 24) || key == groupedByDay.keys.firstOrNull()}.map{ dailyIt ->
@@ -129,7 +126,6 @@ private fun computeDaily(
         val icon = dailyIt.value.map { it.icon }.groupingBy { it }
             .eachCount().entries.maxByOrNull { it.value }
 
-
         val condition = computeDailyWeatherCondition(
             getHourlyConditionsForDay(dailyIt.value, time),
             MetNorwayWeatherConditionMap.getCondition(icon?.key)
@@ -137,7 +133,6 @@ private fun computeDaily(
 
         val precipitationProbabilityMax = dailyIt.value.mapNotNull { it.precipitationProbability }
             .maxOrNull()
-
 
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
@@ -148,7 +143,7 @@ private fun computeDaily(
             windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
             rainSum = rainSum,
             snowfallSum = null,
-            uvIndexMax = null,
+            ultravioletMaximum = null,
             weatherCondition = condition,
             time = time,
             precipitationProbabilityMax = precipitationProbabilityMax,
@@ -169,12 +164,11 @@ private fun computeDaily(
 
 private fun getHourlyConditionsForDay(
     data: List<DwdWeatherForecastDataJson>,
-    time: Long
+    time: Long,
 ): List<WeatherCondition> {
     val startIndex =
         data.indexOfFirst { it.timestamp.iso8601TimestampToMilliseconds() >= time }
             .takeIf { it != -1 } ?: 0
-
 
     val conditions = data.drop(maxOf(0, startIndex - 1))
         .take(WeatherSource.DWD.hourlyAggregationLimitHours)
@@ -184,7 +178,6 @@ private fun getHourlyConditionsForDay(
 
     return conditions
 }
-
 
 private fun Double.kmhToMs(): Double {
     return (this / 3.6)

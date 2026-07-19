@@ -11,18 +11,21 @@ import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.weather.toFroggy
 
 @Composable
-fun FroggyContainer(weather: Weather) {
-
+fun FroggyContainer(
+    weather: Weather,
+) {
     Image(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = 8.dp
+            ),
+        contentDescription = "",
         painter = painterResource(
             weather.current.weatherCondition.toFroggy(
+                daily = weather.daily.firstOrNull(),
                 targetTimeMilli = weather.current.time,
-                daily = weather.daily.firstOrNull()
             )
         ),
-        contentDescription = "",
-        modifier = Modifier
-            .padding(top = 8.dp)
-            .fillMaxWidth()
     )
 }

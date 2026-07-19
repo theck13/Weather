@@ -9,14 +9,16 @@ import javax.inject.Inject
 class WeatherBlocksRepository @Inject constructor(
     private val weatherBlocksDao: WeatherBlocksDao
 ) {
-    suspend fun saveBlocks(blocks: List<WeatherBlock>, isDaily: Boolean) {
-
+    suspend fun saveBlocks(
+        blocks: List<WeatherBlock>,
+        isDaily: Boolean,
+    ) {
         val entities = blocks.mapIndexed { index, block ->
             WeatherBlockEntity(
-                type = block.type,
+                isDaily = block.isDaily,
                 isHidden = block.isHidden,
                 position = index,
-                isDaily = block.isDaily
+                type = block.type,
             )
         }
 
@@ -28,9 +30,10 @@ class WeatherBlocksRepository @Inject constructor(
         weatherBlocksDao.insertBlocks(entities)
     }
 
-    suspend fun loadBlocks(isDaily: Boolean = false): List<WeatherBlock> {
-        val blocks = weatherBlocksDao.getBlocks()
-            .filter { it.isDaily == isDaily }.map { it.toDomain() }
+    suspend fun loadBlocks(
+        isDaily: Boolean = false,
+    ): List<WeatherBlock> {
+        val blocks = weatherBlocksDao.getBlocks().filter { it.isDaily == isDaily }.map { it.toDomain() }
 
         val defaultBlocks = if (isDaily) {
             WeatherBlock.getDefaultForDaily()

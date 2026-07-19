@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.address.nominatim
 
 import com.google.gson.annotations.SerializedName
 
-
 data class NominatimAddressJson(
     val address: NominatimAddressDataJson
 )

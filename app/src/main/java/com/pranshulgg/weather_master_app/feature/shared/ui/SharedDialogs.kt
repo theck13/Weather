@@ -4,35 +4,33 @@ import androidx.compose.runtime.Composable
 import com.pranshulgg.weather_master_app.core.ui.components.TextAlertDialog
 
 object SharedDialogs {
-
     @Composable
     fun DeviceLocationPermissionInfoDialog(
-        show: Boolean,
+        onConfirm: () -> Unit,
         onDismiss: () -> Unit,
-        onConfirm: () -> Unit
+        show: Boolean,
     ) {
         TextAlertDialog(
-            show,
-            onDismiss = onDismiss,
+            message = "Allow location access to save places using your current position.  Your location will only be shared with the sources you choose.",
             onConfirm = onConfirm,
-            title = "Location permission",
-            message = "Allow location access to save places using your current position. Your location will only be shared with the sources you choose"
+            onDismiss = onDismiss,
+            show = show,
+            title = "Location Permission",
         )
     }
 
     @Composable
     fun DeviceBackgroundLocationPermissionInfoDialog(
-        show: Boolean,
+        onConfirm: () -> Unit,
         onDismiss: () -> Unit,
-        onConfirm: () -> Unit
+        show: Boolean,
     ) {
         TextAlertDialog(
-            show,
-            onDismiss = onDismiss,
+            message = "Allow background location access to keep your saved device location updated even when the app is closed or running in the background so widgets stay up-to-date.",
             onConfirm = onConfirm,
-            title = "Background location permission",
-            message = "Allow background location access to keep your saved device location updated even when the app is closed or running in the background"
+            onDismiss = onDismiss,
+            show = show,
+            title = "Background Location Permission",
         )
     }
-
 }

@@ -5,34 +5,51 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 object SnackbarManager {
-
     data class SnackbarEvent(
-        val messageResource: Int,
-        val messageArgs: Any? = null,
-        val actionLabel: Int? = null,
+        val action: Int? = null,
+        val arguments: Any? = null,
+        val duration: SnackbarDuration = SnackbarDuration.Short,
+        val messageResource: Int? = null,
+        val messageText: String? = null,
         val onAction: (() -> Unit)? = null,
-        val duration: SnackbarDuration = SnackbarDuration.Short
     )
 
     private val _events = MutableSharedFlow<SnackbarEvent>(
-        extraBufferCapacity = 1
+        extraBufferCapacity = 1,
     )
+
     val events = _events.asSharedFlow()
 
     fun show(
-        messageResource: Int,
-        actionLabel: Int? = null,
-        messageArgs: Any? = null,
+        action: Int? = null,
+        arguments: Any? = null,
+        duration: SnackbarDuration = SnackbarDuration.Short,
+        message: Int,
         onAction: (() -> Unit)? = null,
-        duration: SnackbarDuration = SnackbarDuration.Short
     ) {
         _events.tryEmit(
             SnackbarEvent(
-                messageResource = messageResource,
-                actionLabel = actionLabel,
-                messageArgs = messageArgs,
+                action = action,
+                arguments = arguments,
+                duration = duration,
+                messageResource = message,
                 onAction = onAction,
-                duration = duration
+            )
+        )
+    }
+
+    fun show(
+        action: Int? = null,
+        duration: SnackbarDuration = SnackbarDuration.Short,
+        message: String,
+        onAction: (() -> Unit)? = null,
+    ) {
+        _events.tryEmit(
+            SnackbarEvent(
+                action = action,
+                duration = duration,
+                messageText = message,
+                onAction = onAction,
             )
         )
     }

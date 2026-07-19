@@ -7,7 +7,6 @@ import javax.inject.Singleton
 
 @Singleton
 class AppVisibility @Inject constructor() : DefaultLifecycleObserver {
-
     var isForeground = false
         private set
 

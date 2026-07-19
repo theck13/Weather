@@ -1,10 +1,11 @@
 package com.pranshulgg.weather_master_app.feature.intro
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,50 +33,60 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.model.domain.location.Address
-import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
+import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
 import com.pranshulgg.weather_master_app.core.ui.components.Symbol
 import com.pranshulgg.weather_master_app.core.ui.components.WeatherIconBox
-import com.pranshulgg.weather_master_app.core.ui.navigation.NavRoutes
+import com.pranshulgg.weather_master_app.core.ui.navigation.NavigationRoutes
 import com.pranshulgg.weather_master_app.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.weather_master_app.core.utils.ids.UuidGenerator
 import com.pranshulgg.weather_master_app.data.provider.devicelocation.DeviceLocation
 import com.pranshulgg.weather_master_app.data.provider.devicelocation.GetDeviceLocation
-import com.pranshulgg.weather_master_app.data.provider.devicelocation.getCountryCode
 import com.pranshulgg.weather_master_app.data.provider.devicelocation.rememberBackgroundLocationPermissionLauncher
 import com.pranshulgg.weather_master_app.data.provider.devicelocation.rememberLocationPermissionLauncher
 import com.pranshulgg.weather_master_app.feature.shared.ui.SharedDialogs
+import com.pranshulgg.weather_master_app.widgets.hasActiveWidgets
 import java.time.ZoneId
-import java.util.TimeZone
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
-fun IntroScreen(navController: NavController) {
-
+fun IntroScreen(
+    navController: NavController,
+) {
     val context = LocalContext.current
     val viewModel: IntroScreenViewModel = hiltViewModel()
-    var isLoading by remember { mutableStateOf(false) }
+
     var backgroundLocationPermissionInfoDialogOpen by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
     var locationPermissionInfoDialogOpen by remember { mutableStateOf(false) }
 
     val continueWithLocation = {
         isLoading = true
         GetDeviceLocation().getDeviceLocation(
-            context,
+            context = context,
             onTimeout = {
-                SnackbarManager.show(R.string.current_location_not_found)
+                SnackbarManager.show(
+                    message = R.string.current_location_not_found,
+                )
                 isLoading = false
-            }) { location ->
+            },
+        ) { location ->
             if (location.latitude == null || location.longitude == null) {
-                SnackbarManager.show(R.string.current_location_not_found)
+                SnackbarManager.show(
+                    message = R.string.current_location_not_found,
+                )
                 isLoading = false
                 return@getDeviceLocation
             }
@@ -86,10 +97,16 @@ fun IntroScreen(navController: NavController) {
 
     val requestLocation = rememberLocationPermissionLauncher(
         onForegroundGranted = {
-            backgroundLocationPermissionInfoDialogOpen = true
+            if (context.hasActiveWidgets()) {
+                backgroundLocationPermissionInfoDialogOpen = true
+            } else {
+                continueWithLocation()
+            }
         },
         onDenied = {
-            SnackbarManager.show(R.string.location_permission_required)
+            SnackbarManager.show(
+                message = R.string.location_permission_required,
+            )
             isLoading = false
         }
     )
@@ -102,169 +119,334 @@ fun IntroScreen(navController: NavController) {
             continueWithLocation()
         },
         onDenied = {
-            SnackbarManager.show(R.string.location_permission_required)
+            SnackbarManager.show(
+                message = R.string.location_permission_required,
+            )
             backgroundLocationPermissionInfoDialogOpen = true
             isLoading = false
         }
     )
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer
+        containerColor = MaterialTheme.colorScheme.background,
     ) { paddingValues ->
+        val buttonSize = ButtonDefaults.MediumContainerHeight
 
-        val btnSize = ButtonDefaults.MediumContainerHeight
-
-
-        Box(
-            Modifier.fillMaxSize()
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxSize(),
         ) {
+            val decorativeIconSize = min(
+                maxHeight * 0.40f,
+                maxWidth * 0.58f,
+            )
+            val decorativeIconOffsetX = decorativeIconSize * 0.26f
+            val decorativeIconOffsetY = maxHeight * 0.02f
+            val isLandscape = maxWidth > maxHeight
 
             Column(
-                Modifier
-                    .align(Alignment.Center)
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.Center,
+                    )
                     .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = paddingValues.calculateTopPadding()
+                        paddingValues = paddingValues,
+                    )
+                    .padding(
+                        all = 16.dp,
                     ),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Icon()
-                Gap(24.dp)
-                Text(
-                    "Let’s Get Your Forecast",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.W700
+
+                Gap(
+                    vertical = 24.dp,
                 )
-                Gap(8.dp)
+
                 Text(
-                    "Allow location access to see your local forecast",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.W700,
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = "Get Your Forecast",
+                )
+
+                Gap(
+                    vertical = 8.dp,
+                )
+
+                Text(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
+                    text = "Allow location access to see the forecast of your current location.",
+                    textAlign = TextAlign.Center,
                 )
-                Gap(28.dp)
-                Button(
-                    enabled = !isLoading,
-                    onClick = {
-                        locationPermissionInfoDialogOpen = true
-                    },
-                    modifier = Modifier
-                        .heightIn(btnSize)
-                        .fillMaxWidth(0.7f),
-                    contentPadding = ButtonDefaults.contentPaddingFor(btnSize),
-                    shapes = ButtonDefaults.shapes()
-                ) {
-                    Text("Enable Location", style = ButtonDefaults.textStyleFor(btnSize))
-                }
-                Gap(12.dp)
-                OutlinedButton(
-                    onClick = {
-                        navController.navigate(NavRoutes.SEARCH)
-                    },
-                    modifier = Modifier
-                        .heightIn(btnSize)
-                        .fillMaxWidth(0.7f),
-                    contentPadding = ButtonDefaults.contentPaddingFor(btnSize),
-                    shapes = ButtonDefaults.shapes()
-                ) {
-                    Text(
-                        "Search for a City",
-                        style = ButtonDefaults.textStyleFor(btnSize),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+
+                Gap(
+                    vertical = 28.dp,
+                )
+
+                if (isLandscape) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(
+                            fraction = 0.70f,
+                        ),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            space = 16.dp,
+                        ),
+                    ) {
+                        ButtonEnableLocation(
+                            modifier = Modifier.weight(
+                                weight = 1.00f,
+                            ),
+                            buttonSize = buttonSize,
+                            enabled = isLoading.not(),
+                            onClick = {
+                                locationPermissionInfoDialogOpen = true
+                            },
+                        )
+
+                        ButtonSearchLocations(
+                            modifier = Modifier.weight(
+                                weight = 1.00f,
+                            ),
+                            buttonSize = buttonSize,
+                            onClick = {
+                                navController.navigate(NavigationRoutes.SEARCH)
+                            },
+                        )
+                    }
+                } else {
+                    ButtonEnableLocation(
+                        modifier = Modifier.fillMaxWidth(
+                            fraction = 0.70f,
+                        ),
+                        buttonSize = buttonSize,
+                        enabled = isLoading.not(),
+                        onClick = {
+                            locationPermissionInfoDialogOpen = true
+                        },
+                    )
+
+                    Gap(
+                        vertical = 16.dp,
+                    )
+
+                    ButtonSearchLocations(
+                        modifier = Modifier.fillMaxWidth(
+                            fraction = 0.70f,
+                        ),
+                        buttonSize = buttonSize,
+                        onClick = {
+                            navController.navigate(NavigationRoutes.SEARCH)
+                        },
                     )
                 }
             }
 
             Box(
-                Modifier
-                    .align(Alignment.TopStart)
-                    .rotate(60f)
-                    .alpha(0.2f)
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.TopStart,
+                    )
+                    .alpha(
+                        alpha = 0.20f,
+                    )
+                    .offset(
+                        x = -decorativeIconOffsetX,
+                        y = -decorativeIconOffsetY,
+                    )
+                    .rotate(
+                        degrees = 60.00f,
+                    ),
             ) {
-                WeatherIconBox(R.drawable.weather_very_hot, size = 150.dp)
+                WeatherIconBox(
+                    icon = R.drawable.il_weather_very_hot,
+                    size = decorativeIconSize,
+                )
             }
 
             Box(
-                Modifier
-                    .align(Alignment.TopEnd)
-                    .offset(y = 100.dp)
-                    .rotate(60f)
-                    .alpha(0.1f)
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.TopEnd,
+                    )
+                    .alpha(
+                        alpha = 0.10f,
+                    )
+                    .offset(
+                        x = decorativeIconOffsetX,
+                        y = -decorativeIconOffsetY,
+                    )
+                    .rotate(
+                        degrees = 60.00f,
+                    ),
             ) {
-                WeatherIconBox(R.drawable.weather_clear_night, size = 150.dp)
+                WeatherIconBox(
+                    icon = R.drawable.il_weather_clear_night,
+                    size = decorativeIconSize,
+                )
             }
 
             Box(
-                Modifier
-                    .align(Alignment.TopStart)
-                    .offset(y = 500.dp)
-                    .rotate(60f)
-                    .alpha(0.1f)
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.BottomStart,
+                    )
+                    .alpha(
+                        alpha = 0.10f,
+                    )
+                    .offset(
+                        x = -decorativeIconOffsetX,
+                        y = decorativeIconOffsetY,
+                    )
+                    .rotate(
+                        degrees = 60.00f,
+                    ),
             ) {
-                WeatherIconBox(R.drawable.weather_clear_day, size = 150.dp)
+                WeatherIconBox(
+                    icon = R.drawable.il_weather_clear_day,
+                    size = decorativeIconSize,
+                )
             }
 
             Box(
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .rotate(60f)
-                    .alpha(0.1f)
+                modifier = Modifier
+                    .align(
+                        alignment = Alignment.BottomEnd,
+                    )
+                    .alpha(
+                        alpha = 0.10f,
+                    )
+                    .offset(
+                        x = decorativeIconOffsetX,
+                        y = decorativeIconOffsetY,
+                    )
+                    .rotate(
+                        degrees = 60.00f,
+                    ),
             ) {
-                WeatherIconBox(R.drawable.weather_very_cold, size = 150.dp)
+                WeatherIconBox(
+                    icon = R.drawable.il_weather_very_cold,
+                    size = decorativeIconSize,
+                )
             }
         }
     }
 
     SharedDialogs.DeviceBackgroundLocationPermissionInfoDialog(
-        show = backgroundLocationPermissionInfoDialogOpen,
         onConfirm = {
             backgroundLocationPermissionInfoDialogOpen = false
             requestBackgroundLocation()
         },
-        onDismiss = { backgroundLocationPermissionInfoDialogOpen = false }
+        onDismiss = {
+            backgroundLocationPermissionInfoDialogOpen = false
+        },
+        show = backgroundLocationPermissionInfoDialogOpen,
     )
 
     SharedDialogs.DeviceLocationPermissionInfoDialog(
-        show = locationPermissionInfoDialogOpen,
         onConfirm = {
             requestLocation()
         },
-        onDismiss = { locationPermissionInfoDialogOpen = false }
+        onDismiss = {
+            locationPermissionInfoDialogOpen = false
+        },
+        show = locationPermissionInfoDialogOpen,
     )
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
+@Composable
+private fun ButtonEnableLocation(
+    buttonSize: Dp,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = modifier.heightIn(
+            min = buttonSize,
+        ),
+        contentPadding = ButtonDefaults.contentPaddingFor(
+            buttonHeight = buttonSize,
+        ),
+        enabled = enabled,
+        onClick = onClick,
+        shapes = ButtonDefaults.shapes(),
+    ) {
+        Text(
+            style = ButtonDefaults.textStyleFor(
+                buttonHeight = buttonSize,
+            ),
+            text = "Enable Location",
+        )
+    }
+}
+
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
+@Composable
+private fun ButtonSearchLocations(
+    buttonSize: Dp,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    OutlinedButton(
+        modifier = modifier.heightIn(
+            min = buttonSize,
+        ),
+        contentPadding = ButtonDefaults.contentPaddingFor(
+            buttonHeight = buttonSize,
+        ),
+        onClick = onClick,
+        shapes = ButtonDefaults.shapes(),
+    ) {
+        Text(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = ButtonDefaults.textStyleFor(
+                buttonHeight = buttonSize,
+            ),
+            text = stringResource(R.string.search_empty_state_title),
+        )
+    }
+}
+
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
 private fun Icon() {
     Surface(
-        shape = MaterialShapes.Cookie9Sided.toShape(),
         modifier = Modifier
-            .height(100.dp)
-            .width(100.dp),
-        color = MaterialTheme.colorScheme.primaryContainer
+            .height(
+                height = 100.dp,
+            )
+            .width(
+                width = 100.dp,
+            ),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        shape = MaterialShapes.Cookie9Sided.toShape(),
     ) {
-
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
             Symbol(
-                R.drawable.location_on_24px,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                icon = R.drawable.ic_location_on_24,
                 size = 56.dp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
-
 }
 
-fun DeviceLocation.toDomain(context: Context): Location {
-
-
+fun DeviceLocation.toDomain(
+    context: Context,
+): Location {
     val formattedLatitude = kotlin.math.round(latitude!! * 100000) / 100000
     val formattedLongitude = kotlin.math.round(longitude!! * 100000) / 100000
-
-
 
     return Location(
         id = UuidGenerator.generateId(),
@@ -275,11 +457,10 @@ fun DeviceLocation.toDomain(context: Context): Location {
         timezone = ZoneId.systemDefault().id,
         countryCode = "",
         state = "",
-        source = WeatherSource.OPEN_METEO,
+        source = WeatherSource.OPEN,
         isFavorite = false,
         isPinned = false,
         isDefault = false, // Repository can handle it
-        isDeviceLocation = true
+        isDeviceLocation = true,
     )
-
 }

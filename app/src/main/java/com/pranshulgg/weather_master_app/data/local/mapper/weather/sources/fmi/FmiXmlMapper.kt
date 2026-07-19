@@ -1,22 +1,17 @@
 package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.fmi
 
-import android.util.Log
-import com.pranshulgg.weather_master_app.core.model.astro.MoonPhase
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
-import com.pranshulgg.weather_master_app.core.model.weather.WindSpeedUnit
+import com.pranshulgg.weather_master_app.core.model.weather.WindUnit
 import com.pranshulgg.weather_master_app.core.model.weather.wind.WindDirection
-import com.pranshulgg.weather_master_app.core.network.sources.weather.dwd.DwdWeatherConditionMap
-import com.pranshulgg.weather_master_app.core.network.sources.weather.dwd.json.DwdWeatherForecastDataJson
 import com.pranshulgg.weather_master_app.core.network.sources.weather.fmi.FmiConditionMap
 import com.pranshulgg.weather_master_app.core.network.sources.weather.fmi.model.FmiWeather
 import com.pranshulgg.weather_master_app.core.network.sources.weather.fmi.model.FmiWeatherMember
-import com.pranshulgg.weather_master_app.core.network.sources.weather.metnorway.MetNorwayWeatherConditionMap
 import com.pranshulgg.weather_master_app.core.utils.extensions.DateTimeExtensions.iso8601TimestampToMilliseconds
 import com.pranshulgg.weather_master_app.core.utils.extensions.DateTimeExtensions.normalizeToDay
 import com.pranshulgg.weather_master_app.core.utils.formatters.toSafeDouble
@@ -25,13 +20,11 @@ import com.pranshulgg.weather_master_app.core.utils.weather.astronomy.getSunTimi
 import com.pranshulgg.weather_master_app.core.utils.weather.calculations.computeApparentTemperature
 import com.pranshulgg.weather_master_app.core.utils.weather.computing.computeDailyWeatherCondition
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findHourlyIndexForTime
-import kotlin.collections.firstOrNull
 import kotlin.math.roundToInt
-import kotlin.text.toDouble
 
-
-fun FmiWeather.toDomain(location: Location): Weather {
-
+fun FmiWeather.toDomain(
+    location: Location,
+): Weather {
     val forecast = this.data.groupBy { it.time!!.iso8601TimestampToMilliseconds() }
     val current = if (!this.observation.isNullOrEmpty()) {
         this.observation.groupBy { it.parameterName }
@@ -76,26 +69,29 @@ fun FmiWeather.toDomain(location: Location): Weather {
      * Which would prevent us from knowing if the current icon is null or not
      * and make "use hourly icon as fallback" just not work
      */
-    val currentIcon = if (current != null)
-        current["wawa"]?.get(0)?.parameterValue?.toSafeDouble() else null
-
+    val currentIcon =
+        if (current != null) {
+            current["wawa"]?.get(0)?.parameterValue?.toSafeDouble()
+        } else {
+            null
+        }
 
     val daily = computeDaily(this.data, location)
 
     return Weather(
         location = location,
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = currentDataForParam("t2m"),
             humidity = currentDataForParam("rh") ?: 0.0,
-            windSpeed = WindSpeedUnit.MPS.convert(
-                currentDataForParam("ws_10min"),
-                WindSpeedUnit.KPH
+            windSpeed = WindUnit.MPS.convert(
+                from = currentDataForParam("ws_10min"),
+                to = WindUnit.KPH,
             ),
             windDirection = WindDirection.toWindDirectionFromDegrees(currentDataForParam("wd_10min")?.toInt()),
             pressureMsl = currentDataForParam("p_sea"),
             visibility = currentDataForParam("vis")?.toInt(),
             cloudCover = null,
-            uvIndex = null,
+            ultraviolet = null,
             weatherCondition = if (currentIcon == 0.0 || currentIcon == null || currentIcon.isNaN()
             ) FmiConditionMap.getCondition(
                 hourDataForParam(
@@ -117,9 +113,9 @@ fun FmiWeather.toDomain(location: Location): Weather {
 
             WeatherHourly(
                 temperature = hourDataForParam(time, "Temperature"),
-                windSpeed = WindSpeedUnit.MPS.convert(
-                    hourDataForParam(time, "WindSpeedMS"),
-                    WindSpeedUnit.KPH
+                windSpeed = WindUnit.MPS.convert(
+                    from = hourDataForParam(time, "WindSpeedMS"),
+                    to = WindUnit.KPH,
                 ),
                 windDirection = WindDirection.toWindDirectionFromDegrees(
                     hourDataForParam(
@@ -129,7 +125,7 @@ fun FmiWeather.toDomain(location: Location): Weather {
                 ),
                 rain = hourDataForParam(time, "Precipitation1h") ?: 0.0,
                 snowfall = null,
-                uvIndex = null,
+                ultraviolet = null,
                 pressureMsl = hourDataForParam(time, "Pressure"),
                 visibility = hourDataForParam(time, "Visibility")?.roundToInt(),
                 humidity = hourDataForParam(time, "Humidity"),
@@ -150,15 +146,12 @@ fun FmiWeather.toDomain(location: Location): Weather {
 
 private fun computeDaily(
     data: List<FmiWeatherMember>,
-    location: Location
+    location: Location,
 ): List<WeatherDaily> {
-
-
     val zoneId = location.timezone
 
     val groupedByDay = data.groupBy {
         it.time!!.iso8601TimestampToMilliseconds().normalizeToDay(zoneId)
-
     }
 
     val sunTimings = getSunTimings(
@@ -167,7 +160,7 @@ private fun computeDaily(
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
     val moonTimings = getMoonTimings(
@@ -176,9 +169,8 @@ private fun computeDaily(
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
-
 
     val dataForParam: (Long, String) -> List<FmiWeatherMember>? = { hour, param ->
         groupedByDay[hour]?.filter { it.parameterName == param } ?: emptyList()
@@ -198,7 +190,6 @@ private fun computeDaily(
             )?.mapNotNull { it.parameterValue?.toSafeDouble() }
                 ?.maxOf { it }.takeIf { it != null && !it.isNaN() }
 
-
         val windDirection =
             dataForParam(dailyIt.key, "WindDirection")?.mapNotNull { it.parameterValue }
                 ?.maxOrNull().takeIf { it != null }
@@ -211,11 +202,9 @@ private fun computeDaily(
             ?.mapNotNull { it.parameterValue?.toSafeDouble() }
             ?.average().takeIf { it != null && !it.isNaN() }
 
-
         val icon = dataForParam(dailyIt.key, "WeatherSymbol3")?.map { it.parameterValue }
             ?.groupingBy { it }
             ?.eachCount()?.entries?.maxByOrNull { it.value }.takeIf { it != null }
-
 
         val condition = computeDailyWeatherCondition(
             getHourlyConditionsForDay(dataForParam(dailyIt.key, "WeatherSymbol3")!!, dailyIt.key),
@@ -236,16 +225,13 @@ private fun computeDaily(
             dataForParam(dailyIt.key, "Pressure")?.map { it.parameterValue.toSafeDouble() ?: -1.0 }
                 ?.average().takeIf { it != null && !it.isNaN() }
 
-
         val minVisibility = dataForParam(dailyIt.key, "Visibility")?.minOfOrNull {
             it.parameterValue.toSafeDouble() ?: -1.0
         }
 
-
         val avgDewPoint =
             dataForParam(dailyIt.key, "DewPoint")?.map { it.parameterValue.toSafeDouble() ?: -1.0 }
                 ?.average().takeIf { it != null && !it.isNaN() }
-
 
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
@@ -258,7 +244,7 @@ private fun computeDaily(
             ),
             rainSum = rainSum,
             snowfallSum = null,
-            uvIndexMax = null,
+            ultravioletMaximum = null,
             weatherCondition = condition,
             time = dailyIt.key,
             precipitationProbabilityMax = precipitationProbabilityMax,
@@ -272,19 +258,18 @@ private fun computeDaily(
             pressureMsl = avgPressure,
             visibility = minVisibility?.roundToInt(),
             humidity = avgHumidity,
-            dewPoint = avgDewPoint
+            dewPoint = avgDewPoint,
         )
     }
 }
 
 private fun getHourlyConditionsForDay(
     data: List<FmiWeatherMember>,
-    time: Long
+    time: Long,
 ): List<WeatherCondition> {
     val startIndex =
         data.indexOfFirst { it.time!!.iso8601TimestampToMilliseconds() >= time }
             .takeIf { it != -1 } ?: 0
-
 
     val conditions = data.drop(maxOf(0, startIndex - 1))
         .take(WeatherSource.FMI.hourlyAggregationLimitHours)

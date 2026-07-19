@@ -5,11 +5,17 @@ import com.pranshulgg.weather_master_app.data.local.dao.location.LocationsDao
 import com.pranshulgg.weather_master_app.data.local.dao.weather.nws.NwsDao
 import jakarta.inject.Inject
 
-
 class WeatherDataReconcilerRepository @Inject constructor(
     private val nwsDao: NwsDao,
-    private val locationDao: LocationsDao
+    private val locationDao: LocationsDao,
 ) {
+    suspend fun cleanNws(
+        locationId: String,
+    ) {
+        nwsDao.deleteGridPointsForLocation(
+            locationId = locationId,
+        )
+    }
 
     /**
      * This clears up extra data for sources not used
@@ -17,14 +23,13 @@ class WeatherDataReconcilerRepository @Inject constructor(
      * NWS might have saved grid points
      * which are important to be removed from the DB so they don't end up stale
      */
-    suspend fun cleanUpStaleData(previousSource: WeatherSource, locationId: String) {
+    suspend fun cleanUpStaleData(
+        locationId: String,
+        previousSource: WeatherSource,
+    ) {
         when (previousSource) {
             WeatherSource.NWS -> cleanNws(locationId)
             else -> {}
         }
-    }
-
-    suspend fun cleanNws(locationId: String) {
-        nwsDao.deleteGridPointsForLocation(locationId)
     }
 }

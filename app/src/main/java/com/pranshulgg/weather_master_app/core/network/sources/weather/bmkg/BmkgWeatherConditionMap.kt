@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.bmkg
 
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
 
-
 object BmkgWeatherConditionMap {
     fun getCondition(id: Int?): WeatherCondition {
         return when (id) {

@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.bmkg.json
 
 import com.google.gson.annotations.SerializedName
 
-
 data class BmkgCurrentForecastJson(
     val data: BmkgCurrentForecastDataJson
 )

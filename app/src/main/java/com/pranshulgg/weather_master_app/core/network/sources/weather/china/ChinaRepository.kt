@@ -21,79 +21,57 @@ import javax.inject.Inject
 class ChinaRepository @Inject constructor(
     val dao: LocationsDao,
     val weatherDao: WeatherDao,
-    val api: ChinaApi
+    val api: ChinaApi,
 ) : WeatherRepository {
-
-
     override suspend fun getWeather(
-        location: Location,
+        isForceRefresh: Boolean,
         isManualRefresh: Boolean,
-        isForceRefresh: Boolean
-    ): WeatherResult =
-        withContext(
-            Dispatchers.IO
-        ) {
-            val cache = dao.getWeatherDataForLocation(location.id)
+        location: Location,
+    ): WeatherResult = withContext(Dispatchers.IO) {
+        val cache = dao.getWeatherDataForLocation(location.id)
+        val shouldReturnCache = shouldReturnWeatherCache(cache, isManualRefresh, isForceRefresh)
 
-            val shouldReturnCache = shouldReturnWeatherCache(cache, isManualRefresh, isForceRefresh)
-            val appKey = "weather20151024"
-            val sign = "zUFJoAR2ZVrDy1vF3D07"
+        val appKey = "weather20151024"
+        val sign = "zUFJoAR2ZVrDy1vF3D07"
 
-
-            when (shouldReturnCache) {
-                WeatherResultType.REFRESH_TOO_EARLY -> return@withContext WeatherResult.RefreshNotAvailable
-                WeatherResultType.SUCCESS -> return@withContext WeatherResult.Success(cache!!.toDomain())
-                else -> {}
-            }
-
-            return@withContext try {
-
-
-                val response = api.getLocationKey(location.latitude, location.longitude)
-
-                val body = response.body()
-                    ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-                val locationKey =
-                    body[0].locationKey ?: body[0].key ?: return@withContext WeatherResult.Error(
-                        exception = UnknownHostException()
-                    )
-
-
-                val forecastResponse = api.getForecast(
-                    location.latitude,
-                    location.longitude,
-                    appKey = appKey,
-                    sign = sign,
-                    locationKey = locationKey
-                )
-
-                val forecastBody = forecastResponse.body()
-                    ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-
-                val domain = forecastBody.toDomain(location)
-
-                weatherDao.insertWeather(
-                    domain.current.toCurrentWeatherEntity(location.id),
-                    domain.hourly.toHourlyWeatherEntity(location.id),
-                    domain.daily.toDailyWeatherEntity(location.id),
-                    location.id
-                )
-                WeatherResult.Success(domain)
-
-            } catch (e: Exception) {
-
-                val isCacheSafe = isWeatherCacheSafe(cache)
-
-                WeatherResult.Error(
-                    exception = e,
-                    if (isCacheSafe) cache?.toDomain() else null
-                )
-
-            }
-
-
+        when (shouldReturnCache) {
+            WeatherResultType.REFRESH_TOO_EARLY -> return@withContext WeatherResult.RefreshNotAvailable(cache?.toDomain())
+            WeatherResultType.SUCCESS -> return@withContext (WeatherResult.Success(cache!!.toDomain()))
+            else -> {}
         }
 
+        return@withContext try {
+            val response = api.getLocationKey(location.latitude, location.longitude)
+            val body = response.body()
+                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
+            val locationKey =
+                body[0].locationKey ?: body[0].key ?: return@withContext WeatherResult.Error(
+                    exception = UnknownHostException()
+                )
+            val forecastResponse = api.getForecast(
+                location.latitude,
+                location.longitude,
+                appKey = appKey,
+                sign = sign,
+                locationKey = locationKey,
+            )
+            val forecastBody = forecastResponse.body()
+                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
+            val domain = forecastBody.toDomain(location)
+
+            weatherDao.insertWeather(
+                domain.current.toCurrentWeatherEntity(location.id),
+                domain.hourly.toHourlyWeatherEntity(location.id),
+                domain.daily.toDailyWeatherEntity(location.id),
+                location.id
+            )
+            WeatherResult.Success(domain)
+
+        } catch (e: Exception) {
+            WeatherResult.Error(
+                cacheWeather = if (isWeatherCacheSafe(cache)) cache?.toDomain() else null,
+                exception = e,
+            )
+        }
+    }
 }

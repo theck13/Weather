@@ -1,0 +1,10 @@
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.pranshulgg.weather_master_app.widgets.ActivityWidgetConfig"
+    android:minHeight="40dp"
+    android:minWidth="100dp"
+    android:previewImage="@drawable/im_widget_transparent_preview"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen">
+</appwidget-provider>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- APPLICATION -->
+    <color name="launcher_background">@color/material_blue_500</color>
+    <color name="launcher_background_cloud_1">@color/white_80</color>
+    <color name="launcher_background_cloud_2">@color/white_80</color>
+    <color name="launcher_background_grid">@color/white_20</color>
+    <color name="launcher_background_sun_center_1">@color/white_60</color>
+    <color name="launcher_background_sun_center_2">@color/white_60</color>
+    <color name="launcher_background_sun_inner_1">@color/white_60</color>
+    <color name="launcher_background_sun_inner_2">@color/white_60</color>
+    <color name="launcher_background_sun_inner_3">@color/white_60</color>
+    <color name="launcher_background_sun_outer_1">@color/white_60</color>
+    <color name="launcher_background_sun_outer_2">@color/white_60</color>
+    <color name="launcher_background_sun_outer_3">@color/white_60</color>
+
+</resources>

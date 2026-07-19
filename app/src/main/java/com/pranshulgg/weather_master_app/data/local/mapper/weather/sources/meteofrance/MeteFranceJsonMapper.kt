@@ -2,12 +2,12 @@ package com.pranshulgg.weather_master_app.data.local.mapper.weather.sources.mete
 
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
-import com.pranshulgg.weather_master_app.core.model.weather.WindSpeedUnit
+import com.pranshulgg.weather_master_app.core.model.weather.WindUnit
 import com.pranshulgg.weather_master_app.core.model.weather.wind.WindDirection
 import com.pranshulgg.weather_master_app.core.network.sources.weather.meteofrance.MeteoFranceConditionMap
 import com.pranshulgg.weather_master_app.core.network.sources.weather.meteofrance.json.MeteoFranceForecastItemJson
@@ -20,7 +20,6 @@ import com.pranshulgg.weather_master_app.core.utils.weather.calculations.compute
 import com.pranshulgg.weather_master_app.core.utils.weather.computing.computeDailyWeatherCondition
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findHourlyIndexForTime
 
-
 fun MeteoFranceForecastJson.toDomain(location: Location): Weather {
     val forecast = this.properties.forecast
     val daily =
@@ -30,23 +29,23 @@ fun MeteoFranceForecastJson.toDomain(location: Location): Weather {
         ) // We don't use "this.properties.daily" cuz too complicated
 
     val currentHour = findHourlyIndexForTime(
-        forecast.map { it.time.secondsToMilliseconds() }
+        time = forecast.map { it.time.secondsToMilliseconds() },
     )
 
     return Weather(
         location = location,
-        current = WeatherCurrent(
+        current = WeatherCurrently(
             temperature = forecast[currentHour].temperature,
             humidity = forecast[currentHour].humidity?.toDouble() ?: 0.0,
-            windSpeed = WindSpeedUnit.MPS.convert(
-                forecast[currentHour].windSpeed?.toDouble(),
-                WindSpeedUnit.KPH
+            windSpeed = WindUnit.MPS.convert(
+                from = forecast[currentHour].windSpeed?.toDouble(),
+                to = WindUnit.KPH,
             ),
             windDirection = WindDirection.toWindDirectionFromDegrees(forecast[currentHour].windDirection),
             pressureMsl = forecast[currentHour].pressureMsl,
             visibility = null,
             cloudCover = null, // NOT USED IN THE APP
-            uvIndex = null, // Only daily
+            ultraviolet = null, // Only daily
             weatherCondition = MeteoFranceConditionMap.getCondition(forecast[currentHour].icon),
             feelsLike = computeApparentTemperature(
                 forecast[currentHour].temperature, forecast[currentHour].humidity?.toDouble(),
@@ -60,14 +59,14 @@ fun MeteoFranceForecastJson.toDomain(location: Location): Weather {
         hourly = forecast.filter { it.temperature != null }.map {
             WeatherHourly(
                 temperature = it.temperature,
-                windSpeed = WindSpeedUnit.MPS.convert(
-                    it.windSpeed?.toDouble(),
-                    WindSpeedUnit.KPH
+                windSpeed = WindUnit.MPS.convert(
+                    from = it.windSpeed?.toDouble(),
+                    to = WindUnit.KPH,
                 ),
                 windDirection = WindDirection.toWindDirectionFromDegrees(it.windDirection),
                 rain = it.rain ?: 0.0,
                 snowfall = it.snow,
-                uvIndex = null,
+                ultraviolet = null,
                 pressureMsl = it.pressureMsl,
                 visibility = null,
                 humidity = it.humidity?.toDouble(),
@@ -83,15 +82,12 @@ fun MeteoFranceForecastJson.toDomain(location: Location): Weather {
 
 private fun computeDaily(
     data: List<MeteoFranceForecastItemJson>,
-    location: Location
+    location: Location,
 ): List<WeatherDaily> {
-
-
     val zoneId = location.timezone
 
     val groupedByDay = data.groupBy {
         it.time.secondsToMilliseconds().normalizeToDay(zoneId)
-
     }
 
     val sunTimings = getSunTimings(
@@ -100,7 +96,7 @@ private fun computeDaily(
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
     val moonTimings = getMoonTimings(
@@ -109,13 +105,12 @@ private fun computeDaily(
         },
         location.timezone,
         location.latitude,
-        location.longitude
+        location.longitude,
     )
 
     return groupedByDay.map { dailyIt ->
-
-        val minTemperature = dailyIt.value.mapNotNull { it.temperature }.min()
-        val maxTemperature = dailyIt.value.mapNotNull { it.temperature }.max()
+        val temperatureMinimum = dailyIt.value.mapNotNull { it.temperature }.min()
+        val temperatureMaximum = dailyIt.value.mapNotNull { it.temperature }.max()
         val windSpeed = dailyIt.value
             .mapNotNull { it.windSpeed }
             .average()
@@ -133,31 +128,27 @@ private fun computeDaily(
         val icon = dailyIt.value.map { it.icon }.groupingBy { it }
             .eachCount().entries.maxByOrNull { it.value }
 
-
         val condition = computeDailyWeatherCondition(
             getHourlyConditionsForDay(dailyIt.value, time),
             MeteoFranceConditionMap.getCondition(icon?.key)
         )
-
 
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
         val avgHumidity = dailyIt.value.map { it.humidity?.toDouble() ?: -1.0 }.average()
         val avgPressure = dailyIt.value.map { it.pressureMsl ?: -1.0 }.average()
 
-
-
         WeatherDaily(
-            temperatureMin = minTemperature,
-            temperatureMax = maxTemperature,
-            windSpeed = WindSpeedUnit.MPS.convert(
-                windSpeed?.toDouble(),
-                WindSpeedUnit.KPH
+            temperatureMin = temperatureMinimum,
+            temperatureMax = temperatureMaximum,
+            windSpeed = WindUnit.MPS.convert(
+                from = windSpeed?.toDouble(),
+                to = WindUnit.KPH,
             ),
             windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
             rainSum = rainSum,
             snowfallSum = snowSum,
-            uvIndexMax = null,
+            ultravioletMaximum = null,
             weatherCondition = condition,
             time = time,
             precipitationProbabilityMax = null,
@@ -171,26 +162,24 @@ private fun computeDaily(
             pressureMsl = avgPressure,
             visibility = null,
             humidity = avgHumidity,
-            dewPoint = null
+            dewPoint = null,
         )
     }
 }
 
 private fun getHourlyConditionsForDay(
     data: List<MeteoFranceForecastItemJson>,
-    time: Long
+    time: Long,
 ): List<WeatherCondition> {
     val startIndex =
         data.indexOfFirst { it.time >= time }
             .takeIf { it != -1 } ?: 0
 
-
     val conditions = data.drop(maxOf(0, startIndex - 1))
-        .take(WeatherSource.METEO_FRANCE.hourlyAggregationLimitHours)
+        .take(WeatherSource.METEO.hourlyAggregationLimitHours)
         .map {
             MeteoFranceConditionMap.getCondition(it.icon)
         }
 
     return conditions
 }
-

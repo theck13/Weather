@@ -4,49 +4,59 @@ import android.content.Context
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.pranshulgg.weather_master_app.NOTIFICATION_CHANNEL_ID
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import java.util.concurrent.TimeUnit
 
 object WeatherUpdateScheduler {
+    fun disableWeatherUpdates(
+        context: Context,
+    ) {
+        WorkManager.getInstance(
+            context,
+        )
+            .cancelUniqueWork(
+                uniqueWorkName = NOTIFICATION_CHANNEL_ID,
+            )
+    }
+
     fun scheduleWeatherUpdates(
         context: Context,
         repeatInterval: Int,
     ) {
-
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiredNetworkType(
+                networkType = NetworkType.CONNECTED,
+            )
             .build()
 
         val request =
             PeriodicWorkRequestBuilder<WeatherWorker>(
-                repeatInterval.toLong(),
-                TimeUnit.MINUTES
+                repeatInterval = repeatInterval.toLong(),
+                repeatIntervalTimeUnit = TimeUnit.MINUTES,
             )
                 .setConstraints(constraints)
                 .build()
 
-
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "@pranshulgg_weather_master_updates",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            request
+            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
+            request = request,
+            uniqueWorkName = NOTIFICATION_CHANNEL_ID,
         )
-    }
-
-    fun disableWeatherUpdates(context: Context) {
-        WorkManager.getInstance(context)
-            .cancelUniqueWork("@pranshulgg_weather_master_updates")
     }
 
     suspend fun updateAllWidgets(
         context: Context,
         data: Weather,
-        units: WeatherUnits
+        units: WeatherUnits,
     ) {
-        WeatherWorker.updateAllWidgets(context, data, units)
+        WeatherWorker.updateAllWidgets(
+            context = context,
+            data = data,
+            units = units,
+        )
     }
 }

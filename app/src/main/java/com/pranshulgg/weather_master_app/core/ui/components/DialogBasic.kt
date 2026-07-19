@@ -3,9 +3,7 @@ package com.pranshulgg.weather_master_app.core.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -22,73 +20,105 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.pranshulgg.weather_master_app.core.ui.theme.ShapeRadius
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
 fun DialogBasic(
-    show: Boolean,
-    title: String,
-    confirmText: String = "Confirm",
-    dismissText: String = "Cancel",
+    isConfirmButtonDisabled: Boolean = false,
+    isDefaultActions: Boolean = true,
+    isDismissActionOnly: Boolean = false,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit,
-    showOnlyDismissAction: Boolean = false,
-    showDefaultActions: Boolean = true,
-    confirmBtnDisabled: Boolean = false,
+    show: Boolean,
+    textConfirm: String = "Confirm",
+    textDismiss: String = "Cancel",
+    textTitle: String,
     content: @Composable () -> Unit,
 ) {
-    if (!show) return
+    if (show.not()) return
 
     Dialog(
         onDismissRequest = {
             onDismiss()
-        }
+        },
     ) {
-
         Surface(
             modifier = Modifier
-                .width(300.dp)
-                .heightIn(max = 500.dp),
-            shape = RoundedCornerShape(ShapeRadius.ExtraLarge),
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            shadowElevation = 6.dp
-        ) {
-            Column() {
-                Text(
-                    title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                .heightIn(
+                    max = 500.dp,
                 )
-                Spacer(Modifier.height(16.dp))
+                .width(
+                    width = 300.dp,
+                ),
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            shape = RoundedCornerShape(
+                size = ShapeRadius.ExtraLarge,
+            ),
+            shadowElevation = 6.dp,
+        ) {
+            Column {
+                Text(
+                    modifier = Modifier.padding(
+                        end = 24.dp,
+                        start = 24.dp,
+                        top = 24.dp,
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = textTitle,
+                )
+
+                Gap(
+                    vertical = 16.dp,
+                )
+
                 content()
 
-                if (showDefaultActions) {
-                    Spacer(Modifier.height(16.dp))
+                if (isDefaultActions) {
+                    Gap(
+                        vertical = 16.dp,
+                    )
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 24.dp, start = 24.dp, end = 24.dp),
+                            .padding(
+                                bottom = 24.dp,
+                                end = 24.dp,
+                                start = 24.dp,
+                            ),
                         horizontalArrangement = Arrangement.End,
                     ) {
                         TextButton(
                             onClick = {
                                 onDismiss()
                             },
-                            shapes = ButtonDefaults.shapes()
+                            shapes = ButtonDefaults.shapes(),
                         ) {
-                            Text(dismissText, style = MaterialTheme.typography.labelLarge)
+                            Text(
+                                style = MaterialTheme.typography.labelLarge,
+                                text = textDismiss,
+                            )
                         }
-                        if (!showOnlyDismissAction) {
-                            Spacer(Modifier.width(8.dp))
+
+                        if (isDismissActionOnly.not()) {
+                            Gap(
+                                horizontal = 8.dp,
+                            )
+
                             TextButton(
-                                enabled = !confirmBtnDisabled,
+                                enabled = !isConfirmButtonDisabled,
                                 onClick = {
                                     onConfirm()
                                     onDismiss()
                                 },
-                                shapes = ButtonDefaults.shapes()
+                                shapes = ButtonDefaults.shapes(),
                             ) {
-                                Text(confirmText, style = MaterialTheme.typography.labelLarge)
+                                Text(
+                                    text = textConfirm,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
                             }
                         }
                     }
@@ -96,5 +126,4 @@ fun DialogBasic(
             }
         }
     }
-
 }

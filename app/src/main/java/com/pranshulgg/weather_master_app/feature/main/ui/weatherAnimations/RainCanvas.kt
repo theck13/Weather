@@ -1,4 +1,4 @@
-package com.pranshulgg.weather_master_app.feature.main.ui.weatherAnimations
+package com.pranshulgg.weather_master_app.feature.main.ui.weatheranimations
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,23 +29,15 @@ import kotlin.random.Random
 private data class Drop(
     var x: Float,
     var y: MutableState<Float>,
-    var speed: MutableState<Float>
+    var speed: MutableState<Float>,
 )
 
 @Composable
 fun RainCanvas(
     isStorming: Boolean = false,
     rainDropCount: Int = 80,
-    isFroggyLayout: Boolean = true
+    isFroggyLayout: Boolean = true,
 ) {
-
-    var canvasSize by remember { mutableStateOf(Size.Zero) }
-
-
-    var lightningAlpha by remember { mutableIntStateOf(0) }
-
-    val isDark = isThemeDark()
-
     val drops = remember {
         List(rainDropCount) {
             Drop(
@@ -56,12 +48,15 @@ fun RainCanvas(
 
         }.toMutableStateList()
     }
+    val isDark = isThemeDark()
+
+    var canvasSize by remember { mutableStateOf(Size.Zero) }
+    var lightningAlpha by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
-
         if (canvasSize == Size.Zero) return@LaunchedEffect
 
-        val gravity = 0.5f
+        val gravity = 0.50f
 
         while (true) {
             withFrameNanos {
@@ -69,7 +64,7 @@ fun RainCanvas(
                     it.speed.value += gravity
                     it.y.value += it.speed.value
 
-                    it.x += -1f + -Random.nextFloat() * -2f
+                    it.x += -1.00f + -Random.nextFloat() * -2.00f
 
                     if (it.y.value > canvasSize.height) {
                         it.y.value = 0f
@@ -81,11 +76,9 @@ fun RainCanvas(
         }
     }
 
-
     if (isStorming) {
         LaunchedEffect(Unit) {
             while (true) {
-
                 delay((1000..10000).random().toLong())
                 lightningAlpha = 124
                 delay((50..100).random().toLong())
@@ -97,48 +90,66 @@ fun RainCanvas(
                 delay((50..100).random().toLong())
 
                 lightningAlpha = 0
-
             }
         }
     }
 
-
     Canvas(
-        modifier = if (isFroggyLayout) Modifier
-            .fillMaxWidth()
-            .height(290.dp) else Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+        modifier =
+            if (isFroggyLayout) {
+                Modifier
+                    .fillMaxWidth()
+                    .height(
+                        height = 290.dp,
+                    )
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            }
     ) {
-
         canvasSize = size
 
         drops.forEach {
             drawLine(
-                start = Offset(it.x, it.y.value),
-                end = Offset(it.x, it.y.value + 20f),
-                strokeWidth = 5f,
-                cap = StrokeCap.Round,
                 brush = Brush.verticalGradient(
                     listOf(
-                        if (isDark) Color.Gray.copy(alpha = 0.5f) else Color.White.copy(alpha = 0.5f),
-                        Color.White.copy(alpha = if (isDark) 0.6f else 1.0f)
+                        if (isDark) {
+                            Color.Gray.copy(
+                                alpha = 0.50f,
+                            )
+                        } else {
+                            Color.White.copy(
+                                alpha = 0.50f,
+                            )
+                        },
+                        Color.White.copy(
+                            alpha = if (isDark) 0.60f else 1.00f,
+                        )
                     )
-                )
+                ),
+                cap = StrokeCap.Round,
+                end = Offset(it.x, it.y.value + 20.00f),
+                start = Offset(it.x, it.y.value),
+                strokeWidth = 5.00f,
             )
         }
+
         if (isStorming) {
             drawRect(
-                size = size,
                 brush = Brush.verticalGradient(
                     listOf(
-                        Color(212, 191, 255, alpha = lightningAlpha),
+                        Color(
+                            alpha = lightningAlpha,
+                            blue = 255,
+                            green = 191,
+                            red = 212,
+                        ),
                         Color.Transparent
                     )
-                )
-
+                ),
+                size = size,
             )
         }
     }
-
 }

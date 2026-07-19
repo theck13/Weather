@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="together">
+
+    <objectAnimator
+        android:duration="933"
+        android:interpolator="@drawable/av_splash_cloud_group_2_1"
+        android:propertyName="scaleX"
+        android:startOffset="116"
+        android:valueFrom="0.2"
+        android:valueTo="1"
+        android:valueType="floatType">
+    </objectAnimator>
+
+    <objectAnimator
+        android:duration="933"
+        android:interpolator="@drawable/av_splash_cloud_group_2_2"
+        android:propertyName="scaleY"
+        android:startOffset="116"
+        android:valueFrom="0.2"
+        android:valueTo="1"
+        android:valueType="floatType">
+    </objectAnimator>
+
+</set>

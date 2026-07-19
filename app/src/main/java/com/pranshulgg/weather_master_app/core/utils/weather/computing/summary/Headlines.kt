@@ -1,57 +1,58 @@
 package com.pranshulgg.weather_master_app.core.utils.weather.computing.summary
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.ui.res.stringResource
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.model.weather.TemperatureUnit
-import com.pranshulgg.weather_master_app.core.prefs.AppPrefsState
-import com.pranshulgg.weather_master_app.core.prefs.helper.PreferencesHelper
+import com.pranshulgg.weather_master_app.core.prefs.PreferencesHelper
 import com.pranshulgg.weather_master_app.core.utils.formatters.to12HourTimeString
 import com.pranshulgg.weather_master_app.core.utils.formatters.to24HourTimeString
 import kotlin.math.roundToInt
 
-
-// Pretty basic for now
 fun getHeadline(
-    summaryData: SummaryData,
-    zoneId: String,
-    units: WeatherUnits,
     context: Context,
+    summaryData: SummaryData,
+    units: WeatherUnits,
+    zoneId: String,
 ): String {
-
     val rain = summaryData.rain
     val snow = summaryData.snow
     val peakUv = summaryData.uv
-    val is24hr = PreferencesHelper.getBool("is24HrTimeFormat") ?: true
-    val peakRainyAt = if (is24hr) to24HourTimeString(rain.at, zoneId) else to12HourTimeString(
-        rain.at,
-        zoneId
-    )
-
-    val peakSnowAt = if (is24hr) to24HourTimeString(snow.at, zoneId) else to12HourTimeString(
-        snow.at,
-        zoneId
-    )
-
-    val peakUvAt = if (is24hr) to24HourTimeString(peakUv.at, zoneId) else to12HourTimeString(
-        peakUv.at,
-        zoneId
-    )
-
-    val parts = mutableListOf<String>()
-
-
+    val is24hr = PreferencesHelper.getString("app_time") == "24"
     val overviewTemplates = listOf(
         context.getString(R.string.summary_overview_template_1, summaryData.condition),
         context.getString(R.string.summary_overview_template_2, summaryData.condition),
         context.getString(R.string.summary_overview_template_3, summaryData.condition),
         context.getString(R.string.summary_overview_template_4, summaryData.condition)
     )
+    val parts = mutableListOf<String>()
+
+    val peakRainyAt =
+        if (is24hr) to24HourTimeString(
+            timeMilli = rain.at,
+            zoneId = zoneId
+        ) else to12HourTimeString(
+            timeMilli = rain.at,
+            zoneId = zoneId
+        )
+    val peakSnowAt =
+        if (is24hr) to24HourTimeString(
+            timeMilli = snow.at,
+            zoneId = zoneId
+        ) else to12HourTimeString(
+            timeMilli = snow.at,
+            zoneId = zoneId
+        )
+    val peakUvAt =
+        if (is24hr) to24HourTimeString(
+            timeMilli = peakUv.at,
+            zoneId = zoneId
+        ) else to12HourTimeString(
+            timeMilli = peakUv.at,
+            zoneId = zoneId
+        )
 
     parts += overviewTemplates.random()
-
 
     val rainSentence = when {
         rain.amount == 0.0 -> null
@@ -81,7 +82,6 @@ fun getHeadline(
     }
 
     rainSentence?.let { parts += it }
-
 
     val snowSentence = when {
         snow.amount == 0.0 -> null
@@ -139,35 +139,38 @@ fun getHeadline(
 
     uvSentence?.let { parts += it }
 
+    val temperatureMaximum =
+        TemperatureUnit.CELSIUS.convert(
+            from = summaryData.temperatures.temperatureMaximum,
+            to = units.temperature,
+        )?.roundToInt()!!
+    val temperatureMinimum =
+        TemperatureUnit.CELSIUS.convert(
+            from = summaryData.temperatures.temperatureMinimum,
+            to = units.temperature,
+        )?.roundToInt()!!
 
-    val tempMax =
-        TemperatureUnit.CELSIUS.convert(summaryData.temps.max, units.tempUnit)?.roundToInt()!!
-    val tempMin =
-        TemperatureUnit.CELSIUS.convert(summaryData.temps.min, units.tempUnit)?.roundToInt()!!
-
-    val tempAvgSentence = when {
-
-
-        summaryData.temps.max >= 35 -> listOf(
-            context.getString(R.string.summary_temp_hot_template_1, "${tempMax}°"),
+    val temperatureSentence = when {
+        summaryData.temperatures.temperatureMaximum >= 35 -> listOf(
+            context.getString(R.string.summary_temp_hot_template_1, "${temperatureMaximum}°"),
             context.getString(R.string.summary_temp_hot_template_2),
-            context.getString(R.string.summary_temp_hot_template_3, "${tempMin}°")
+            context.getString(R.string.summary_temp_hot_template_3, "${temperatureMinimum}°")
         ).random()
 
-        summaryData.temps.max >= 25 -> listOf(
-            context.getString(R.string.summary_temp_warm_template_1, "${tempMax}°"),
+        summaryData.temperatures.temperatureMaximum >= 25 -> listOf(
+            context.getString(R.string.summary_temp_warm_template_1, "${temperatureMaximum}°"),
             context.getString(R.string.summary_temp_warm_template_2),
-            context.getString(R.string.summary_temp_warm_template_3, "${tempMax}°")
+            context.getString(R.string.summary_temp_warm_template_3, "${temperatureMaximum}°")
         ).random()
 
-        summaryData.temps.max >= 15 -> listOf(
+        summaryData.temperatures.temperatureMaximum >= 15 -> listOf(
             context.getString(R.string.summary_temp_mild_template_1),
-            context.getString(R.string.summary_temp_mild_template_2, "${tempMax}°"),
+            context.getString(R.string.summary_temp_mild_template_2, "${temperatureMaximum}°"),
             context.getString(R.string.summary_temp_mild_template_3)
         ).random()
 
-        summaryData.temps.max >= 5 -> listOf(
-            context.getString(R.string.summary_temp_cool_template_1, "${tempMax}°"),
+        summaryData.temperatures.temperatureMaximum >= 5 -> listOf(
+            context.getString(R.string.summary_temp_cool_template_1, "${temperatureMaximum}°"),
             context.getString(R.string.summary_temp_cool_template_2),
             context.getString(R.string.summary_temp_cool_template_3)
         ).random()
@@ -175,13 +178,11 @@ fun getHeadline(
         else -> listOf(
             context.getString(R.string.summary_temp_cold_template_1),
             context.getString(R.string.summary_temp_cold_template_2),
-            context.getString(R.string.summary_temp_cold_template_3, "${tempMin}°")
+            context.getString(R.string.summary_temp_cold_template_3, "${temperatureMinimum}°")
         ).random()
     }
 
-
-    parts += tempAvgSentence
-
+    parts += temperatureSentence
 
     return parts.joinToString(" ")
 }

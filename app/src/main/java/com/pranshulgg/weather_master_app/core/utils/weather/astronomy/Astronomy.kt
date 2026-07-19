@@ -9,32 +9,42 @@ import org.shredzone.commons.suncalc.MoonIllumination
 import org.shredzone.commons.suncalc.MoonTimes
 import org.shredzone.commons.suncalc.SunTimes
 import java.time.Instant
-import java.time.ZoneId
 
 fun getSunTimings(
     timeMilli: List<Long>,
     zoneId: String,
-    lat: Double,
-    lon: Double
+    latitude: Double,
+    longitude: Double,
 ): List<SunTimings> {
 
     return timeMilli.map {
         val date = Instant.ofEpochMilli(it)
-            .atZone(safeZoneId(zoneId))
+            .atZone(
+                safeZoneId(
+                    id = zoneId,
+                )
+            )
             .toLocalDate()
-
 
         val sunTimes = SunTimes.compute()
             .on(date)
             .fullCycle()
-            .timezone(safeZoneId(zoneId))
-            .at(lat, lon)
+            .timezone(
+                safeZoneId(
+                    id = zoneId,
+                )
+            )
+            .at(latitude, longitude)
             .execute()
 
         val civilTwilight = SunTimes.compute()
             .on(date)
-            .timezone(safeZoneId(zoneId))
-            .at(lat, lon)
+            .timezone(
+                safeZoneId(
+                    id = zoneId,
+                )
+            )
+            .at(latitude, longitude)
             .twilight(SunTimes.Twilight.CIVIL)
             .execute()
 
@@ -56,32 +66,37 @@ fun getSunTimings(
 fun getMoonTimings(
     timeMilli: List<Long>,
     zoneId: String,
-    lat: Double,
-    lon: Double
+    latitude: Double,
+    longitude: Double,
 ): List<MoonTimings> {
 
     return timeMilli.map {
         val date = Instant.ofEpochMilli(it)
-            .atZone(safeZoneId(zoneId))
+            .atZone(
+                safeZoneId(
+                    id = zoneId,
+                )
+            )
             .toLocalDate()
-
 
         val moonTimes = MoonTimes.compute()
             .on(date)
-            .at(lat, lon)
-            .timezone(safeZoneId(zoneId))
+            .at(latitude, longitude)
+            .timezone(
+                safeZoneId(
+                    id = zoneId,
+                )
+            )
             .execute()
 
         val phase = MoonIllumination.compute().on(date).execute().phase
-
         val phaseName = getMoonPhase(phase)
 
-
         MoonTimings(
-            it,
-            moonTimes.rise?.toEpochSecond()?.secondsToMilliseconds(),
-            moonTimes.set?.toEpochSecond()?.secondsToMilliseconds(),
-            phase = phaseName
+            time = it,
+            moonrise = moonTimes.rise?.toEpochSecond()?.secondsToMilliseconds(),
+            moonset = moonTimes.set?.toEpochSecond()?.secondsToMilliseconds(),
+            phase = phaseName,
         )
     }
 }

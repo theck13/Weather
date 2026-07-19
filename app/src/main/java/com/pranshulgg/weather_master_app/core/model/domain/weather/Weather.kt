@@ -7,12 +7,12 @@ import com.pranshulgg.weather_master_app.core.model.weather.wind.WindDirection
 
 data class Weather(
     val location: Location,
-    val current: WeatherCurrent,
+    val current: WeatherCurrently,
     val hourly: List<WeatherHourly>,
-    val daily: List<WeatherDaily>
+    val daily: List<WeatherDaily>,
 )
 
-data class WeatherCurrent(
+data class WeatherCurrently(
     val temperature: Double?, // NOTE: ALWAYS C
     val humidity: Double,
     val windSpeed: Double?, // NOTE: ALWAYS KMH
@@ -20,66 +20,36 @@ data class WeatherCurrent(
     val pressureMsl: Double?, // NOTE: ALWAYS HPA
     val visibility: Int?,  // NOTE: ALWAYS METERS
     val cloudCover: Double?,
-    val uvIndex: Double?,
+    val ultraviolet: Double?,
     val weatherCondition: WeatherCondition,
     val feelsLike: Double?,
     val time: Long, // NOTE: ALWAYS MILLISECONDS
     val dewPoint: Double?,
     val utcOffsetSeconds: Long?,
-    val lastUpdatedInMilli: Long
+    val lastUpdatedInMilli: Long,
 ) {
-
-    fun isWindSpeedValid(): Boolean {
-        return windSpeed != null
-    }
-
-    fun isWindDirectionValid(): Boolean {
-        return windDirection != null
+    fun isDewPointValid(): Boolean {
+        return dewPoint != null
     }
 
     fun isPressureValid(): Boolean {
         return pressureMsl != null
     }
 
-    fun isVisibilityValid(): Boolean {
-        return visibility != null
-    }
-
-    fun isDewPointValid(): Boolean {
-        return dewPoint != null
-    }
-
-    fun isUvIndexValid(): Boolean {
-        return uvIndex != null
-    }
-
-}
-
-data class WeatherHourly(
-    val temperature: Double?, // NOTE: ALWAYS C
-    val windSpeed: Double?, // NOTE: ALWAYS KMH
-    val windDirection: WindDirection?, // NOTE: ALWAYS DOMINANT
-    val rain: Double,  // NOTE: ALWAYS MM
-    val snowfall: Double?, // NOTE: ALWAYS CM
-    val uvIndex: Double?,
-    val pressureMsl: Double?, // NOTE: ALWAYS HPA
-    val visibility: Int?,  // NOTE: ALWAYS METERS
-    val humidity: Double?,
-    val dewPoint: Double?,
-    val weatherCondition: WeatherCondition,
-    val time: Long,  // NOTE: ALWAYS MILLISECONDS
-    val precipitationProbability: Int?
-) {
-    fun isWindSpeedValid(): Boolean {
-        return windSpeed != null
-    }
-
     fun isWindDirectionValid(): Boolean {
         return windDirection != null
     }
 
-    fun isUvIndexValid(): Boolean {
-        return uvIndex != null
+    fun isWindSpeedValid(): Boolean {
+        return windSpeed != null
+    }
+
+    fun isUltravioletValid(): Boolean {
+        return ultraviolet != null
+    }
+
+    fun isVisibilityValid(): Boolean {
+        return visibility != null
     }
 }
 
@@ -90,7 +60,7 @@ data class WeatherDaily(
     val windDirection: WindDirection?, // NOTE: ALWAYS DOMINANT
     val rainSum: Double,  // NOTE: ALWAYS MM
     val snowfallSum: Double?, // NOTE: ALWAYS CM
-    val uvIndexMax: Double?,
+    val ultravioletMaximum: Double?,
     val weatherCondition: WeatherCondition,
     val time: Long, // NOTE: ALWAYS MILLISECONDS
     val precipitationProbabilityMax: Int?,
@@ -104,35 +74,62 @@ data class WeatherDaily(
     val moonset: Long, // NOTE: ALWAYS MILLISECONDS
     val moonPhase: MoonPhase,
     val dawn: Long,
-    val dusk: Long
+    val dusk: Long,
 ) {
 
-    fun isWindSpeedValid(): Boolean {
-        return windSpeed != null
-    }
-
-    fun isWindDirectionValid(): Boolean {
-        return windDirection != null
+    fun isHumidityValid(): Boolean {
+        return humidity != null && humidity != -1.0
     }
 
     fun isPrecipitationProbabilityMaxValid(): Boolean {
         return precipitationProbabilityMax != null
     }
 
-    fun isUvIndexMaxValid(): Boolean {
-        return uvIndexMax != null
+    fun isPressureValid(): Boolean {
+        return pressureMsl != null && pressureMsl != -1.0
+    }
+
+    fun isUltravioletMaxValid(): Boolean {
+        return ultravioletMaximum != null
     }
 
     fun isVisibilityValid(): Boolean {
         return visibility != null && visibility != -1
     }
 
-    fun isHumidityValid(): Boolean {
-        return humidity != null && humidity != -1.0
+    fun isWindDirectionValid(): Boolean {
+        return windDirection != null
     }
 
-    fun isPressureValid(): Boolean {
-        return pressureMsl != null && pressureMsl != -1.0
+    fun isWindSpeedValid(): Boolean {
+        return windSpeed != null
+    }
+}
+
+data class WeatherHourly(
+    val temperature: Double?, // NOTE: ALWAYS C
+    val windSpeed: Double?, // NOTE: ALWAYS KMH
+    val windDirection: WindDirection?, // NOTE: ALWAYS DOMINANT
+    val rain: Double,  // NOTE: ALWAYS MM
+    val snowfall: Double?, // NOTE: ALWAYS CM
+    val ultraviolet: Double?,
+    val pressureMsl: Double?, // NOTE: ALWAYS HPA
+    val visibility: Int?,  // NOTE: ALWAYS METERS
+    val humidity: Double?,
+    val dewPoint: Double?,
+    val weatherCondition: WeatherCondition,
+    val time: Long,  // NOTE: ALWAYS MILLISECONDS
+    val precipitationProbability: Int?,
+) {
+    fun isUvIndexValid(): Boolean {
+        return ultraviolet != null
     }
 
+    fun isWindDirectionValid(): Boolean {
+        return windDirection != null
+    }
+
+    fun isWindSpeedValid(): Boolean {
+        return windSpeed != null
+    }
 }

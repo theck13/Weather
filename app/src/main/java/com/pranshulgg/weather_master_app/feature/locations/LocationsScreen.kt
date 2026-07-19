@@ -1,17 +1,17 @@
 package com.pranshulgg.weather_master_app.feature.locations
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +27,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -34,176 +39,381 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.ui.components.Symbol
 import com.pranshulgg.weather_master_app.core.ui.components.Tooltip
-import com.pranshulgg.weather_master_app.core.ui.navigation.NavRoutes
+import com.pranshulgg.weather_master_app.core.ui.navigation.NavigationRoutes
 import com.pranshulgg.weather_master_app.core.ui.snackbar.SnackbarManager
-import com.pranshulgg.weather_master_app.data.provider.devicelocation.GetDeviceLocation
+import com.pranshulgg.weather_master_app.core.ui.theme.ShadowElevation
+import com.pranshulgg.weather_master_app.data.provider.devicelocation.hasBackgroundLocationPermission
 import com.pranshulgg.weather_master_app.data.provider.devicelocation.rememberBackgroundLocationPermissionLauncher
 import com.pranshulgg.weather_master_app.data.provider.devicelocation.rememberLocationPermissionLauncher
-import com.pranshulgg.weather_master_app.feature.intro.toDomain
+import com.pranshulgg.weather_master_app.feature.locations.ui.LocationScreenChooseDefaultDialog
 import com.pranshulgg.weather_master_app.feature.locations.ui.LocationScreenConfirmationDialog
 import com.pranshulgg.weather_master_app.feature.locations.ui.LocationScreenSheet
 import com.pranshulgg.weather_master_app.feature.shared.WeatherViewModel
 import com.pranshulgg.weather_master_app.feature.shared.ui.SharedDialogs
+import com.pranshulgg.weather_master_app.widgets.hasActiveWidgets
 
 data class LocationsScreenUiState(
     val isConfirmationDialogOpen: Boolean = false,
     val longClickedLocation: Location? = null,
     val isBottomSheetOpen: Boolean = false,
-    val isDeviceLocationLoading: Boolean = false
+    val isChooseDefaultDialogOpen: Boolean = false,
+    val isDeviceLocationLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val isReordering: Boolean = false,
 )
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
 fun LocationsScreen(
-    onBack: () -> Unit,
-    navController: NavController,
-    locations: List<Location>,
     activeLocation: Location?,
+    isTabletLike: Boolean = false,
+    locations: List<Location>,
+    navController: NavController,
+    onBack: () -> Unit,
     onLocationSelect: (Location) -> Unit,
-    isTabletLike: Boolean = false
+    units: WeatherUnits,
 ) {
-
-    val viewModel: LocationsScreenViewModel = hiltViewModel()
-    val weatherViewModel: WeatherViewModel = hiltViewModel()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val uiState = viewModel.uiState
-
-    val weatherForLocations by viewModel.allLocationsWeather.collectAsStateWithLifecycle(
-        initialValue = emptyList()
+    val context = LocalContext.current
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
     )
+    val viewModel: LocationsScreenViewModel = hiltViewModel()
+    val uiState = viewModel.uiState
+    val weatherForLocations by viewModel.allLocationsWeather.collectAsStateWithLifecycle(
+        initialValue = emptyList(),
+    )
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val weatherViewModel: WeatherViewModel = hiltViewModel()
 
     var backgroundLocationPermissionInfoDialogOpen by remember { mutableStateOf(false) }
     var locationPermissionInfoDialogOpen by remember { mutableStateOf(false) }
+    var hasBackgroundLocation by remember { mutableStateOf(context.hasBackgroundLocationPermission()) }
+
+    // Prompt for background location only after a device location has been added, and only
+    // when widgets exist, since background location exists purely to keep widgets updated.
+    val promptBackgroundLocationIfNeeded = {
+        if (context.hasActiveWidgets() && !context.hasBackgroundLocationPermission()) {
+            backgroundLocationPermissionInfoDialogOpen = true
+        }
+    }
 
     val requestLocation = rememberLocationPermissionLauncher(
+        onDenied = {
+            SnackbarManager.show(
+                message = R.string.location_permission_required,
+            )
+        },
         onForegroundGranted = {
-            backgroundLocationPermissionInfoDialogOpen = true
+            viewModel.saveDeviceLocation(onSaved = promptBackgroundLocationIfNeeded)
         },
-        onDenied = {
-            SnackbarManager.show(R.string.location_permission_required)
-        }
     )
-
     val requestBackgroundLocation = rememberBackgroundLocationPermissionLauncher(
-        onGranted = {
-            viewModel.saveDeviceLocation()
-        },
         onContinueWithoutBackground = {
-            viewModel.saveDeviceLocation()
+            hasBackgroundLocation = context.hasBackgroundLocationPermission()
         },
         onDenied = {
-            SnackbarManager.show(R.string.location_permission_required)
-            backgroundLocationPermissionInfoDialogOpen = true
-        }
+            hasBackgroundLocation = false
+        },
+        onGranted = {
+            hasBackgroundLocation = true
+        },
     )
 
+    val showBackgroundLocationCard =
+        hasBackgroundLocation.not() &&
+        context.hasActiveWidgets() &&
+        locations.any { it.isDeviceLocation }
 
+    BackHandler(
+        enabled = uiState.value.isReordering,
+    ) {
+        viewModel.stopReordering()
+    }
 
     Scaffold(
-        modifier = if (isTabletLike) Modifier.width(330.dp) else Modifier,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier.nestedScroll(
+            connection = scrollBehavior.nestedScrollConnection,
+        ),
         topBar = {
-            TopBar(onBack, isTabletLike)
+            TopBar(
+                isRefreshing = uiState.value.isRefreshing,
+                isReordering = uiState.value.isReordering,
+                isTabletLike = isTabletLike,
+                navController = navController,
+                onBack = onBack,
+                onDoneReordering = {
+                    viewModel.stopReordering()
+                },
+                onRefresh = {
+                    viewModel.refreshAllLocations(
+                        onComplete = {
+                            weatherViewModel.reloadActiveLocation()
+                        },
+                    )
+                },
+                scrollBehavior = scrollBehavior,
+            )
         },
-        floatingActionButton = {
-            FloatingButton(navController)
-        },
-        floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding())
+                .then(
+                    if (isTabletLike) {
+                        Modifier
+                            .padding(
+                                top = TopAppBarDefaults.TopAppBarExpandedHeight,
+                            )
+                            .windowInsetsPadding(
+                                insets = TopAppBarDefaults.windowInsets.only(
+                                    sides = WindowInsetsSides.Left + WindowInsetsSides.Top,
+                                )
+                            )
+                    } else {
+                        Modifier.padding(
+                            bottom = paddingValues.calculateBottomPadding(),
+                            top = paddingValues.calculateTopPadding(),
+                        )
+                    }
+                )
+                .fillMaxSize(),
         ) {
             LocationsScreenContent(
-                locations,
-                onLongClick = {
-                    viewModel.showBottomSheet(it)
+                activeLocation = activeLocation,
+                isDeviceLocationLoading =uiState.value.isDeviceLocationLoading,
+                isReordering = uiState.value.isReordering,
+                locations = locations,
+                onAddCurrentLocation = {
+                    locationPermissionInfoDialogOpen = true
+                },
+                onEnableBackgroundLocation = {
+                    backgroundLocationPermissionInfoDialogOpen = true
                 },
                 onLocationSelect = {
                     onLocationSelect(it)
                 },
-                activeLocation = activeLocation,
-                weatherForLocations,
-                onAddCurrentLocation = { locationPermissionInfoDialogOpen = true },
-                uiState.value.isDeviceLocationLoading
+                onLongClick = {
+                    viewModel.showBottomSheet(it)
+                },
+                onReorder = {
+                    viewModel.updateLocationsOrder(it)
+                },
+                showBackgroundLocationCard = showBackgroundLocationCard,
+                units = units,
+                weatherForLocations = weatherForLocations,
             )
         }
     }
 
+    LocationScreenConfirmationDialog(
+        weatherViewModel = weatherViewModel,
+        viewModel = viewModel,
+    )
 
-    LocationScreenConfirmationDialog(weatherViewModel, viewModel)
-    LocationScreenSheet(viewModel, sheetState)
+    LocationScreenChooseDefaultDialog(
+        locations = locations,
+        viewModel = viewModel,
+        weatherViewModel = weatherViewModel,
+    )
+
+    LocationScreenSheet(
+        locations = locations,
+        sheetState = sheetState,
+        viewModel = viewModel,
+    )
 
     SharedDialogs.DeviceBackgroundLocationPermissionInfoDialog(
-        show = backgroundLocationPermissionInfoDialogOpen,
         onConfirm = {
             backgroundLocationPermissionInfoDialogOpen = false
             requestBackgroundLocation()
         },
-        onDismiss = { backgroundLocationPermissionInfoDialogOpen = false }
+        onDismiss = {
+            backgroundLocationPermissionInfoDialogOpen = false
+        },
+        show = backgroundLocationPermissionInfoDialogOpen,
     )
 
     SharedDialogs.DeviceLocationPermissionInfoDialog(
-        show = locationPermissionInfoDialogOpen,
         onConfirm = {
             requestLocation()
         },
-        onDismiss = { locationPermissionInfoDialogOpen = false }
+        onDismiss = {
+            locationPermissionInfoDialogOpen = false
+        },
+        show = locationPermissionInfoDialogOpen,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+)
 @Composable
-private fun TopBar(onBack: () -> Unit, isTabletLike: Boolean) {
+private fun TopBar(
+    isRefreshing: Boolean,
+    isReordering: Boolean,
+    isTabletLike: Boolean,
+    navController: NavController,
+    onBack: () -> Unit,
+    onDoneReordering: () -> Unit,
+    onRefresh: () -> Unit,
+    scrollBehavior: androidx.compose.material3.TopAppBarScrollBehavior,
+) {
+    val shadowElevation by animateDpAsState(
+        label = "Locations Top Bar Shadow",
+        targetValue = ShadowElevation.level2 * scrollBehavior.state.overlappedFraction,
+    )
+
     TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-        title = {
-            Text(
-                stringResource(R.string.locations),
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
-        navigationIcon = {
-            if (!isTabletLike) {
+        actions = {
+            // While reordering, the only action is confirming the new order.
+            if (isReordering) {
                 Tooltip(
-                    "Navigate up",
                     preferredPosition = TooltipAnchorPosition.Below,
-                    spacing = 10.dp
+                    spacing = 10.dp,
+                    tooltipText = stringResource(R.string.action_done),
                 ) {
                     IconButton(
-                        onClick = { onBack() }, shapes = IconButtonDefaults.shapes()
+                        onClick = onDoneReordering,
+                        shapes = IconButtonDefaults.shapes(),
                     ) {
                         Symbol(
-                            R.drawable.arrow_back_24px,
-                            desc = "arrow back icon",
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            description = stringResource(R.string.action_done),
+                            icon = R.drawable.ic_check_24,
+                        )
+                    }
+                }
+            } else {
+                if (isTabletLike.not()) {
+                    Tooltip(
+                        preferredPosition = TooltipAnchorPosition.Below,
+                        spacing = 10.dp,
+                        tooltipText = stringResource(R.string.search),
+                    ) {
+                        IconButton(
+                            onClick = {
+                                onBack()
+                                navController.navigate(
+                                    route = NavigationRoutes.SEARCH,
+                                )
+                            },
+                            shapes = IconButtonDefaults.shapes(),
+                        ) {
+                            Symbol(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                description = stringResource(R.string.search),
+                                icon = R.drawable.ic_search_24,
+                            )
+                        }
+                    }
+                }
+
+                Tooltip(
+                    preferredPosition = TooltipAnchorPosition.Below,
+                    spacing = 10.dp,
+                    tooltipText = stringResource(R.string.refresh),
+                ) {
+                    IconButton(
+                        enabled = isRefreshing.not(),
+                        onClick = onRefresh,
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        if (isRefreshing) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(
+                                    size = 16.dp,
+                                ),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                strokeWidth = 2.dp,
+                            )
+                        } else {
+                            Symbol(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                description = stringResource(R.string.refresh_locations),
+                                icon = R.drawable.ic_refresh_24,
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        ),
+        modifier = Modifier
+            .drawWithContent {
+                clipRect(
+                    bottom = size.height + 16.dp.toPx(),
+                ) {
+                    this@drawWithContent.drawContent()
+                }
+            }
+            .shadow(
+                elevation = shadowElevation,
+            ),
+        navigationIcon = {
+            // Back exits reorder mode first so it never navigates away mid-reorder.
+            if (isReordering) {
+                Tooltip(
+                    preferredPosition = TooltipAnchorPosition.Below,
+                    spacing = 10.dp,
+                    tooltipText = stringResource(R.string.action_done),
+                ) {
+                    IconButton(
+                        onClick = onDoneReordering,
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Symbol(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            description = stringResource(R.string.arrow_back),
+                            icon = R.drawable.ic_arrow_back_24,
+                        )
+                    }
+                }
+            } else if (isTabletLike.not()) {
+                Tooltip(
+                    preferredPosition = TooltipAnchorPosition.Below,
+                    spacing = 10.dp,
+                    tooltipText = stringResource(R.string.navigate_back),
+                ) {
+                    IconButton(
+                        onClick = {
+                            onBack()
+                        },
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Symbol(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            description = stringResource(R.string.arrow_back),
+                            icon = R.drawable.ic_arrow_back_24,
                         )
                     }
                 }
             }
-        }
-    )
-}
-
-@Composable
-private fun FloatingButton(navController: NavController) {
-    FloatingActionButton(
-        onClick = {
-            navController.navigate(NavRoutes.SEARCH)
         },
-        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-        modifier = Modifier
-            .size(96.dp),
-        shape = CircleShape
-    ) {
-        Symbol(
-            R.drawable.search_24px,
-            color = MaterialTheme.colorScheme.onTertiaryContainer,
-            size = 36.dp
-        )
-    }
+        scrollBehavior = scrollBehavior,
+        title = {
+            Text(
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleLarge,
+                text = stringResource(
+                    if (isReordering) R.string.action_reorder_locations else R.string.locations,
+                ),
+            )
+        },
+        windowInsets =
+            if (isTabletLike) {
+                TopAppBarDefaults.windowInsets.only(
+                    sides = WindowInsetsSides.Left + WindowInsetsSides.Top,
+                )
+            } else {
+                TopAppBarDefaults.windowInsets
+            },
+    )
 }

@@ -4,100 +4,236 @@ import androidx.appcompat.app.AppCompatDelegate
 import java.util.Locale
 
 data class Language(
+    val code: String,
     val name: String,
-    val value: String,
     val nativeName: String,
-    val code: String
+    val value: String,
 )
-
 
 fun getAppLocalLocales(): List<Language> {
     return listOf(
-        Language(name = "System", value = "sys", nativeName = "Your device language", code = "SYS"),
-        Language(name = "English", value = "en", nativeName = "English", code = "US"),
         Language(
+            code = "SYS",
+            name = "System",
+            nativeName = "Device Language",
+            value = "sys",
+        ),
+        Language(
+            code = "AR",
             name = "Arabic (Saudi Arabia)",
-            value = "ar-SA",
             nativeName = "العربية",
-            code = "AR"
+            value = "ar-SA",
         ),
         Language(
+            code = "AZ",
             name = "Azerbaijani",
-            value = "az-AZ",
             nativeName = "Azərbaycan dili",
-            code = "AZ"
-        ),
-        Language(name = "Bulgarian", value = "bg-BG", nativeName = "Български", code = "BG"),
-        Language(name = "Catalan", value = "ca-ES", nativeName = "Català", code = "ES"),
-        Language(name = "Czech", value = "cs-CZ", nativeName = "Čeština", code = "CZ"),
-        Language(name = "German", value = "de-DE", nativeName = "Deutsch", code = "DE"),
-        Language(name = "Greek", value = "el-GR", nativeName = "Ελληνικά", code = "GR"),
-        Language(name = "Spanish", value = "es-ES", nativeName = "Español", code = "ES"),
-        Language(name = "Persian", value = "fa-IR", nativeName = "فارسی", code = "IR"),
-        Language(name = "Finnish", value = "fi-FI", nativeName = "Suomi", code = "FI"),
-        Language(name = "Filipino", value = "fil-PH", nativeName = "Filipino", code = "PH"),
-        Language(name = "French", value = "fr-FR", nativeName = "Français", code = "FR"),
-        Language(name = "Hungarian", value = "hu-HU", nativeName = "Magyar", code = "HU"),
-        Language(
-            name = "Indonesian",
-            value = "id-ID",
-            nativeName = "Bahasa Indonesia",
-            code = "ID"
-        ),
-        Language(name = "Italian", value = "it-IT", nativeName = "Italiano", code = "IT"),
-        Language(name = "Japanese", value = "ja-JP", nativeName = "日本語", code = "JP"),
-        Language(name = "Korean", value = "ko-KR", nativeName = "한국어", code = "KR"),
-        Language(name = "Dutch", value = "nl-NL", nativeName = "Nederlands", code = "NL"),
-        Language(name = "Polish", value = "pl-PL", nativeName = "Polski", code = "PL"),
-        Language(
-            name = "Portuguese (Brazil)",
-            value = "pt-BR",
-            nativeName = "Português (Brasil)", code = "BR"
+            value = "az-AZ",
         ),
         Language(
-            name = "Portuguese (Portugal)",
-            value = "pt-PT",
-            nativeName = "Português (Portugal)", code = "PT"
+            code = "BG",
+            name = "Bulgarian",
+            nativeName = "Български",
+            value = "bg-BG",
         ),
-        Language(name = "Romanian", value = "ro-RO", nativeName = "Română", code = "RO"),
-        Language(name = "Russian", value = "ru-RU", nativeName = "Русский", code = "RU"),
-        Language(name = "Slovenian", value = "sl-SI", nativeName = "Slovenščina", code = "SI"),
         Language(
-            name = "Serbian (Cyrillic)",
-            value = "sr-CS",
-            nativeName = "Српски",
-            code = "CS"
+            code = "ES",
+            name = "Catalan",
+            nativeName = "Català",
+            value = "ca-ES",
         ),
-        Language(name = "Serbian (Latin)", value = "sr-SP", nativeName = "Srpski", code = "SP"),
-        Language(name = "Swedish", value = "sv-SE", nativeName = "Svenska", code = "SE"),
-        Language(name = "Thai", value = "th-TH", nativeName = "ไทย", code = "TH"),
-        Language(name = "Turkish", value = "tr-TR", nativeName = "Türkçe", code = "TR"),
-        Language(name = "Ukrainian", value = "uk-UA", nativeName = "Українська", code = "UA"),
-        Language(name = "Vietnamese", value = "vi-VN", nativeName = "Tiếng Việt", code = "VN"),
         Language(
+            code = "CN",
             name = "Chinese (Simplified)",
-            value = "zh-CN",
             nativeName = "简体中文",
-            code = "CN"
+            value = "zh-CN",
         ),
         Language(
+            code = "TW",
             name = "Chinese (Traditional)",
-            value = "zh-TW",
             nativeName = "繁體中文",
-            code = "TW"
+            value = "zh-TW",
         ),
         Language(
+            code = "CZ",
+            name = "Czech",
+            nativeName = "Čeština",
+            value = "cs-CZ",
+        ),
+        Language(
+            code = "NL",
+            name = "Dutch",
+            nativeName = "Nederlands",
+            value = "nl-NL",
+        ),
+        Language(
+            code = "US",
+            name = "English",
+            nativeName = "English",
+            value = "en",
+        ),
+        Language(
+            code = "PH",
+            name = "Filipino",
+            nativeName = "Filipino",
+            value = "fil-PH",
+        ),
+        Language(
+            code = "FI",
+            name = "Finnish",
+            nativeName = "Suomi",
+            value = "fi-FI",
+        ),
+        Language(
+            code = "FR",
+            name = "French",
+            nativeName = "Français",
+            value = "fr-FR",
+        ),
+        Language(
+            code = "DE",
+            name = "German",
+            nativeName = "Deutsch",
+            value = "de-DE",
+        ),
+        Language(
+            code = "GR",
+            name = "Greek",
+            nativeName = "Ελληνικά",
+            value = "el-GR",
+        ),
+        Language(
+            code = "HE",
             name = "Hebrew",
-            value = "he-IL",
             nativeName = "עברית",
-            code = "HE"
+            value = "he-IL",
         ),
         Language(
+            code = "HU",
+            name = "Hungarian",
+            nativeName = "Magyar",
+            value = "hu-HU",
+        ),
+        Language(
+            code = "ID",
+            name = "Indonesian",
+            nativeName = "Bahasa Indonesia",
+            value = "id-ID",
+        ),
+        Language(
+            code = "IT",
+            name = "Italian",
+            nativeName = "Italiano",
+            value = "it-IT",
+        ),
+        Language(
+            code = "JP",
+            name = "Japanese",
+            nativeName = "日本語",
+            value = "ja-JP",
+        ),
+        Language(
+            code = "KR",
+            name = "Korean",
+            nativeName = "한국어",
+            value = "ko-KR",
+        ),
+        Language(
+            code = "LT",
             name = "Lithuanian",
-            value = "lt-LT",
             nativeName = "lietuvių kalba",
-            code = "LT"
-        )
+            value = "lt-LT",
+        ),
+        Language(
+            code = "IR",
+            name = "Persian",
+            nativeName = "فارسی",
+            value = "fa-IR",
+        ),
+        Language(
+            code = "PL",
+            name = "Polish",
+            nativeName = "Polski",
+            value = "pl-PL",
+        ),
+        Language(
+            code = "BR",
+            name = "Portuguese (Brazil)",
+            nativeName = "Português (Brasil)",
+            value = "pt-BR",
+        ),
+        Language(
+            code = "PT",
+            name = "Portuguese (Portugal)",
+            nativeName = "Português (Portugal)",
+            value = "pt-PT",
+        ),
+        Language(
+            code = "RO",
+            name = "Romanian",
+            nativeName = "Română",
+            value = "ro-RO",
+        ),
+        Language(
+            code = "RU",
+            name = "Russian",
+            nativeName = "Русский",
+            value = "ru-RU",
+        ),
+        Language(
+            code = "CS",
+            name = "Serbian (Cyrillic)",
+            nativeName = "Српски",
+            value = "sr-CS",
+        ),
+        Language(
+            code = "SP",
+            name = "Serbian (Latin)",
+            nativeName = "Srpski",
+            value = "sr-SP",
+        ),
+        Language(
+            code = "SI",
+            name = "Slovenian",
+            nativeName = "Slovenščina",
+            value = "sl-SI",
+        ),
+        Language(
+            code = "ES",
+            name = "Spanish",
+            nativeName = "Español",
+            value = "es-ES",
+        ),
+        Language(
+            code = "SE",
+            name = "Swedish",
+            nativeName = "Svenska",
+            value = "sv-SE",
+        ),
+        Language(
+            code = "TH",
+            name = "Thai",
+            nativeName = "ไทย",
+            value = "th-TH",
+        ),
+        Language(
+            code = "TR",
+            name = "Turkish",
+            nativeName = "Türkçe",
+            value = "tr-TR",
+        ),
+        Language(
+            code = "UA",
+            name = "Ukrainian",
+            nativeName = "Українська",
+            value = "uk-UA",
+        ),
+        Language(
+            code = "VN",
+            name = "Vietnamese",
+            nativeName = "Tiếng Việt",
+            value = "vi-VN",
+        ),
     )
 }
 
@@ -105,4 +241,3 @@ fun getCurrentAppLocale(): Locale {
     val locale = AppCompatDelegate.getApplicationLocales()[0]
     return locale ?: Locale.getDefault()
 }
-

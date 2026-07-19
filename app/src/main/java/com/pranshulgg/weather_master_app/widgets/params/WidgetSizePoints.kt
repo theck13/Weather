@@ -4,26 +4,67 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
 object WidgetSizePoints {
-
     val SIZES = setOf(
-        DpSize(140.dp, 40.dp),
-        DpSize(220.dp, 40.dp),
-        DpSize(301.dp, 40.dp),
-        DpSize(382.dp, 40.dp),
+        DpSize(
+            width = 140.dp,
+            height = 40.dp,
+        ),
+        DpSize(
+            height = 40.dp,
+            width = 220.dp,
+        ),
+        DpSize(
+            height = 40.dp,
+            width = 301.dp,
+        ),
+        DpSize(
+            height = 40.dp,
+            width = 382.dp,
+        ),
 
-        DpSize(120.dp, 40.dp),
-        DpSize(200.dp, 40.dp),
-        DpSize(280.dp, 40.dp),
-        DpSize(360.dp, 40.dp),
+        DpSize(
+            height = 40.dp,
+            width = 120.dp,
+        ),
+        DpSize(
+            height = 40.dp,
+            width = 200.dp,
+        ),
+        DpSize(
+            height = 40.dp,
+            width = 280.dp,
+        ),
+        DpSize(
+            height = 40.dp,
+            width = 360.dp,
+        ),
 
         DpSize(60.dp, 40.dp),
 
-        DpSize(140.dp, 208.dp),
-        DpSize(220.dp, 208.dp),
-        DpSize(301.dp, 208.dp),
+        DpSize(
+            height = 208.dp,
+            width = 140.dp,
+        ),
+        DpSize(
+            height = 208.dp,
+            width = 220.dp,
+        ),
+        DpSize(
+            height = 208.dp,
+            width = 301.dp,
+        ),
 
-        DpSize(120.dp, 188.dp),
-        DpSize(200.dp, 188.dp),
-        DpSize(280.dp, 188.dp),
+        DpSize(
+            height = 188.dp,
+            width = 120.dp,
+        ),
+        DpSize(
+            height = 188.dp,
+            width = 200.dp,
+        ),
+        DpSize(
+            height = 188.dp,
+            width = 280.dp,
+        ),
     )
 }

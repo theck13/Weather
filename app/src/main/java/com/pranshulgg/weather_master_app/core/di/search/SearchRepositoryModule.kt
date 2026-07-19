@@ -13,23 +13,31 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(
+    SingletonComponent::class,
+)
 object SearchRepositoryModule {
     @Provides
     @Singleton
-    fun provideOpenMeteoSearchRepository(
-        api: OpenMeteoSearchApi
-    ): OpenMeteoSearchRepository = OpenMeteoSearchRepository(api)
-
-    @Provides
-    @Singleton
     fun provideGeoNamesSearchRepository(
-        api: GeoNamesSearchApi
-    ): GeoNamesSearchRepository = GeoNamesSearchRepository(api)
+        api: GeoNamesSearchApi,
+    ): GeoNamesSearchRepository = GeoNamesSearchRepository(
+        api = api,
+    )
 
     @Provides
     @Singleton
-    fun provideGeoNamesTimezoneRepository(api: GeoNamesTimezoneApi): GeoNamesTimezoneRepository =
-        GeoNamesTimezoneRepository(api)
+    fun provideGeoNamesTimezoneRepository(
+        api: GeoNamesTimezoneApi,
+    ): GeoNamesTimezoneRepository = GeoNamesTimezoneRepository(
+        api = api,
+    )
 
+    @Provides
+    @Singleton
+    fun provideOpenMeteoSearchRepository(
+        api: OpenMeteoSearchApi,
+    ): OpenMeteoSearchRepository = OpenMeteoSearchRepository(
+        api = api,
+    )
 }

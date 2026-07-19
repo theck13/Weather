@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 // ---------------------------- DAILY ----------------------------
 
 data class NwsForecastJson(
-    val properties: NwsForecastPeriodsJson
+    val properties: NwsForecastPeriodsJson,
 )
 
 data class NwsForecastPeriodsJson(
-    val periods: List<NwsForecastPeriodsItemJson>
+    val periods: List<NwsForecastPeriodsItemJson>,
 )
 
 data class NwsForecastPeriodsItemJson(
@@ -23,11 +23,11 @@ data class NwsForecastPeriodsItemJson(
     val windSpeed: String,
     val windDirection: String,
     val icon: String?,
-    val probabilityOfPrecipitation: NwsForecastProbabilityOfPrecipitationJson
+    val probabilityOfPrecipitation: NwsForecastProbabilityOfPrecipitationJson,
 )
 
 data class NwsForecastProbabilityOfPrecipitationJson(
-    val value: Long
+    val value: Long,
 )
 
 // ---------------------------- CURRENT ----------------------------
@@ -47,23 +47,23 @@ data class NwsCurrentForecastPropertiesJson(
 )
 
 data class NwsCurrentForecastTemperatureJson(
-    val value: Double?
+    val value: Double?,
 )
 
 data class NwsCurrentForecastWindSpeedJson(
-    val value: Double?
+    val value: Double?,
 )
 
 data class NwsCurrentForecastSeaLevelPressureJson(
-    val value: Double?
+    val value: Double?,
 )
 
 data class NwsCurrentForecastVisibilityJson(
-    val value: Double?
+    val value: Double?,
 )
 
 data class NwsCurrentForecastRelativeHumidityJson(
-    val value: Double
+    val value: Double,
 )
 
 // ---------------------------- HOURLY ----------------------------
@@ -75,7 +75,6 @@ data class NwsHourlyForecastJson(
 data class NwsHourlyForecastPeriodsJson(
     val periods: List<NwsHourlyForecastPeriodsItemJson>,
 )
-
 
 data class NwsHourlyForecastPeriodsItemJson(
     val number: Long,
@@ -91,18 +90,18 @@ data class NwsHourlyForecastPeriodsItemJson(
 
     val windSpeed: String,
     val windDirection: String,
-    val icon: String?
+    val icon: String?,
 
 )
 
 data class NwsHourlyForecastProbabilityOfPrecipitationJson(
-    val value: Long?
+    val value: Long?,
 )
 
 data class NwsHourlyForecastDewPointJson(
-    val value: Double?
+    val value: Double?,
 )
 
 data class NwsHourlyForecastRelativeHumidityJson(
-    val value: Double?
+    val value: Double?,
 )

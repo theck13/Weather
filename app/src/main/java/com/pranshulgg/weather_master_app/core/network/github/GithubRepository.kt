@@ -9,13 +9,14 @@ import javax.inject.Inject
 
 class GithubRepository @Inject constructor(
     private val api: GithubApi,
-    private val dao: GithubDao
+    private val dao: GithubDao,
 ) {
-    suspend fun isNewVersionAvailable(currentTag: String): Boolean = withContext(Dispatchers.IO) {
-
+    suspend fun isNewVersionAvailable(
+        currentTag: String,
+    ): Boolean = withContext(Dispatchers.IO) {
         val getSavedVersionInfo = dao.getGithubEntity()
-        if (getSavedVersionInfo != null && getSavedVersionInfo.currentTag == currentTag) {
 
+        if (getSavedVersionInfo != null && getSavedVersionInfo.currentTag == currentTag) {
             val ageMillis = System.currentTimeMillis() - getSavedVersionInfo.lastFetchedTime
             val maxAgeMillis = TimeUnit.HOURS.toMillis(24)
 
@@ -23,21 +24,16 @@ class GithubRepository @Inject constructor(
                 return@withContext getSavedVersionInfo.lastFetchedTag != currentTag
             }
         }
+
         try {
-
             val response = api.fetchGithubRepos()
-
             val body = response.body() ?: throw UnknownHostException()
-
-            val firstTag = body.firstOrNull { !it.prerelease }?.tagName
-                ?: return@withContext false
-
+            val firstTag = body.firstOrNull { !it.prerelease }?.tagName ?: return@withContext false
             val isNewAvailable = firstTag != currentTag
 
             dao.insertGithubEntity(currentTag, firstTag, System.currentTimeMillis())
 
             return@withContext isNewAvailable
-
         } catch (e: Exception) {
             throw e
         }

@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "2.3.4"
+    id("com.google.devtools.ksp") version "2.3.9"
     id("com.google.dagger.hilt.android")
     id("androidx.room")
     kotlin("plugin.serialization") version "2.3.21"
@@ -14,14 +14,12 @@ val localProps = Properties().apply {
     if (f.exists()) f.inputStream().use { load(it) }
 }
 
-
 val geoNamesUserNameKey =
     providers.gradleProperty("GEO_NAMES_USERNAME").orNull
         ?: System.getenv("GEO_NAMES_USERNAME")
         ?: ""
 
-val mfKey = providers.gradleProperty("MF_KEY").orNull ?: System.getenv("MF_KEY")
-?: ""
+val mfKey = providers.gradleProperty("MF_KEY").orNull ?: System.getenv("MF_KEY") ?: ""
 
 val keystoreFile = file("../keystore/release.jks")
 val hasKeystore = keystoreFile.exists()
@@ -101,7 +99,6 @@ android {
     }
 }
 
-
 room {
     schemaDirectory("$projectDir/schemas")
 }
@@ -129,6 +126,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.common.suncalc)
     implementation(libs.androidx.appcompat)
+    implementation(libs.google.material)
 
 //    coreLibraryDesugaring(libs.desugar.jdk.libs) // Not sure but it causes timezone crashes on some devices
     implementation(libs.androidx.hilt.navigation.compose)

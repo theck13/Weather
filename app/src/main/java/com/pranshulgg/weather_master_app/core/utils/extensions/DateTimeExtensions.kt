@@ -2,9 +2,6 @@ package com.pranshulgg.weather_master_app.core.utils.extensions
 
 import com.pranshulgg.weather_master_app.core.utils.formatters.safeZoneId
 import java.time.Instant
-import java.time.ZoneId
-import java.time.ZoneOffset
-
 
 object DateTimeExtensions {
     private val formatter = java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
@@ -18,10 +15,12 @@ object DateTimeExtensions {
             .toEpochMilli()
     }
 
-
-    fun Long.normalizeToDay(zoneId: String): Long {
-
-        val zone = safeZoneId(zoneId)
+    fun Long.normalizeToDay(
+        zoneId: String,
+    ): Long {
+        val zone = safeZoneId(
+            id = zoneId,
+        )
 
         val localDate = Instant.ofEpochMilli(this)
             .atZone(zone)

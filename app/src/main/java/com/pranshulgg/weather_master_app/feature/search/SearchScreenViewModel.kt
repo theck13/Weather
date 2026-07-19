@@ -7,10 +7,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.model.sources.SearchSource
 import com.pranshulgg.weather_master_app.core.model.domain.location.Location
 import com.pranshulgg.weather_master_app.core.model.domain.toAppException
 import com.pranshulgg.weather_master_app.core.model.domain.toMessageRes
+import com.pranshulgg.weather_master_app.core.model.sources.SearchSource
 import com.pranshulgg.weather_master_app.core.model.sources.WeatherSource
 import com.pranshulgg.weather_master_app.core.network.sources.search.geonames.GeoNamesTimezoneRepository
 import com.pranshulgg.weather_master_app.core.prefs.AppPrefsState
@@ -26,15 +26,12 @@ import javax.inject.Inject
 class SearchScreenViewModel @Inject constructor(
     val repo: SearchRepositoryProvider,
     val locationsRepo: LocationsRepository,
-    val geoNamesTimezoneRepository: GeoNamesTimezoneRepository
+    val geoNamesTimezoneRepository: GeoNamesTimezoneRepository,
 ) : ViewModel() {
-
-    var results by mutableStateOf<List<Location>>(emptyList())
-        private set
-
     var loading by mutableStateOf(false)
         private set
-
+    var results by mutableStateOf<List<Location>>(emptyList())
+        private set
 
     fun search(query: String) {
         if (query.isEmpty() || loading) return
@@ -48,14 +45,18 @@ class SearchScreenViewModel @Inject constructor(
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 val appExpectation = e.toAppException()
-                SnackbarManager.show(appExpectation.toMessageRes())
+                SnackbarManager.show(
+                    message = appExpectation.toMessageRes(),
+                )
                 return@launch
             } finally {
                 loading = false
             }
 
             if (data.isEmpty()) {
-                SnackbarManager.show(R.string.error_no_results_found)
+                SnackbarManager.show(
+                    message = R.string.error_no_results_found,
+                )
             }
 
             results = data
@@ -81,7 +82,9 @@ class SearchScreenViewModel @Inject constructor(
                 onBack()
             } catch (e: Exception) {
                 val appExpectation = e.toAppException()
-                SnackbarManager.show(appExpectation.toMessageRes())
+                SnackbarManager.show(
+                    message = appExpectation.toMessageRes(),
+                )
                 onReset()
             }
         }
@@ -110,7 +113,6 @@ class SearchScreenViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isSearchSourcePickerSheetOpen = true)
     }
 
-
     fun hideSearchSourcePickerSheet() {
         _uiState.value = _uiState.value.copy(isSearchSourcePickerSheetOpen = false)
     }
@@ -122,7 +124,6 @@ class SearchScreenViewModel @Inject constructor(
     fun showWeatherSourcesForLocationSheet() {
         _uiState.value = _uiState.value.copy(isWeatherSourcesForLocationSheetOpen = true)
     }
-
 
     fun hideWeatherSourcesForLocationSheet() {
         _uiState.value = _uiState.value.copy(isWeatherSourcesForLocationSheetOpen = false)

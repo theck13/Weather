@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:height="108dp"
+    android:viewportHeight="108"
+    android:viewportWidth="108"
+    android:width="108dp"
+    tools:ignore="VectorPath">
+
+    <path
+        android:fillColor="@color/gray"
+        android:pathData="M66.2625 3C38.1427 3 15.2625 25.8776 15.2625 54 15.2625 82.1198 38.1427 105 66.2625 105 71.2523 105 76.0642 104.2477 80.6257 102.9053 84.5597 101.7481 88.2838 100.1192 91.7625 98.0991A51.2 51.2 0 0 1 82.6421 91.3406C72.5961 82.0199 66.2625 68.7512 66.2625 54 66.2625 39.2477 72.5957 25.9796 82.6411 16.6594 85.4171 14.0839 88.4679 11.8128 91.7625 9.9003 88.2838 7.8807 84.5603 6.2513 80.6267 5.0941 76.0652 3.7517 71.2528 3 66.2625 3"
+        android:strokeColor="@color/background"
+        android:strokeMiterLimit="10"
+        android:strokeWidth="6">
+    </path>
+
+</vector>

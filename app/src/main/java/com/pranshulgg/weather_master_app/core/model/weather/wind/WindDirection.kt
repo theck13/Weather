@@ -11,25 +11,10 @@ enum class WindDirection {
     E;
 
     companion object {
-
-
-        // For sources that return values in degrees
-        fun toWindDirectionFromDegrees(value: Int?): WindDirection? {
-            return when (value) {
-                in 0..22, in 337..360 -> N
-                in 22..67 -> NE
-                in 67..112 -> E
-                in 122..157 -> SE
-                in 157..202 -> S
-                in 202..247 -> SW
-                in 247..292 -> W
-                in 292..337 -> NW
-                else -> null
-            }
-        }
-
-        // For rotating the arrow
-        fun toDegrees(windDirection: WindDirection?): Int? {
+        // For rotating the arrow.
+        fun toDegrees(
+            windDirection: WindDirection?,
+        ): Int? {
             return when (windDirection) {
                 N -> 0
                 NE -> 45
@@ -43,8 +28,29 @@ enum class WindDirection {
             }
         }
 
-        // For sources that return values in cardinal directions (N, NE, etc.)
-        fun toWindDirectionFromString(value: String?): WindDirection? {
+        // For sources that return values in degrees.
+        fun toWindDirectionFromDegrees(
+            value: Int?,
+        ): WindDirection? {
+            return when (value) {
+                null -> null
+                in 0..22,
+                in 338..360 -> N
+                in 23..67 -> NE
+                in 68..112 -> E
+                in 113..157 -> SE
+                in 158..202 -> S
+                in 203..247 -> SW
+                in 248..292 -> W
+                in 293..337 -> NW
+                else -> null
+            }
+        }
+
+        // For sources that return values in cardinal directions (N, NE, etc.).
+        fun toWindDirectionFromString(
+            value: String?,
+        ): WindDirection? {
             return when (value?.uppercase()) {
                 "N", "NNE", "NNW" -> N
                 "NE", "ENE" -> NE
@@ -59,7 +65,3 @@ enum class WindDirection {
         }
     }
 }
-
-
-
-

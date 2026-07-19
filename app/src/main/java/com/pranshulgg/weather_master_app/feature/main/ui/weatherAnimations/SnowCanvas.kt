@@ -1,4 +1,4 @@
-package com.pranshulgg.weather_master_app.feature.main.ui.weatherAnimations
+package com.pranshulgg.weather_master_app.feature.main.ui.weatheranimations
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -26,16 +26,14 @@ private data class Snowflake(
     var x: Float,
     var y: MutableState<Float>,
     var speed: MutableState<Float>,
-    val size: Float
+    val size: Float,
 )
 
 @Composable
-fun SnowCanvas(snowFlakeCount: Int = 30, isFroggyLayout: Boolean = true) {
-
-
-    var canvasSize by remember { mutableStateOf(Size.Zero) }
-
-
+fun SnowCanvas(
+    snowFlakeCount: Int = 30,
+    isFroggyLayout: Boolean = true,
+) {
     val snowFlakes = remember {
         List(snowFlakeCount) {
             Snowflake(
@@ -48,8 +46,9 @@ fun SnowCanvas(snowFlakeCount: Int = 30, isFroggyLayout: Boolean = true) {
         }.toMutableStateList()
     }
 
-    LaunchedEffect(Unit) {
+    var canvasSize by remember { mutableStateOf(Size.Zero) }
 
+    LaunchedEffect(Unit) {
         if (canvasSize == Size.Zero) return@LaunchedEffect
 
         while (true) {
@@ -69,36 +68,38 @@ fun SnowCanvas(snowFlakeCount: Int = 30, isFroggyLayout: Boolean = true) {
         }
     }
 
-
-
     Canvas(
-        modifier = if (isFroggyLayout) Modifier
-            .fillMaxWidth()
-            .height(290.dp) else Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+        modifier =
+            if (isFroggyLayout) {
+                Modifier
+                    .fillMaxWidth()
+                    .height(
+                        height = 290.dp,
+                    )
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            }
     ) {
-
         canvasSize = size
 
         snowFlakes.forEach {
             drawCircle(
-                Brush.radialGradient(
+                brush = Brush.radialGradient(
                     colors = listOf(
-                        Color.White.copy(alpha = 0.5f),
+                        Color.White.copy(
+                            alpha = 0.50f,
+                        ),
                         Color.Transparent
                     ),
                     center = Offset(it.x, it.y.value),
-                    radius = it.size
+                    radius = it.size,
 
                 ),
+                center = Offset(it.x, it.y.value),
                 radius = it.size,
-                center = Offset(it.x, it.y.value)
             )
-
         }
-
     }
-
-
 }

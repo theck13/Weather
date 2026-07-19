@@ -1,4 +1,4 @@
-package com.pranshulgg.weather_master_app.feature.main.ui.weatherAnimations
+package com.pranshulgg.weather_master_app.feature.main.ui.weatheranimations
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -22,24 +22,23 @@ import androidx.compose.ui.unit.dp
 import com.pranshulgg.weather_master_app.core.ui.theme.isThemeDark
 
 @Composable
-fun FogHazeCanvas(isFroggyLayout: Boolean) {
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    val windowInfo = LocalWindowInfo.current
-    val screenWidthPx = windowInfo.containerSize.width.toFloat()
-
+fun FogHazeCanvas(
+    isFroggyLayout: Boolean,
+) {
+    val infiniteTransition = rememberInfiniteTransition(
+        label = "Infinite Transition",
+    )
     val isDark = isThemeDark()
-
-
     val itemWidth = 300f
+    val windowInfo = LocalWindowInfo.current
+
+    val screenWidthPx = windowInfo.containerSize.width.toFloat()
     val speedPxPerSecond = 20f
 
     val distance = screenWidthPx + itemWidth * 2
     val durationMillis = ((distance / speedPxPerSecond) * 1000).toInt()
 
     val offsetX1 by infiniteTransition.animateFloat(
-        initialValue = -200f,
-        targetValue = 200f,
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = 6000,
@@ -47,12 +46,12 @@ fun FogHazeCanvas(isFroggyLayout: Boolean) {
             ),
             repeatMode = RepeatMode.Reverse
         ),
-        label = ""
+        initialValue = -200f,
+        targetValue = 200f,
+        label = "Offset 1",
     )
 
     val offsetX2 by infiniteTransition.animateFloat(
-        initialValue = 200f,
-        targetValue = -150f,
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = 8000,
@@ -60,12 +59,12 @@ fun FogHazeCanvas(isFroggyLayout: Boolean) {
             ),
             repeatMode = RepeatMode.Reverse
         ),
-        label = ""
+        initialValue = 200f,
+        targetValue = -150f,
+        label = "Offset 2",
     )
 
     val offsetX3 by infiniteTransition.animateFloat(
-        initialValue = screenWidthPx,
-        targetValue = -screenWidthPx,
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = durationMillis,
@@ -73,57 +72,78 @@ fun FogHazeCanvas(isFroggyLayout: Boolean) {
             ),
             repeatMode = RepeatMode.Reverse
         ),
-        label = ""
+        initialValue = screenWidthPx,
+        targetValue = -screenWidthPx,
+        label = "Offset 3",
     )
 
     val modifier = Modifier
+        .blur(
+            radius = 30.dp,
+        )
         .fillMaxWidth()
-        .blur(30.dp)
 
     Canvas(
-        modifier = if (!isFroggyLayout) modifier.fillMaxHeight() else modifier
-            .height(290.dp)
+        modifier =
+            if (!isFroggyLayout) {
+                modifier.fillMaxHeight()
+            } else {
+                modifier.height(
+                    height = 290.dp,
+                )
+            },
     ) {
         val fog1 = Brush.radialGradient(
-            colors = listOf(
-                Color.Gray.copy(alpha = if (isDark) 0.3f else 0.7f),
-                Color.Transparent
-            ),
             center = Offset(
-                x = size.width * 0.3f + offsetX1,
+                x = size.width * 0.30f + offsetX1,
                 y = size.height
             ),
-            radius = size.width * 0.7f
+            colors = listOf(
+                Color.Gray.copy(
+                    alpha = if (isDark) 0.30f else 0.70f,
+                ),
+                Color.Transparent
+            ),
+            radius = size.width * 0.70f
         )
 
         val fog2 = Brush.radialGradient(
+            center = Offset(
+                x = size.width * 0.70f + offsetX2,
+                y = size.height / 5.00f
+            ),
             colors = listOf(
-                Color.White.copy(alpha = if (isDark) 0.2f else 0.7f),
+                Color.White.copy(
+                    alpha = if (isDark) 0.20f else 0.70f,
+                ),
                 Color.Transparent
             ),
-            center = Offset(
-                x = size.width * 0.7f + offsetX2,
-                y = size.height / 5f
-            ),
-            radius = size.width * 0.8f
+            radius = size.width * 0.80f,
         )
 
-
         val fog3 = Brush.radialGradient(
+            center = Offset(
+                x = size.width * 0.70f + offsetX3,
+                y = size.height / 5.00f,
+            ),
             colors = listOf(
-                if (isDark) Color.Black.copy(alpha = 1f) else Color.White.copy(alpha = 1f),
+                if (isDark) {
+                    Color.Black.copy(
+                        alpha = 1.00f,
+                    )
+                } else {
+                    Color.White.copy(
+                        alpha = 1.00f,
+                    )
+                },
                 Color.Transparent
             ),
-            center = Offset(
-                x = size.width * 0.7f + offsetX3,
-                y = size.height / 5f
-            ),
-            radius = 300f
+            radius = 300f,
         )
 
         drawRect(
             brush = fog1,
-            size = size
+            size = size,
         )
 
         drawRect(

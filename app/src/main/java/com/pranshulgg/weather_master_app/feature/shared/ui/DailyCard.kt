@@ -22,60 +22,80 @@ import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.model.weather.TemperatureUnit
-import com.pranshulgg.weather_master_app.core.model.weather.toIcon
+import com.pranshulgg.weather_master_app.core.model.weather.toIconPair
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
 import com.pranshulgg.weather_master_app.core.ui.components.WeatherIconBox
-import com.pranshulgg.weather_master_app.core.ui.navigation.NavRoutes
+import com.pranshulgg.weather_master_app.core.ui.navigation.NavigationRoutes
 import com.pranshulgg.weather_master_app.core.ui.theme.ShadowElevation
 import com.pranshulgg.weather_master_app.core.utils.formatters.toWeekdayString
 import com.pranshulgg.weather_master_app.core.utils.weather.cache.isWeatherDailyDomainSafe
-import com.pranshulgg.weather_master_app.feature.shared.components.CardsHeader
+import com.pranshulgg.weather_master_app.feature.shared.components.Header
 import kotlin.math.roundToInt
 
-
 @Composable
-fun DailyCard(weather: Weather, units: WeatherUnits, navController: NavController) {
-
-    if (!isWeatherDailyDomainSafe(weather)) return
-
+fun DailyCard(
+    navController: NavController,
+    units: WeatherUnits,
+    weather: Weather,
+) {
+    if (isWeatherDailyDomainSafe(weather).not()) return
 
     val daily = weather.daily
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = MaterialTheme.shapes.extraLarge,
-        shadowElevation = ShadowElevation.level2
+        shadowElevation = ShadowElevation.level2,
     ) {
         Column(
             modifier = Modifier
-                .padding(bottom = 16.dp)
-                .fillMaxWidth()
+                .padding(
+                    bottom = 16.dp,
+                )
+                .fillMaxWidth(),
         ) {
-            CardsHeader(stringResource(R.string.weather_daily_forecast), R.drawable.date_range_24px)
+            Header(
+                icon = R.drawable.ic_date_range_24,
+                text = stringResource(R.string.weather_daily_forecast),
+            )
 
-            Gap(14.dp)
+            Gap(
+                vertical = 14.dp,
+            )
 
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                items(daily.size, key = { "${daily[it].time}_$it" }) { index ->
-
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 6.dp,
+                ),
+            ) {
+                items(
+                    count = daily.size,
+                    key = { "${daily[it].time}_$it" },
+                ) { index ->
                     val item = daily[index]
                     val weekDay = toWeekdayString(
-                        item.time,
-                        weather.location.timezone
+                        timeMilli = item.time,
+                        zoneId = weather.location.timezone,
                     )
 
-                    if (index == 0) Gap(horizontal = 16.dp)
+                    if (index == 0) {
+                        Gap(
+                            horizontal = 16.dp,
+                        )
+                    }
 
                     DailyItem(
                         weekDay,
                         item.temperatureMax,
                         item.temperatureMin,
-                        item.weatherCondition.toIcon(targetTimeMilli = System.currentTimeMillis()) /* always use day icons */,
+                        item.weatherCondition.toIconPair(
+                            targetTimeMilli = System.currentTimeMillis(),
+                        ),
                         item.precipitationProbabilityMax,
                         units,
                         onDailyItemClick = {
                             navController.navigate(
-                                NavRoutes.daily(
+                                NavigationRoutes.daily(
                                     index,
                                     weather.location.id
                                 )
@@ -83,8 +103,11 @@ fun DailyCard(weather: Weather, units: WeatherUnits, navController: NavControlle
                         }
                     )
 
-                    if (index == daily.size - 1) Gap(horizontal = 16.dp)
-
+                    if (index == daily.size - 1) {
+                        Gap(
+                            horizontal = 16.dp,
+                        )
+                    }
                 }
             }
         }
@@ -96,63 +119,85 @@ private fun DailyItem(
     weekday: String,
     maxTemp: Double?,
     minTemp: Double?,
-    icon: Int,
+    icons: Pair<Int, Int?>,
     precipitationProbability: Int?,
     units: WeatherUnits,
     onDailyItemClick: () -> Unit
 ) {
-
-
-    val maxTemp = TemperatureUnit.CELSIUS.convert(maxTemp, units.tempUnit)?.roundToInt() ?: "-"
-    val minTemp = TemperatureUnit.CELSIUS.convert(minTemp, units.tempUnit)?.roundToInt() ?: "-"
+    val maxTemp = TemperatureUnit.CELSIUS.convert(
+        from = maxTemp,
+        to = units.temperature,
+    )?.roundToInt() ?: "-"
+    val minTemp = TemperatureUnit.CELSIUS.convert(
+        from = minTemp,
+        to = units.temperature,
+    )?.roundToInt() ?: "-"
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
+        onClick = onDailyItemClick,
         shape = CircleShape,
-        onClick = onDailyItemClick
     ) {
         Column(
             Modifier
-                .height(210.dp)
-                .width(65.dp)
-                .padding(vertical = 24.dp),
+                .height(
+                    height = 210.dp,
+                )
+                .padding(
+                    vertical = 24.dp,
+                )
+                .width(
+                    width = 65.dp,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    "${maxTemp}°",
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = "${maxTemp}°",
                 )
                 Text(
-                    "${minTemp}°",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "${minTemp}°",
                 )
             }
 
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                WeatherIconBox(icon, size = 38.dp)
-                Gap(8.dp)
-                Text(
-                    "${precipitationProbability}%",
-                    modifier = Modifier.alpha(if (precipitationProbability == null) 0f else 1f),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium
+                WeatherIconBox(
+                    icons = icons,
+                    size = 38.dp,
                 )
-                Gap(4.dp)
+
+                Gap(
+                    vertical = 8.dp,
+                )
+
                 Text(
-                    weekday,
+                    modifier = Modifier.alpha(
+                        alpha = if (precipitationProbability == null) 0.00f else 1.00f,
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = "${precipitationProbability}%",
+                )
+
+                Gap(
+                    vertical = 4.dp,
+                )
+
+                Text(
                     color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    text = weekday,
                 )
             }
         }
     }
 }
-

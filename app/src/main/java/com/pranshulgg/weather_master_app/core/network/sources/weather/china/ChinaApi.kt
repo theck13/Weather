@@ -3,7 +3,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.china
 import com.pranshulgg.weather_master_app.core.network.sources.weather.china.json.ChinaForecastJson
 import com.pranshulgg.weather_master_app.core.network.sources.weather.china.json.ChinaLocationJson
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,8 +36,14 @@ interface ChinaApi {
         fun create(): ChinaApi {
 
             val client = OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
+                .readTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
                 .build()
 
             return Retrofit.Builder()

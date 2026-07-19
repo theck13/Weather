@@ -21,12 +21,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import com.pranshulgg.weather_master_app.feature.blocks.screens.air.AirScreen
+import com.pranshulgg.weather_master_app.feature.blocks.screens.celestial.CelestialScreen
 import com.pranshulgg.weather_master_app.feature.blocks.screens.humidity.HumidityScreen
-import com.pranshulgg.weather_master_app.feature.blocks.screens.pressure.PressureScreen
-import com.pranshulgg.weather_master_app.feature.blocks.screens.SunMoonScreen
 import com.pranshulgg.weather_master_app.feature.blocks.screens.precipitation.RainScreen
 import com.pranshulgg.weather_master_app.feature.blocks.screens.precipitation.SnowScreen
-import com.pranshulgg.weather_master_app.feature.blocks.screens.uvindex.UvIndexScreen
+import com.pranshulgg.weather_master_app.feature.blocks.screens.pressure.PressureScreen
+import com.pranshulgg.weather_master_app.feature.blocks.screens.ultraviolet.UltravioletScreen
 import com.pranshulgg.weather_master_app.feature.blocks.screens.visibility.VisibilityScreen
 import com.pranshulgg.weather_master_app.feature.blocks.screens.wind.WindScreen
 import com.pranshulgg.weather_master_app.feature.daily.DailyScreen
@@ -34,118 +35,50 @@ import com.pranshulgg.weather_master_app.feature.main.MainScreen
 import com.pranshulgg.weather_master_app.feature.search.SearchScreen
 import com.pranshulgg.weather_master_app.feature.settings.SettingsScreen
 import com.pranshulgg.weather_master_app.feature.settings.about.AboutScreen
-import com.pranshulgg.weather_master_app.feature.settings.about.license.LicenseScreen
-import com.pranshulgg.weather_master_app.feature.settings.about.privacy.PrivacyPolicyScreen
-import com.pranshulgg.weather_master_app.feature.settings.about.terms.TermsConditionsScreen
+import com.pranshulgg.weather_master_app.feature.settings.about.LegalLicenseScreen
+import com.pranshulgg.weather_master_app.feature.settings.about.PrivacyPolicyScreen
+import com.pranshulgg.weather_master_app.feature.settings.about.TermsConditionsScreen
 import com.pranshulgg.weather_master_app.feature.settings.appearance.AppearanceScreen
 import com.pranshulgg.weather_master_app.feature.settings.background.BackgroundUpdatesScreen
 import com.pranshulgg.weather_master_app.feature.settings.language.LanguageScreen
 import com.pranshulgg.weather_master_app.feature.settings.sources.WeatherSourcesScreen
 import com.pranshulgg.weather_master_app.feature.settings.units.UnitsScreen
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
 ) {
-
     Box(
         Modifier.fillMaxSize()
     ) {
         NavHost(
+            modifier = Modifier.background(
+                color = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+            enterTransition = {
+                NavigationTransitions.enter()
+             },
+            exitTransition = {
+                NavigationTransitions.exit()
+            },
             navController = navController,
+            popEnterTransition = {
+                NavigationTransitions.popEnter()
+             },
+            popExitTransition = {
+                NavigationTransitions.popExit()
+            },
             startDestination = "root",
-            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
-            enterTransition = { NavTransitions.enter() },
-            exitTransition = { NavTransitions.exit() },
-            popEnterTransition = { NavTransitions.popEnter() },
-            popExitTransition = { NavTransitions.popExit() }
         ) {
             navigation(
                 route = "root",
-                startDestination = NavRoutes.MAIN
+                startDestination = NavigationRoutes.MAIN,
             ) {
                 composable(
-                    NavRoutes.MAIN
-                ) {
-                    MainScreen(navController)
-                }
-                composable(
-                    NavRoutes.SEARCH
-                ) {
-                    SearchScreen(navController)
-                }
-                composable(
-                    NavRoutes.SETTINGS
-                ) {
-                    SettingsScreen(navController)
-                }
-                composable(
-                    NavRoutes.APPEARANCE
-                ) {
-                    AppearanceScreen(navController)
-                }
-                composable(
-                    NavRoutes.LANGUAGE
-                ) {
-                    LanguageScreen(navController)
-                }
-                composable(
-                    NavRoutes.UNITS
-                ) {
-                    UnitsScreen(navController)
-                }
-                composable(
-                    NavRoutes.BACKGROUND_UPDATES
-                ) {
-                    BackgroundUpdatesScreen(navController)
-                }
-                composable(
-                    route = "${NavRoutes.DAILY}/{index}/{locationId}",
-                    arguments = listOf(
-                        navArgument("index") {
-                            type = NavType.IntType
-                            defaultValue = 0
-                        },
-                        navArgument("locationId") {
-                            type = NavType.StringType
-                        }
-                    )
-                ) { backStackEntry ->
-                    val index = backStackEntry.arguments?.getInt("index") ?: 0
-                    val locationId = backStackEntry.arguments?.getString("locationId")
-
-                    DailyScreen(navController, index, locationId!!)
-                }
-                composable(
-                    NavRoutes.ABOUT
-                ) {
-                    AboutScreen(navController)
-                }
-
-                composable(
-                    NavRoutes.TERMS_CONDITIONS
-                ) {
-                    TermsConditionsScreen(navController)
-                }
-                composable(
-                    NavRoutes.PRIVACY_POLICY
-                ) {
-                    PrivacyPolicyScreen(navController)
-                }
-                composable(
-                    NavRoutes.LICENSE
-                ) {
-                    LicenseScreen(navController)
-                }
-                composable(
-                    NavRoutes.SOURCES
-                ) {
-                    WeatherSourcesScreen(navController)
-                }
-                composable(
-                    route = "{block}/{index}/{locationId}",
                     arguments = listOf(
                         navArgument("index") {
                             type = NavType.IntType
@@ -157,37 +90,152 @@ fun AppNavHost(
                         navArgument("block") {
                             type = NavType.StringType
                         }
-                    )
+                    ),
+                    route = "{block}/{index}/{locationId}",
                 ) { backStackEntry ->
+                    val block = backStackEntry.arguments?.getString("block")
                     val index = backStackEntry.arguments?.getInt("index") ?: 0
                     val locationId = backStackEntry.arguments?.getString("locationId")!!
-                    val block = backStackEntry.arguments?.getString("block")
 
                     when (block) {
-                        NavRoutes.UV_INDEX -> UvIndexScreen(navController, index, locationId)
-                        NavRoutes.HUMIDITY -> HumidityScreen(navController, index, locationId)
-                        NavRoutes.VISIBILITY -> VisibilityScreen(navController, index, locationId)
-                        NavRoutes.SUN_MOON -> SunMoonScreen(navController, index, locationId)
-                        NavRoutes.PRESSURE -> PressureScreen(navController, index, locationId)
-                        NavRoutes.WIND -> WindScreen(navController, index, locationId)
-                        NavRoutes.RAIN -> RainScreen(navController, index, locationId)
-                        NavRoutes.SNOW -> SnowScreen(navController, index, locationId)
+                        NavigationRoutes.AIR -> AirScreen(index, locationId, navController)
+                        NavigationRoutes.CELESTIAL -> CelestialScreen(index, locationId, navController)
+                        NavigationRoutes.HUMIDITY -> HumidityScreen(index, locationId, navController)
+                        NavigationRoutes.PRESSURE -> PressureScreen(index, locationId, navController)
+                        NavigationRoutes.RAIN -> RainScreen(index, locationId, navController)
+                        NavigationRoutes.SNOW -> SnowScreen(index, locationId, navController)
+                        NavigationRoutes.ULTRAVIOLET -> UltravioletScreen(index, locationId, navController)
+                        NavigationRoutes.VISIBILITY -> VisibilityScreen(index, locationId, navController)
+                        NavigationRoutes.WIND -> WindScreen(index, locationId, navController)
                     }
+                }
+
+                composable(
+                    arguments = listOf(
+                        navArgument("index") {
+                            type = NavType.IntType
+                            defaultValue = 0
+                        },
+                        navArgument("locationId") {
+                            type = NavType.StringType
+                        }
+                    ),
+                    route = "${NavigationRoutes.DAILY}/{index}/{locationId}",
+                ) { backStackEntry ->
+                    val index = backStackEntry.arguments?.getInt("index") ?: 0
+                    val locationId = backStackEntry.arguments?.getString("locationId")
+
+                    DailyScreen(index, locationId!!, navController)
+                }
+
+                composable(
+                    route = NavigationRoutes.ABOUT,
+                ) {
+                    AboutScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.APPEARANCE,
+                ) {
+                    AppearanceScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.BACKGROUND_UPDATES,
+                ) {
+                    BackgroundUpdatesScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.LANGUAGE,
+                ) {
+                    LanguageScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.LICENSE,
+                ) {
+                    LegalLicenseScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.MAIN,
+                ) {
+                    MainScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.PRIVACY_POLICY,
+                ) {
+                    PrivacyPolicyScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.SEARCH,
+                ) {
+                    SearchScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.SETTINGS,
+                ) {
+                    SettingsScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.SOURCES,
+                ) {
+                    WeatherSourcesScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.TERMS_CONDITIONS,
+                ) {
+                    TermsConditionsScreen(
+                        navController = navController,
+                    )
+                }
+
+                composable(
+                    route = NavigationRoutes.UNITS,
+                ) {
+                    UnitsScreen(
+                        navController = navController,
+                    )
                 }
             }
         }
 
         SnackbarHost(
-            hostState = snackbarHostState,
-            Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(
-                    bottom = WindowInsets.navigationBars.asPaddingValues()
-                        .calculateBottomPadding()
+            modifier = Modifier
+                .align(
+                    alignment = Alignment.BottomCenter,
                 )
+                .fillMaxWidth()
+                .padding(
+                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding(),
+                ),
+            hostState = snackbarHostState,
         )
-
     }
-
 }

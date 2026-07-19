@@ -9,49 +9,15 @@ import java.time.format.DateTimeFormatter
 import java.time.zone.ZoneRulesException
 import java.util.concurrent.TimeUnit
 
-fun to12HourTimeString(timeMilli: Long, zoneId: String, pattern: String = "ha"): String {
-    val instant = Instant.ofEpochMilli(timeMilli)
-    val formatter = DateTimeFormatter.ofPattern(pattern, getCurrentAppLocale())
-        .withZone(safeZoneId(zoneId))
-
-    return formatter.format(instant)
-}
-
-fun to24HourTimeString(timeMilli: Long, zoneId: String, pattern: String = "HH:mm"): String {
-    val instant = Instant.ofEpochMilli(timeMilli)
-    val formatter = DateTimeFormatter.ofPattern(pattern, getCurrentAppLocale())
-        .withZone(safeZoneId(zoneId))
-
-    return formatter.format(instant)
-}
-
-
-fun toWeekdayString(timeMilli: Long, zoneId: String): String {
-    val instant = Instant.ofEpochMilli(timeMilli)
-    val zonedDateTime = instant.atZone(safeZoneId(zoneId))
-    val formatter = DateTimeFormatter.ofPattern("EEE", getCurrentAppLocale())
-
-    return formatter.format(zonedDateTime)
-}
-
-fun toDateString(timeMilli: Long, zoneId: String, pattern: String = "dd MMMM"): String {
-    val instant = Instant.ofEpochMilli(timeMilli)
-    val zonedDateTime = instant.atZone(safeZoneId(zoneId))
-    val formatter = DateTimeFormatter.ofPattern(pattern, getCurrentAppLocale())
-
-
-    return formatter.format(zonedDateTime)
-
-}
-
-fun getLastUpdatedTimeString(context: Context, timeMilli: Long): String {
-
+fun getLastUpdatedTimeString(
+    context: Context,
+    timeMilli: Long,
+): String {
     val ageMillis = System.currentTimeMillis() - timeMilli
-    val seconds = TimeUnit.MILLISECONDS.toSeconds(ageMillis)
-    val minutes = TimeUnit.MILLISECONDS.toMinutes(ageMillis)
-    val hours = TimeUnit.MILLISECONDS.toHours(ageMillis)
     val days = TimeUnit.MILLISECONDS.toDays(ageMillis)
-
+    val hours = TimeUnit.MILLISECONDS.toHours(ageMillis)
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(ageMillis)
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(ageMillis)
 
     val lastUpdated = when {
         seconds < 60 -> context.getString(R.string.time_just_now)
@@ -78,9 +44,52 @@ fun getLastUpdatedTimeString(context: Context, timeMilli: Long): String {
     return lastUpdated
 }
 
-fun safeZoneId(id: String): ZoneId =
+fun safeZoneId(
+    id: String,
+): ZoneId =
     try {
         ZoneId.of(id)
     } catch (e: ZoneRulesException) {
         ZoneId.systemDefault()
     }
+
+fun to12HourTimeString(
+    pattern: String = "ha",
+    timeMilli: Long,
+    zoneId: String,
+): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern, getCurrentAppLocale()).withZone(safeZoneId(zoneId))
+    val instant = Instant.ofEpochMilli(timeMilli)
+    return formatter.format(instant)
+}
+
+fun to24HourTimeString(
+    pattern: String = "HH:mm",
+    timeMilli: Long,
+    zoneId: String,
+): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern, getCurrentAppLocale()).withZone(safeZoneId(zoneId))
+    val instant = Instant.ofEpochMilli(timeMilli)
+    return formatter.format(instant)
+}
+
+fun toDateString(
+    pattern: String = "dd MMMM",
+    timeMilli: Long,
+    zoneId: String,
+): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern, getCurrentAppLocale())
+    val instant = Instant.ofEpochMilli(timeMilli)
+    val zonedDateTime = instant.atZone(safeZoneId(zoneId))
+    return formatter.format(zonedDateTime)
+}
+
+fun toWeekdayString(
+    timeMilli: Long,
+    zoneId: String,
+): String {
+    val formatter = DateTimeFormatter.ofPattern("EEE", getCurrentAppLocale())
+    val instant = Instant.ofEpochMilli(timeMilli)
+    val zonedDateTime = instant.atZone(safeZoneId(zoneId))
+    return formatter.format(zonedDateTime)
+}

@@ -1,19 +1,19 @@
-<p><i>WeatherMaster</i> inspired by the Google Pixel weather app, but with more features</p>
+<p><i>Weather</i> inspired by Pixel Weather and Weather Master</p>
 <br>
-<p>Features both the Pixel Weather-inspired design and the original Froggy style, with summaries, multiple weather and search providers, personalization options, and more.</p>
+<p>Features both the Pixel Weather design and Google Froggy style including summaries, multiple weather and search providers, personalization options, and more.  Code is based on the Weather Master open source repository with many customizations and optimizations with a nearly-fill rewrite.</p>
 <br>
 <p><b>Supported weather sources: </b></p>
-
+<br>
 <ul>
- <li><b>Open Meteo</b></li>
- <li><b>Met Norway</b></li>
- <li><b>NWS</b></li>
- <li><b>SMHI</b></li>
- <li><b>DWD</b></li>
- <li><b>Meteo-France</b></li>
- <li><b>FMI</b></li>
- <li><b>ECCC</b></li>
- <li><b>BMKG</b></li>
- <li><b>China</b></li>
- <li><b>And more to be added</b></li>
+    <li><b>Open Meteo (Global)</b></li>
+    <li><b>BMKG (Indonesia)</b></li>
+    <li><b>CNEMC (China)</b></li>
+    <li><b>DWD (Germany)</b></li>
+    <li><b>ECCC (Canada)</b></li>
+    <li><b>FMI (Finland)</b></li>
+    <li><b>Met (Norway)</b></li>
+    <li><b>Meteo (France)</b></li>
+    <li><b>NWS (United States)</b></li>
+    <li><b>SMHI (Sweden)</b></li>
+    <li><b>And more to be added</b></li>
 </ul>

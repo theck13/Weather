@@ -2,46 +2,60 @@ package com.pranshulgg.weather_master_app.data.worker.notification
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.Icon
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.pranshulgg.weather_master_app.NOTIFICATION_CHANNEL_ID
+import com.pranshulgg.weather_master_app.NOTIFICATION_ID
 import com.pranshulgg.weather_master_app.R
 
-
 object WeatherNotification {
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun showNotification(locationName: String?, context: Context) {
+    fun hideNotification(
+        context: Context,
+    ) {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(
+                NOTIFICATION_ID,
+            )
+    }
 
-        val contentText =
-            if (locationName != null) "Updating weather for $locationName" else "Updating weather"
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun showNotification(
+        context: Context,
+        locationName: String?,
+    ) {
+        val contentText = locationName?.let{
+            context.resources.getString(
+                R.string.notification_updating_location,
+                locationName,
+            )
+        } ?: run {
+            context.resources.getString(R.string.notification_updating)
+        }
 
         val notification = context.let {
             NotificationCompat.Builder(
                 it,
-                WeatherNotificationConfig.CHANNEL_ID
+                NOTIFICATION_CHANNEL_ID,
             )
         }
-            .setContentTitle("WeatherMaster")
             .setContentText(contentText)
-            .setProgress(0, 0, true)
+            .setContentTitle(context.resources.getString(R.string.app_name))
+            .setLargeIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
             .setOngoing(true)
-            .setSmallIcon(R.drawable.cloud_download_24px)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setProgress(0, 0, true)
+            .setSmallIcon(R.drawable.ic_notification)
             .build()
 
         context.let {
             NotificationManagerCompat.from(it)
                 .notify(
-                    WeatherNotificationConfig.NOTIFICATION_ID,
-                    notification
+                    NOTIFICATION_ID,
+                    notification,
                 )
         }
-    }
-
-    fun hideNotification(context: Context) {
-        NotificationManagerCompat
-            .from(context)
-            .cancel(
-                WeatherNotificationConfig.NOTIFICATION_ID
-            )
     }
 }

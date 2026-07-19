@@ -19,7 +19,7 @@ data class EcccCurrentWeatherJson(
     val visibility: EcccCurrentWeatherVisibilityJson,
     val humidity: String?,
     val windDirection: String?,
-    val windSpeed: EcccCurrentWeatherWindSpeedJson
+    val windSpeed: EcccCurrentWeatherWindSpeedJson,
 )
 
 data class EcccCurrentWeatherTemperatureJson(
@@ -49,7 +49,7 @@ data class EcccCurrentWeatherWindSpeedJson(
 // HOURLY
 
 data class EcccHourlyWeatherJson(
-    val hourly: List<EcccHourlyWeatherItemJson>
+    val hourly: List<EcccHourlyWeatherItemJson>,
 )
 
 data class EcccHourlyWeatherItemJson(
@@ -58,9 +58,7 @@ data class EcccHourlyWeatherItemJson(
     val temperature: EcccHourlyWeatherItemTemperatureJson,
     @SerializedName("precip") val precipProbability: String?,
     val iconCode: String,
-    val windSpeed: EcccHourlyWeatherItemWindSpeedJson
-
-
+    val windSpeed: EcccHourlyWeatherItemWindSpeedJson,
 )
 
 data class EcccHourlyWeatherItemTemperatureJson(
@@ -74,7 +72,7 @@ data class EcccHourlyWeatherItemWindSpeedJson(
 // DAILY
 
 data class EcccDailyWeatherJson(
-    val daily: List<EcccDailyWeatherItemJson>
+    val daily: List<EcccDailyWeatherItemJson>,
 )
 
 data class EcccDailyWeatherItemJson(
@@ -83,10 +81,8 @@ data class EcccDailyWeatherItemJson(
     @SerializedName("precip") val precipProbability: String?,
     val iconCode: String,
     val periodLabel: String,
-
-    )
+)
 
 data class EcccDailyWeatherItemTemperatureJson(
     val metric: String?,
 )
-

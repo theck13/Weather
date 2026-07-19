@@ -1,43 +1,42 @@
 package com.pranshulgg.weather_master_app.data.provider.devicelocation
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 data class DeviceLocation(
     val latitude: Double?,
-    val longitude: Double?
+    val longitude: Double?,
 )
 
 class GetDeviceLocation {
-
-    private var locationManager: LocationManager? = null
     private var locationListener: LocationListener? = null
-
+    private var locationManager: LocationManager? = null
     private var timeoutHandler: Handler? = null
+    private val timeoutMillis = 20_000L
     private var timeoutRunnable: Runnable? = null
 
-    private val timeoutMillis = 20_000L
-    private fun getProvider(lm: LocationManager): String {
-        return when {
-            lm.allProviders.contains(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
-            lm.allProviders.contains(LocationManager.GPS_PROVIDER) -> LocationManager.GPS_PROVIDER
-            else -> LocationManager.PASSIVE_PROVIDER
+    /**
+     * Picks the first provider that is both present on the device and currently enabled,
+     * preferring GPS over network over passive. Returns null when no provider is enabled,
+     * so the caller can report the location as unavailable.
+     */
+    private fun getProvider(lm: LocationManager): String? {
+        val preferred = listOf(
+            LocationManager.GPS_PROVIDER,
+            LocationManager.NETWORK_PROVIDER,
+            LocationManager.PASSIVE_PROVIDER,
+        )
+
+        return preferred.firstOrNull { provider ->
+            lm.allProviders.contains(provider) && lm.isProviderEnabled(provider)
         }
     }
 
@@ -46,8 +45,6 @@ class GetDeviceLocation {
         onTimeout: () -> Unit,
         onResult: (DeviceLocation) -> Unit
     ) {
-
-
         val hasPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -56,7 +53,6 @@ class GetDeviceLocation {
                     context,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
-
 
         if (!hasPermission) {
             onResult(DeviceLocation(null, null))
@@ -71,29 +67,37 @@ class GetDeviceLocation {
 
         locationManager = lm
 
-        val provider = getProvider(lm)
-
-        if (!lm.isProviderEnabled(provider)) {
+        val provider = getProvider(lm) ?: run {
             onResult(DeviceLocation(null, null))
             return
         }
 
-
-        getLocation(onLocation = { onResult(it) }, lm, provider, onTimeout)
+        getLocation(
+            onLocation = {
+                onResult(it)
+            },
+            locationManager = lm,
+            onTimeout = onTimeout,
+            provider = provider,
+        )
     }
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    @RequiresPermission(
+        allOf = [
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        ]
+    )
     private fun getLocation(
         onLocation: (DeviceLocation) -> Unit,
-        lm: LocationManager,
+        locationManager: LocationManager,
+        onTimeout: () -> Unit,
         provider: String,
-        onTimeout: () -> Unit
     ) {
-
-        val lastKnown = lm.getLastKnownLocation(provider)
-            ?: lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-            ?: lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
+        val lastKnown = locationManager.getLastKnownLocation(provider)
+            ?: locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            ?: locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
 
         if (lastKnown != null) {
             timeoutHandler?.removeCallbacks(timeoutRunnable!!)
@@ -123,8 +127,7 @@ class GetDeviceLocation {
             override fun onProviderDisabled(provider: String) {}
         }
 
-
-        lm.requestLocationUpdates(
+        locationManager.requestLocationUpdates(
             provider,
             0L,
             0f,
@@ -142,13 +145,11 @@ class GetDeviceLocation {
         timeoutHandler?.postDelayed(timeoutRunnable!!, timeoutMillis)
     }
 
-
     fun stopUpdates() {
         locationListener?.let { locationManager?.removeUpdates(it) }
         locationListener = null
     }
 }
-
 
 /**
  * Device might return lat/lon as a string based on the device locale

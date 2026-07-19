@@ -21,134 +21,145 @@ import com.pranshulgg.weather_master_app.core.ui.components.Symbol
 @Composable
 fun SwitchTile(
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    headline: String,
     description: String? = null,
+    enabled: Boolean = true,
+    headline: String,
+    itemBgColor: Color,
     leading: @Composable (() -> Unit)? = null,
+    onCheckedChange: (Boolean) -> Unit,
     shapes: RoundedCornerShape,
-    switchEnabled: Boolean = true,
-    itemBgColor: Color
 ) {
-
-
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = shapes,
     ) {
         ListItem(
-
-            modifier = if (switchEnabled) {
-                Modifier.clickable { onCheckedChange(!checked) }
-            } else {
-                Modifier
-            },
-
+            modifier =
+                if (enabled) {
+                    Modifier.clickable { onCheckedChange(!checked) }
+                } else {
+                    Modifier
+                },
             colors = ListItemDefaults.colors(
                 containerColor = itemBgColor
             ),
             leadingContent = leading,
-            headlineContent = { Text(headline) },
+            headlineContent = {
+                Text(
+                    text = headline,
+                )
+            },
             supportingContent = {
-                if (description != null) Text(description)
+                description?.let{
+                    Text(
+                        text = description,
+                    )
+                }
             },
             trailingContent = {
                 Switch(
-                    enabled = switchEnabled,
+                    enabled = enabled,
                     checked = checked,
-                    onCheckedChange = { newChecked ->
-                        if (checked != newChecked) {
-                            onCheckedChange(newChecked)
+                    onCheckedChange = { change ->
+                        if (checked != change) {
+                            onCheckedChange(change)
                         }
                     },
                     thumbContent = if (checked) {
                         {
                             Symbol(
-                                R.drawable.check_24px,
+                                color = MaterialTheme.colorScheme.primary,
+                                icon = R.drawable.ic_check_24,
                                 size = SwitchDefaults.IconSize,
-                                color = MaterialTheme.colorScheme.primary
                             )
-
                         }
                     } else {
                         {
                             Symbol(
-                                R.drawable.close_24px,
+                                color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                icon = R.drawable.ic_close_24,
                                 size = SwitchDefaults.IconSize,
-                                color = MaterialTheme.colorScheme.surfaceContainerHighest
                             )
-
                         }
                     }
                 )
             }
         )
     }
-
 }
-
 
 @Composable
 fun SingleSwitchTile(
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    headline: String,
     description: String? = null,
+    enabled: Boolean = true,
+    headline: String,
+    itemBgColor: Color,
     leading: @Composable (() -> Unit)? = null,
-    switchEnabled: Boolean = true,
-    itemBgColor: Color
-
+    onCheckedChange: (Boolean) -> Unit,
 ) {
-
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(50.dp),
+        shape = RoundedCornerShape(
+            size = 50.dp,
+        ),
     ) {
         ListItem(
-
-            modifier = if (switchEnabled) {
-                Modifier
-                    .clickable { onCheckedChange(!checked) }
-                    .padding(start = 10.dp)
-            } else {
-                Modifier.padding(start = 10.dp)
-            },
-
+            modifier =
+                if (enabled) {
+                    Modifier
+                        .clickable {
+                            onCheckedChange(checked.not())
+                        }
+                        .padding(
+                            start = 10.dp,
+                        )
+                } else {
+                    Modifier.padding(
+                        start = 10.dp,
+                    )
+                },
             leadingContent = leading,
-            headlineContent = { Text(headline) },
+            headlineContent = {
+                Text(
+                    text = headline,
+                )
+            },
             supportingContent = {
-                if (description != null) Text(description)
+                description?.let{
+                    Text(
+                        text = description,
+                    )
+                }
             },
             trailingContent = {
                 Switch(
-                    enabled = switchEnabled,
+                    enabled = enabled,
                     checked = checked,
-                    onCheckedChange = { newChecked ->
-                        if (checked != newChecked) {
-                            onCheckedChange(newChecked)
+                    onCheckedChange = { change ->
+                        if (checked != change) {
+                            onCheckedChange(change)
                         }
                     },
                     thumbContent = if (checked) {
                         {
                             Symbol(
-                                R.drawable.check_24px,
+                                color = MaterialTheme.colorScheme.primary,
+                                icon = R.drawable.ic_check_24,
                                 size = SwitchDefaults.IconSize,
-                                color = MaterialTheme.colorScheme.primary
                             )
-
                         }
                     } else {
                         {
                             Symbol(
-                                R.drawable.close_24px,
+                                color = itemBgColor,
+                                icon = R.drawable.ic_close_24,
                                 size = SwitchDefaults.IconSize,
-                                color = itemBgColor
                             )
-
                         }
                     }
                 )
             }
         )
     }
-
 }

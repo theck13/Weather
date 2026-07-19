@@ -13,124 +13,168 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
-fun M3eButton(
+fun ExpressiveButton(
     modifier: Modifier = Modifier,
-    text: String,
-    size: Dp = ButtonDefaults.MinHeight,
-    onClick: () -> Unit,
-    icon: Int? = null,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
-    disabled: Boolean = false
+    disabled: Boolean = false,
+    icon: Int? = null,
+    onClick: () -> Unit,
+    size: Dp = ButtonDefaults.MinHeight,
+    text: String,
 ) {
-
-    val disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+    val disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+        alpha = 0.38f,
+    )
 
     Button(
-        modifier = modifier.heightIn(size),
-        enabled = !disabled,
-        onClick = { onClick() },
-        shapes = ButtonDefaults.shapes(),
+        modifier = modifier.heightIn(
+            min = size,
+        ),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
-            contentColor = contentColor
+            contentColor = contentColor,
         ),
-        contentPadding =
-            ButtonDefaults.contentPaddingFor(size, hasStartIcon = icon != null),
+        contentPadding = ButtonDefaults.contentPaddingFor(
+            buttonHeight = size,
+            hasStartIcon = icon != null,
+        ),
+        enabled = disabled.not(),
+        onClick = {
+            onClick()
+        },
+        shapes = ButtonDefaults.shapes(),
     ) {
         if (icon != null) {
             Symbol(
-                icon,
-                size = ButtonDefaults.iconSizeFor(size),
-                color = if (disabled) disabledContentColor else contentColor
+                color = if (disabled) disabledContentColor else contentColor,
+                icon = icon,
+                size = ButtonDefaults.iconSizeFor(
+                    buttonHeight = size,
+                ),
             )
-            Gap(horizontal = ButtonDefaults.iconSpacingFor(size))
+
+            Gap(
+                horizontal = ButtonDefaults.iconSpacingFor(
+                    buttonHeight = size,
+                ),
+            )
         }
         Text(
-            text,
-            style = ButtonDefaults.textStyleFor(size),
-            color = if (disabled) disabledContentColor else contentColor
+            color = if (disabled) disabledContentColor else contentColor,
+            style = ButtonDefaults.textStyleFor(
+                buttonHeight = size,
+            ),
+            text = text,
         )
     }
 }
 
-
-//--------------------------------
-// OUTLINED
-//--------------------------------
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
-fun M3eOutlinedButton(
+fun ExpressiveButtonOutlined(
     modifier: Modifier = Modifier,
-    text: String,
-    size: Dp = ButtonDefaults.MinHeight,
-    onClick: () -> Unit,
+    disabled: Boolean = false,
     icon: Int? = null,
-    disabled: Boolean = false
+    onClick: () -> Unit,
+    size: Dp = ButtonDefaults.MinHeight,
+    text: String,
 ) {
     OutlinedButton(
-        modifier = modifier.heightIn(size),
-        onClick = { onClick() },
+        modifier = modifier.heightIn(
+            min = size,
+        ),
+        contentPadding = ButtonDefaults.contentPaddingFor(
+            buttonHeight = size,
+            hasStartIcon = icon != null,
+        ),
+        enabled = disabled.not(),
+        onClick = {
+            onClick()
+        },
         shapes = ButtonDefaults.shapes(),
-        enabled = !disabled,
-        contentPadding =
-            ButtonDefaults.contentPaddingFor(size, hasStartIcon = icon != null),
     ) {
         if (icon != null) {
             Symbol(
-                icon,
-                size = ButtonDefaults.iconSizeFor(size),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                icon = icon,
+                size = ButtonDefaults.iconSizeFor(
+                    buttonHeight = size,
+                ),
             )
-            Gap(horizontal = ButtonDefaults.iconSpacingFor(size))
+
+            Gap(
+                horizontal = ButtonDefaults.iconSpacingFor(
+                    buttonHeight = size,
+                ),
+            )
         }
         Text(
-            text,
-            style = ButtonDefaults.textStyleFor(size),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = ButtonDefaults.textStyleFor(
+                buttonHeight = size,
+            ),
+            text = text,
         )
     }
 }
 
-//--------------------------------
-// FILLED TONAL
-//--------------------------------
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
-fun M3eFilledTonalButton(
+fun ExpressiveButtonTonal(
     modifier: Modifier = Modifier,
-    text: String,
-    size: Dp = ButtonDefaults.MinHeight,
-    onClick: () -> Unit,
-    icon: Int? = null,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
-    disabled: Boolean = false
+    disabled: Boolean = false,
+    icon: Int? = null,
+    onClick: () -> Unit,
+    size: Dp = ButtonDefaults.MinHeight,
+    text: String,
 ) {
     FilledTonalButton(
         modifier = modifier.heightIn(size),
-        onClick = { onClick() },
-        shapes = ButtonDefaults.shapes(),
-        enabled = !disabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor
         ),
-        contentPadding =
-            ButtonDefaults.contentPaddingFor(size, hasStartIcon = icon != null),
+        contentPadding = ButtonDefaults.contentPaddingFor(
+            buttonHeight = size,
+            hasStartIcon = icon != null,
+        ),
+        enabled = disabled.not(),
+        onClick = { onClick() },
+        shapes = ButtonDefaults.shapes(),
     ) {
         if (icon != null) {
             Symbol(
-                icon,
-                size = ButtonDefaults.iconSizeFor(size),
-                color = contentColor
+                color = contentColor,
+                icon = icon,
+                size = ButtonDefaults.iconSizeFor(
+                    buttonHeight = size,
+                ),
             )
-            Gap(horizontal = ButtonDefaults.iconSpacingFor(size))
+
+            Gap(
+                horizontal = ButtonDefaults.iconSpacingFor(
+                    buttonHeight = size,
+                ),
+            )
         }
-        Text(text, style = ButtonDefaults.textStyleFor(size), color = contentColor)
+
+        Text(
+            color = contentColor,
+            style = ButtonDefaults.textStyleFor(
+                buttonHeight = size,
+            ),
+            text = text,
+        )
     }
 }

@@ -4,9 +4,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
-fun SettingsTileIcon(icon: Int, dangerColor: Boolean = false) {
+fun SettingsTileIcon(
+    icon: Int,
+    isError: Boolean = false,
+) {
     Symbol(
-        icon,
-        color = if (dangerColor) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant
+        color = if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+        icon = icon,
     )
 }

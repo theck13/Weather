@@ -1,14 +1,10 @@
 package com.pranshulgg.weather_master_app.feature.settings.language
 
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -22,80 +18,81 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.prefs.helper.PreferencesHelper
+import com.pranshulgg.weather_master_app.core.prefs.PreferencesHelper
 import com.pranshulgg.weather_master_app.core.ui.components.AvatarCheck
 import com.pranshulgg.weather_master_app.core.ui.components.AvatarMonogram
-import com.pranshulgg.weather_master_app.core.ui.components.Gap
-import com.pranshulgg.weather_master_app.core.ui.components.LargeTopBarScaffold
-import com.pranshulgg.weather_master_app.core.ui.components.NavigateUpBtn
+import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
 import com.pranshulgg.weather_master_app.core.ui.components.SettingSection
 import com.pranshulgg.weather_master_app.core.ui.components.SettingTile
+import com.pranshulgg.weather_master_app.core.ui.components.SettingsTileIcon
+import com.pranshulgg.weather_master_app.core.ui.components.TopBarScaffold
 import com.pranshulgg.weather_master_app.core.utils.locale.getAppLocalLocales
 import com.pranshulgg.weather_master_app.core.utils.locale.getCurrentAppLocale
-import java.util.Locale
-
 
 @Composable
-fun LanguageScreen(navController: NavController) {
-
-
-    val languageList = getAppLocalLocales()
-    val uriHandler = LocalUriHandler.current
-
+fun LanguageScreen(
+    navController: NavController,
+) {
     val currentAppLocale =
         remember {
             mutableStateOf(
                 getCurrentAppLocale().toLanguageTag()
             )
         }
-
     val isSystemLanguage = PreferencesHelper.getBool("isSystemLanguage") ?: true
+    val languageList = getAppLocalLocales()
+    val uriHandler = LocalUriHandler.current
 
-
-    LargeTopBarScaffold(
+    TopBarScaffold(
+        navigationIcon = {
+            NavigateBackButton(
+                navController = navController,
+            )
+        },
         title = stringResource(R.string.setting_language),
-        navigationIcon = { NavigateUpBtn(navController) },
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(
+                    state = rememberScrollState()
+                )
+                .padding(
+                    paddingValues = paddingValues,
+                )
+                .padding(
+                    bottom = 10.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 10.dp,
+            ),
         ) {
-
-            SettingSection(
-                tiles = listOf(
-                    SettingTile.ActionTile(
-                        title = stringResource(R.string.setting_translate_app),
-                        description = stringResource(R.string.setting_translate_app_secondary),
-                        onClick = {
-                            uriHandler.openUri("https://crowdin.com/project/weathermaster")
-                        }
-                    )
-                ))
-
             SettingSection(
                 tiles = languageList.map {
-                    val selected =
-                        if (isSystemLanguage) it.value == "sys" else it.value == currentAppLocale.value
-
-
+                    val selected = if (isSystemLanguage) it.value == "sys" else it.value == currentAppLocale.value
 
                     SettingTile.ActionTile(
-                        leading = {
-                            if (selected) AvatarCheck(
-                                containerColor = MaterialTheme.colorScheme.secondary,
-                                contentColor = MaterialTheme.colorScheme.onSecondary
-                            ) else AvatarMonogram(it.code)
-                        },
-                        title = it.name,
+                        colorDesc =
+                            if (selected) {
+                                MaterialTheme.colorScheme.onSecondaryContainer.copy(
+                                    0.80f
+                                )
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                         description = it.nativeName,
-                        colorDesc = if (selected) MaterialTheme.colorScheme.onSecondaryContainer.copy(
-                            0.8f
-                        ) else MaterialTheme.colorScheme.onSurfaceVariant,
-                        selected = selected,
+                        leading = {
+                            if (selected) {
+                                AvatarCheck(
+                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                                )
+                            } else {
+                                AvatarMonogram(
+                                    text = it.code,
+                                )
+                            }
+                        },
                         onClick = {
                             currentAppLocale.value = it.value
 
@@ -104,18 +101,36 @@ fun LanguageScreen(navController: NavController) {
                             } else {
                                 setLanguage(it.value)
                             }
-                        }
+                        },
+                        selected = selected,
+                        title = it.name,
                     )
-                }
+                },
             )
 
-            Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 30.dp)
+            SettingSection(
+                tiles = listOf(
+                    SettingTile.ActionTile(
+                        description = stringResource(R.string.setting_translate_app_secondary),
+                        onClick = {
+                            uriHandler.openUri("https://crowdin.com/project/weathermaster")
+                        },
+                        title = stringResource(R.string.setting_translate_app),
+                        trailing = {
+                            SettingsTileIcon(
+                                icon = R.drawable.ic_open_in_new_24,
+                            )
+                        },
+                    ),
+                ),
+            )
         }
     }
-
 }
 
-private fun setLanguage(languageCode: String) {
+private fun setLanguage(
+    languageCode: String,
+) {
     AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
     PreferencesHelper.setBool("isSystemLanguage", false)
 }

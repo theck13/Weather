@@ -7,21 +7,20 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class NominatimRepository @Inject constructor(
-    private val api: NominatimApi
+    private val api: NominatimApi,
 ) {
-    suspend fun getAddress(latitude: Double?, longitude: Double?): Address? {
+    suspend fun getAddress(
+        latitude: Double?,
+        longitude: Double?,
+    ): Address? {
         try {
-
             if (latitude == null || longitude == null) return null
 
             val response = api.reverseGeocode("jsonv2", latitude, longitude)
-
             val body = response.body() ?: throw UnknownHostException()
-
             val domain = body.toDomain()
 
             return domain
-
         } catch (e: Exception) {
             throw e
         }

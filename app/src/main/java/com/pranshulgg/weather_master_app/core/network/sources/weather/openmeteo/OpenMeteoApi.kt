@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.openmeteo
 
 import com.pranshulgg.weather_master_app.core.network.sources.weather.openmeteo.json.OpenMeteoWeatherJson
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,7 +20,6 @@ private const val CURRENT_FIELDS =
 
 interface OpenMeteoApi {
 
-
     @GET("forecast")
     suspend fun fetchWeather(
         @Query("latitude") latitude: Double,
@@ -30,18 +28,22 @@ interface OpenMeteoApi {
         @Query("hourly") appendHourly: String = HOURLY_FIELDS,
         @Query("current") appendCurrent: String = CURRENT_FIELDS,
         @Query("daily") appendDaily: String = DAILY_FIELDS,
-        @Query("timeformat") appendTimeFormat: String = "unixtime"
+        @Query("timeformat") appendTimeFormat: String = "unixtime",
     ): Response<OpenMeteoWeatherJson>
-
 
     companion object {
         const val BASE_URL = "https://api.open-meteo.com/v1/"
 
         fun create(): OpenMeteoApi {
-
             val client = OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
+                .readTimeout(
+                    timeout = 30,
+                    unit = TimeUnit.SECONDS,
+                )
                 .build()
 
             return Retrofit.Builder()
@@ -52,5 +54,4 @@ interface OpenMeteoApi {
                 .create(OpenMeteoApi::class.java)
         }
     }
-
 }

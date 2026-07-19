@@ -6,71 +6,102 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
-import com.pranshulgg.weather_master_app.core.prefs.helper.PreferencesHelper
 import com.pranshulgg.weather_master_app.widgets.WeatherWidgetStateDefinition
-import com.pranshulgg.weather_master_app.widgets.config.WidgetConfig
-import com.pranshulgg.weather_master_app.widgets.glance.GlanceWidget
+import com.pranshulgg.weather_master_app.widgets.WidgetConfig
+import com.pranshulgg.weather_master_app.widgets.card.WidgetCard
+import com.pranshulgg.weather_master_app.widgets.daily.WidgetDaily
+import com.pranshulgg.weather_master_app.widgets.hourly.WidgetHourly
 import com.pranshulgg.weather_master_app.widgets.pill.WidgetPill
-import com.pranshulgg.weather_master_app.widgets.summary.SummaryWidget
-import com.pranshulgg.weather_master_app.widgets.weather.WeatherWidget
-import com.pranshulgg.weather_master_app.widgets.weatherclockdaily.ClockDailyWidget
-import com.pranshulgg.weather_master_app.widgets.weatherhorizontal.WeatherHorizontalWidget
+import com.pranshulgg.weather_master_app.widgets.summary.WidgetSummary
+import com.pranshulgg.weather_master_app.widgets.transparent.WidgetTransparent
 
 class WeatherWidgetUpdater(
-    private val context: Context
+    private val context: Context,
 ) {
-
-    private val widget = WeatherWidget()
     private val pill = WidgetPill()
-    private val summary = SummaryWidget()
-    private val widgetHorizontal = WeatherHorizontalWidget()
-    private val widgetGlance = GlanceWidget()
+    private val summary = WidgetSummary()
+    private val widget = WidgetHourly()
+    private val widgetClockDaily = WidgetDaily()
+    private val widgetGlance = WidgetTransparent()
+    private val widgetHorizontal = WidgetCard()
 
-    private val widgetClockDaily = ClockDailyWidget()
-
-    suspend fun update(json: String) {
+    suspend fun update(
+        json: String,
+    ) {
         val manager = GlanceAppWidgetManager(context)
 
         suspend fun <T : GlanceAppWidget> updateWidgets(
             widget: T,
-            ids: List<GlanceId>
+            ids: List<GlanceId>,
         ) {
             ids.forEach { id ->
                 try {
                     updateAppWidgetState(context, WeatherWidgetStateDefinition, id) { current ->
-                        current.copy(json = json, config = current.config)
+                        current.copy(
+                            config = current.config,
+                            json = json,
+                        )
                     }
-                    widget.update(context, id)
+                    widget.update(
+                        context = context,
+                        id = id,
+                    )
                 } catch (e: Exception) {
                     Log.e("WeatherWidgetUpdater", "Failed to update widget $id", e)
                 }
             }
         }
 
-        updateWidgets(widget, manager.getGlanceIds(WeatherWidget::class.java))
-        updateWidgets(pill, manager.getGlanceIds(WidgetPill::class.java))
-        updateWidgets(summary, manager.getGlanceIds(SummaryWidget::class.java))
-        updateWidgets(widgetHorizontal, manager.getGlanceIds(WeatherHorizontalWidget::class.java))
-        updateWidgets(widgetGlance, manager.getGlanceIds(GlanceWidget::class.java))
-        updateWidgets(widgetClockDaily, manager.getGlanceIds(ClockDailyWidget::class.java))
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetCard::class.java,
+            ),
+            widget = widgetHorizontal,
+        )
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetDaily::class.java,
+            ),
+            widget = widgetClockDaily,
+        )
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetHourly::class.java,
+            ),
+            widget = widget,
+        )
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetPill::class.java,
+            ),
+            widget = pill,
+        )
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetSummary::class.java,
+            ),
+            widget = summary,
+        )
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetTransparent::class.java,
+            ),
+            widget = widgetGlance,
+        )
     }
 
     suspend fun saveWidgetConfig(
+        config: WidgetConfig,
         context: Context,
         widgetId: Int,
-        config: WidgetConfig
     ) {
-
-        val manager =
-            GlanceAppWidgetManager(context)
-
-        val glanceId =
-            manager.getGlanceIdBy(widgetId)
+        val manager = GlanceAppWidgetManager(context)
+        val glanceId = manager.getGlanceIdBy(widgetId)
 
         updateAppWidgetState(
-            context,
-            WeatherWidgetStateDefinition,
-            glanceId
+            context = context,
+            definition = WeatherWidgetStateDefinition,
+            glanceId = glanceId,
         ) {
             it.copy(
                 config = config

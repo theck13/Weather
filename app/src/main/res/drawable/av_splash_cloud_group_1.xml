@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="together">
+
+    <objectAnimator
+        android:duration="1867"
+        android:interpolator="@drawable/av_splash_cloud_group_1_1"
+        android:propertyName="translateX"
+        android:startOffset="116"
+        android:valueFrom="288.329"
+        android:valueTo="271.329"
+        android:valueType="floatType">
+    </objectAnimator>
+
+</set>

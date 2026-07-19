@@ -14,41 +14,53 @@ import androidx.compose.ui.unit.dp
 import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
-import com.pranshulgg.weather_master_app.core.prefs.AppPrefsState
 import com.pranshulgg.weather_master_app.core.ui.components.Gap
 import com.pranshulgg.weather_master_app.core.ui.theme.ShadowElevation
 import com.pranshulgg.weather_master_app.core.utils.weather.computing.summary.computeDaySummary
-import com.pranshulgg.weather_master_app.feature.shared.components.CardsHeader
-
+import com.pranshulgg.weather_master_app.feature.shared.components.Header
 
 @Composable
 fun SummaryCard(
-    weather: Weather,
-    dailyIndex: Int = 0,
     context: Context,
-    units: WeatherUnits
+    dailyIndex: Int = 0,
+    units: WeatherUnits,
+    weather: Weather,
 ) {
-
-    val summary = computeDaySummary(weather, context, dailyIndex, units)
+    val summary = computeDaySummary(
+        context = context,
+        dailyIndex = dailyIndex,
+        units = units,
+        weather = weather,
+    )
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = MaterialTheme.shapes.extraLarge,
-        shadowElevation = ShadowElevation.level2
+        shadowElevation = ShadowElevation.level2,
     ) {
         Column(
             modifier = Modifier
-                .padding(bottom = 16.dp)
                 .fillMaxWidth()
+                .padding(
+                    bottom = 16.dp,
+                ),
         ) {
+            Header(
+                icon = R.drawable.ic_article_24,
+                text = stringResource(R.string.setting_day_summary),
+            )
 
-            CardsHeader(stringResource(R.string.setting_day_summary), R.drawable.article_24px)
-            Gap(8.dp)
+            Gap(
+                vertical = 8.dp,
+            )
+
             Text(
-                summary,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(
+                    horizontal = 16.dp,
+                ),
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                text = summary,
             )
         }
     }

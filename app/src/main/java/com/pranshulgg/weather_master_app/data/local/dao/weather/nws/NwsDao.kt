@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pranshulgg.weather_master_app.data.local.entity.weather.nws.NwsGridPointsEntity
 
-
 @Dao
 interface NwsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

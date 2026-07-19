@@ -1,6 +1,5 @@
 package com.pranshulgg.weather_master_app.feature.main
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -8,11 +7,9 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -53,48 +50,52 @@ data class MainScreenUiState(
     val isWeatherSourcesForLocationSheetOpen: Boolean = false,
     val isWeatherSourcesInfoForLocationSheetOpen: Boolean = false,
     val isNewVersionAvailable: Boolean = false,
-    val lastestVersionUrl: String = "https://github.com/PranshulGG/WeatherMaster/releases/latest"
+    val lastestVersionUrl: String = "https://github.com/theck13/Weather/releases/latest"
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+)
 @Composable
-fun MainScreen(navController: NavController) {
-    val weatherViewModel: WeatherViewModel = hiltViewModel()
-    val uiState by weatherViewModel.uiState
-    val viewModel: MainScreenViewModel = hiltViewModel()
-    val mainScreenUiState = viewModel.uiState.value
-    val uriHandler = LocalUriHandler.current
-
-
-
-    if (uiState.locations.isEmpty()) {
-        IntroScreen(navController)
-        return
-    }
-
+fun MainScreen(
+    navController: NavController,
+) {
     val context = LocalContext.current
-    val activeLocation = uiState.activeLocation
-
     val density = LocalDensity.current
+    val drawerState = rememberDrawerState(
+        initialValue = DrawerValue.Closed,
+    )
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberBottomSheetState(
+        enabledValues = setOf(SheetValue.Expanded, SheetValue.Hidden),
+        initialValue = SheetValue.Hidden,
+    )
+    val uriHandler = LocalUriHandler.current
+    val viewModel: MainScreenViewModel = hiltViewModel()
+
+    val mainScreenUiState = viewModel.uiState.value
+    val weatherViewModel: WeatherViewModel = hiltViewModel()
+
+    val uiState by weatherViewModel.uiState
+
+    val activeLocation = uiState.activeLocation
     val widthDp = with(density) {
         LocalWindowInfo.current.containerSize.width.toDp()
     }
 
     val isTabletLike = widthDp > 600.dp
 
-    val sheetState = rememberBottomSheetState(
-        initialValue = SheetValue.Hidden,
-        enabledValues = setOf(SheetValue.Expanded, SheetValue.Hidden)
-    )
-
-
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-
     val closeDrawer = {
         scope.launch { drawerState.close() }
     }
 
+    if (uiState.locations.isEmpty()) {
+        IntroScreen(
+            navController = navController,
+        )
+
+        return
+    }
 
     BackHandler(
         enabled = drawerState.isOpen,
@@ -105,12 +106,12 @@ fun MainScreen(navController: NavController) {
     LaunchedEffect(mainScreenUiState.isNewVersionAvailable) {
         if (mainScreenUiState.isNewVersionAvailable) {
             SnackbarManager.show(
-                R.string.message_new_version_available,
-                actionLabel = R.string.action_view,
+                action = R.string.action_view,
+                duration = SnackbarDuration.Indefinite,
+                message = R.string.message_new_version_available,
                 onAction = {
                     uriHandler.openUri(mainScreenUiState.lastestVersionUrl)
                 },
-                duration = SnackbarDuration.Indefinite
             )
 
             viewModel.dismissNewVersionSnackbar()
@@ -120,68 +121,66 @@ fun MainScreen(navController: NavController) {
     NavigationDrawer(
         drawerContent = {
             LocationsScreen(
+                activeLocation = uiState.activeLocation,
+                locations = uiState.locations,
+                navController = navController,
+                isTabletLike = isTabletLike,
                 onBack = {
                     closeDrawer()
                 },
-                navController,
-                uiState.locations,
-                uiState.activeLocation,
                 onLocationSelect = {
                     if (activeLocation == it) return@LocationsScreen
                     weatherViewModel.setLoading(true)
                     scope.launch {
-                        drawerState.close() // wait until drawer fully closes
+                        drawerState.close() // Wait until drawer fully closes.
                         weatherViewModel.setActiveLocation(it)
                     }
                 },
-                isTabletLike = isTabletLike
+                units = uiState.weatherUnits,
             )
         },
         drawerState = drawerState,
         isTabletLike = isTabletLike,
         content = {
             MainScreenScaffold(
-                navController,
-                drawerState,
-                uiState,
-                onRefresh = {
-                    if (activeLocation != null) {
-                        weatherViewModel.getWeather(
-                            activeLocation,
-                            activeLocation.source,
-                            isManualRefresh = true
-                        )
-                    }
-                },
+                context = context,
+                drawerState = drawerState,
+                isTabletLike = isTabletLike,
+                navController = navController,
                 onEditLocation = {
                     viewModel.showWeatherSourcesForLocationSheet(uiState.isLoading)
                 },
-                context,
-                onWeatherSourceInfoClick = viewModel::showWeatherSourcesInfoForLocationSheet,
-                isTabletLike
+                onRefresh = {
+                    if (activeLocation != null) {
+                        weatherViewModel.getWeather(
+                            isManualRefresh = true,
+                            location = activeLocation,
+                            source = activeLocation.source,
+                        )
+                    }
+                },
+                uiState = uiState,
             )
         }
     )
 
-
-    // WEATHER SOURCES DIALOG
     SharedBottomSheet.WeatherSourcesForLocationSheet(
         countryCode = activeLocation?.countryCode,
-        show = viewModel.uiState.value.isWeatherSourcesForLocationSheetOpen,
         isEditing = true,
-        selectedSource = activeLocation?.source ?: WeatherSource.OPEN_METEO,
+        onDismiss = viewModel::hideWeatherSourcesForLocationSheet,
         onSave = {
             if (activeLocation != null) {
                 weatherViewModel.updateSourceForLocation(activeLocation, it)
             }
         },
-        onDismiss = viewModel::hideWeatherSourcesForLocationSheet,
-        sheetState = sheetState
+        selectedSource = activeLocation?.source ?: WeatherSource.OPEN,
+        sheetState = sheetState,
+        show = viewModel.uiState.value.isWeatherSourcesForLocationSheetOpen,
     )
 
-    // WEATHER SOURCES INFO DIALOG
-    MainScreenBottomSheets.WeatherSourcesInfoForLocationSheet(viewModel, activeLocation, sheetState)
+    MainScreenBottomSheets.WeatherSourcesInfoForLocationSheet(
+        location = activeLocation,
+        sheetState = sheetState,
+        viewModel = viewModel,
+    )
 }
-
-
-

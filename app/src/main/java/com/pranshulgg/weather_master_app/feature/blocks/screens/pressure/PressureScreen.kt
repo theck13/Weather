@@ -1,39 +1,61 @@
 package com.pranshulgg.weather_master_app.feature.blocks.screens.pressure
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.ui.components.Gap
-import com.pranshulgg.weather_master_app.core.ui.components.LargeTopBarScaffold
-import com.pranshulgg.weather_master_app.core.ui.components.NavigateUpBtn
+import com.pranshulgg.weather_master_app.core.model.weather.PressureUnit
+import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
+import com.pranshulgg.weather_master_app.core.ui.components.TopBarScaffold
+import com.pranshulgg.weather_master_app.core.ui.theme.Blue800
+import com.pranshulgg.weather_master_app.core.ui.theme.Green600
+import com.pranshulgg.weather_master_app.core.ui.theme.Orange600
+import com.pranshulgg.weather_master_app.core.ui.theme.Purple900
+import com.pranshulgg.weather_master_app.core.ui.theme.Red800
 import com.pranshulgg.weather_master_app.core.utils.formatters.toDateString
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findMatchingHourly
 import com.pranshulgg.weather_master_app.feature.blocks.BlocksScreenViewModel
-import com.pranshulgg.weather_master_app.feature.blocks.components.AboutCard
-import com.pranshulgg.weather_master_app.feature.blocks.components.AboutCardText
+import com.pranshulgg.weather_master_app.feature.blocks.components.AboutScaleLayout
 import com.pranshulgg.weather_master_app.feature.blocks.components.NoHourlyDataAvailable
-import com.pranshulgg.weather_master_app.feature.blocks.screens.pressure.components.PressureHourlyCard
+import com.pranshulgg.weather_master_app.feature.blocks.components.ScaleCardItem
+import com.pranshulgg.weather_master_app.feature.blocks.components.ScaleDialog
 
+private data class PressureScale(
+    val color: Color,
+    val description: String,
+    val headline: String,
+    val scale: String,
+)
+
+private data class PressureScaleRange(
+    val color: Color,
+    val description: Int,
+    val headline: Int,
+    val scaleHpa: String,
+    val scaleInHg: String,
+    val scaleMmHg: String,
+)
 
 @Composable
-fun PressureScreen(navController: NavController, index: Int = 0, locationId: String) {
-
+fun PressureScreen(
+    index: Int = 0,
+    locationId: String,
+    navController: NavController,
+) {
+    val context = LocalContext.current
     val viewModel: BlocksScreenViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
@@ -41,60 +63,147 @@ fun PressureScreen(navController: NavController, index: Int = 0, locationId: Str
         viewModel.getWeather(locationId)
     }
 
-
     val uiState = viewModel.uiState.value
-    val weather = uiState.weather
-    val hourly = weather?.hourly ?: return
     val units = uiState.units
-    val zoneId = weather.location.timezone
-    val time = if (index != 0) weather.daily[index].time else weather.current.time
-    val context = LocalContext.current
+    val weather = uiState.weather
 
+    val hourly = weather?.hourly ?: return
+    val scale = getPressureScaleFor(units.pressure)
+    val time = if (index != 0) weather.daily[index].time else weather.current.time
+    val zoneId = weather.location.timezone
 
     val data = findMatchingHourly(
-        hourly,
-        time,
-        weather.location.source,
-
-        )
-
-    val date = toDateString(weather.daily[index].time, weather.location.timezone)
+        currentMilli = time,
+        data = hourly,
+        source = weather.location.source,
+    )
+    val date = toDateString(
+        timeMilli = weather.daily[index].time,
+        zoneId = weather.location.timezone,
+    )
     val pressureData = data.map { it.pressureMsl }
 
+    var selectedPressure by remember { mutableStateOf<PressureScale?>(null) }
 
-    LargeTopBarScaffold(
-        title = stringResource(R.string.weather_pressure),
-        navigationIcon = { NavigateUpBtn(navController) },
+    TopBarScaffold(
         actions = {
             Text(
-                date,
-                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(
+                    end = 16.dp,
+                ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(end = 16.dp)
+                style = MaterialTheme.typography.titleMedium,
+                text = date,
             )
-        }
+        },
+        navigationIcon = {
+            NavigateBackButton(
+                navController = navController,
+            )
+        },
+        title = stringResource(R.string.weather_pressure),
     ) { paddingValues ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
-        ) {
+        val scaleItems: @Composable () -> Unit = {
+            scale.forEach {
+                ScaleCardItem(
+                    containerColor = it.color,
+                    headline = it.headline,
+                    icon = R.drawable.ic_compress_24,
+                    onClick = {
+                        selectedPressure = it
+                    },
+                    trailing = it.scale,
+                )
+            }
+        }
 
-            if (!pressureData.contains(null)) {
-                PressureHourlyCard(data, zoneId, units.pressureUnit, context)
+        AboutScaleLayout(
+            aboutText = stringResource(R.string.weather_about_pressure),
+            paddingValues = paddingValues,
+            scaleItems = scaleItems,
+        ) {
+            if (pressureData.contains(null).not()) {
+                PressureHourlyCard(
+                    context = context,
+                    data = data,
+                    unit = units.pressure,
+                    zoneId = zoneId,
+                )
             } else {
                 NoHourlyDataAvailable()
             }
-            Gap(14.dp)
-            AboutCard {
-                AboutCardText(stringResource(R.string.weather_about_pressure))
-            }
-
-            Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 30.dp)
-
         }
+    }
+
+    selectedPressure?.let { info ->
+        ScaleDialog(
+            description = info.description,
+            onDismiss = {
+                selectedPressure = null
+            },
+            range = info.scale,
+            title = info.headline,
+        )
     }
 }
 
+private val pressureRanges = listOf(
+    PressureScaleRange(
+        color = Red800,
+        description = R.string.pressure_description_1,
+        headline = R.string.pressure_scale_1,
+        scaleHpa = "> 1025 hPa",
+        scaleInHg = "> 30.27 inHg",
+        scaleMmHg = "> 769 mmHg",
+    ),
+    PressureScaleRange(
+        color = Orange600,
+        description = R.string.pressure_description_2,
+        headline = R.string.pressure_scale_2,
+        scaleHpa = "1010 - 1025 hPa",
+        scaleInHg = "29.83 - 30.27 inHg",
+        scaleMmHg = "758 - 769 mmHg",
+    ),
+    PressureScaleRange(
+        color = Green600,
+        description = R.string.pressure_description_3,
+        headline = R.string.pressure_scale_3,
+        scaleHpa = "995 - 1010 hPa",
+        scaleInHg = "29.38 - 29.83 inHg",
+        scaleMmHg = "746 - 758 mmHg",
+    ),
+    PressureScaleRange(
+        color = Blue800,
+        description = R.string.pressure_description_4,
+        headline = R.string.pressure_scale_4,
+        scaleHpa = "980 - 995 hPa",
+        scaleInHg = "28.94 - 29.38 inHg",
+        scaleMmHg = "735 - 746 mmHg",
+    ),
+    PressureScaleRange(
+        color = Purple900,
+        description = R.string.pressure_description_5,
+        headline = R.string.pressure_scale_5,
+        scaleHpa = "< 980 hPa",
+        scaleInHg = "< 28.94 inHg",
+        scaleMmHg = "< 735 mmHg",
+    ),
+)
+
+@Composable
+private fun getPressureScaleFor(
+    unit: PressureUnit,
+): List<PressureScale> {
+    return pressureRanges.map { range ->
+        PressureScale(
+            color = range.color,
+            description = stringResource(range.description),
+            headline = stringResource(range.headline),
+            scale = when (unit) {
+                PressureUnit.HPA -> range.scaleHpa
+                PressureUnit.INHG -> range.scaleInHg
+                PressureUnit.MMHG -> range.scaleMmHg
+            },
+        )
+    }
+}

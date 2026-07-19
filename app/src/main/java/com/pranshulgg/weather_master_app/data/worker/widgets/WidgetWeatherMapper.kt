@@ -1,15 +1,13 @@
 package com.pranshulgg.weather_master_app.data.worker.widgets
 
 import android.content.Context
-import android.util.Log
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.model.weather.TemperatureUnit
 import com.pranshulgg.weather_master_app.core.model.weather.toFroggy
 import com.pranshulgg.weather_master_app.core.model.weather.toIcon
 import com.pranshulgg.weather_master_app.core.model.weather.toLabel
-import com.pranshulgg.weather_master_app.core.prefs.LocalAppPrefs
-import com.pranshulgg.weather_master_app.core.prefs.helper.PreferencesHelper
+import com.pranshulgg.weather_master_app.core.prefs.PreferencesHelper
 import com.pranshulgg.weather_master_app.core.utils.formatters.to12HourTimeString
 import com.pranshulgg.weather_master_app.core.utils.formatters.to24HourTimeString
 import com.pranshulgg.weather_master_app.core.utils.formatters.toWeekdayString
@@ -22,94 +20,107 @@ import com.pranshulgg.weather_master_app.widgets.model.WidgetWeather
 import kotlinx.serialization.json.Json
 import kotlin.math.roundToInt
 
-
 fun widgetWeatherMapper(
-    weather: Weather,
     applicationContext: Context,
-    units: WeatherUnits
+    units: WeatherUnits,
+    weather: Weather,
 ): String {
-
-    // Map everything
-    val timezone = weather.location.timezone
-
-    val currentCondition = weather.current.weatherCondition.toLabel(applicationContext)
-    val currentIcon = weather.current.weatherCondition.toIcon(
-        targetTimeMilli = weather.current.time,
-        daily = weather.daily.firstOrNull()
+    val currentCondition = weather.current.weatherCondition.toLabel(
+        context = applicationContext,
     )
-
     val currentFrogIcon = weather.current.weatherCondition.toFroggy(
+        daily = weather.daily.firstOrNull(),
         targetTimeMilli = weather.current.time,
-        daily = weather.daily.firstOrNull()
     )
-
-
+    val currentIcon = weather.current.weatherCondition.toIcon(
+        daily = weather.daily.firstOrNull(),
+        targetTimeMilli = weather.current.time,
+    )
     val currentTemperature = TemperatureUnit.CELSIUS.convert(
-        weather.current.temperature, units.tempUnit
+        from = weather.current.temperature,
+        to = units.temperature,
     )?.roundToInt()
-
-
-    val hourlyStartIndex = findHourlyIndexForTime(weather.hourly.map { it.time })
-
-    val is24hr = PreferencesHelper.getBool("is24HrTimeFormat") ?: true
-
-    val daySummary = computeDaySummary(weather, applicationContext, 0, units)
-
-
-    val hourly = weather.hourly
-        .drop(hourlyStartIndex)
-        .take(12)
-        .map {
-            val temperature =
-                TemperatureUnit.CELSIUS.convert(it.temperature, units.tempUnit)?.roundToInt()
-            val matchingDaily = findMatchingDaily(
-                it.time,
-                weather.daily,
-                weather.location.timezone
-            )
-            val formattedTime =
-                if (is24hr) to24HourTimeString(it.time, timezone) else to12HourTimeString(
-                    it.time,
-                    timezone
-                )
-
-            val icon = it.weatherCondition.toIcon(matchingDaily, it.time)
-            WidgetHourlyItem(
-                time = formattedTime,
-                temp = "${temperature}°",
-                conditionIcon = icon
-            )
-        }
+    val daySummary = computeDaySummary(
+        context = applicationContext,
+        dailyIndex = 0,
+        units = units,
+        weather = weather,
+    )
+    val hourlyStartIndex = findHourlyIndexForTime(
+        time = weather.hourly.map { it.time },
+    )
+    val is24hr = PreferencesHelper.getString("app_time") == "24"
+    val timezone = weather.location.timezone
 
     val daily = weather.daily
         .take(6)
         .map {
-            val maxTemperature =
-                TemperatureUnit.CELSIUS.convert(it.temperatureMax, units.tempUnit)?.roundToInt()
-            val minTemperature =
-                TemperatureUnit.CELSIUS.convert(it.temperatureMin, units.tempUnit)?.roundToInt()
+            val maxTemperature = TemperatureUnit.CELSIUS.convert(
+                from = it.temperatureMax,
+                to = units.temperature,
+            )?.roundToInt()
+            val minTemperature = TemperatureUnit.CELSIUS.convert(
+                from = it.temperatureMin,
+                to = units.temperature,
+            )?.roundToInt()
             val icon = it.weatherCondition.toIcon(
-                targetTimeMilli = System.currentTimeMillis()
+                targetTimeMilli = System.currentTimeMillis(),
             )
+
             WidgetDailyItem(
-                tempMax = "${maxTemperature}°",
-                tempMin = "${minTemperature}°",
-                conditionIcon = icon,
-                time = toWeekdayString(it.time, timezone)
+                icon = icon,
+                temperatureMaximum = "${maxTemperature}°",
+                temperatureMinimum = "${minTemperature}°",
+                time = toWeekdayString(
+                    timeMilli = it.time,
+                    zoneId = timezone,
+                ),
+            )
+        }
+    val hourly = weather.hourly
+        .drop(hourlyStartIndex)
+        .take(12)
+        .map {
+            val daily = findMatchingDaily(
+                dailyList = weather.daily,
+                targetTimeMilli = it.time,
+                timezone = weather.location.timezone,
+            )
+            val icon = it.weatherCondition.toIcon(
+                daily = daily,
+                targetTimeMilli = it.time,
+            )
+            val temperature =
+                TemperatureUnit.CELSIUS.convert(
+                    from = it.temperature,
+                    to = units.temperature,
+                )?.roundToInt()
+            val formattedTime =
+                if (is24hr) to24HourTimeString(
+                    timeMilli = it.time,
+                    zoneId = timezone,
+                ) else to12HourTimeString(
+                    timeMilli = it.time,
+                    zoneId = timezone,
+                )
+
+            WidgetHourlyItem(
+                icon = icon,
+                temperature = "${temperature}°",
+                time = formattedTime,
             )
         }
 
     val widgetState = WidgetWeather(
-        currentTemp = "${currentTemperature}°",
-        hourly = hourly,
-        daily = daily,
         currentCondition = currentCondition,
-        currentIcon = currentIcon,
         currentFrog = currentFrogIcon,
+        currentIcon = currentIcon,
+        currentTemp = "${currentTemperature}°",
+        daily = daily,
+        hourly = hourly,
         locationName = weather.location.name,
-        summary = daySummary
+        summary = daySummary,
     )
 
-    // Convert to string
     return Json.encodeToString(widgetState)
 }

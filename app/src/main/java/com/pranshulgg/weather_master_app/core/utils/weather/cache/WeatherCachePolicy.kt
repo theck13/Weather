@@ -7,36 +7,28 @@ import com.pranshulgg.weather_master_app.core.utils.weather.cache.CacheConfig.MA
 import com.pranshulgg.weather_master_app.data.local.entity.weather.WeatherWithRelations
 import java.util.concurrent.TimeUnit
 
-fun isWeatherCacheSafe(cache: WeatherWithRelations?): Boolean {
-    val isSafe = cache != null &&
-            cache.daily.isNotEmpty() &&
-            cache.hourly.isNotEmpty() &&
-            cache.current != null
-
-    return isSafe
+fun isWeatherCacheSafe(
+    cache: WeatherWithRelations?,
+): Boolean {
+    return cache != null && cache.daily.isNotEmpty() && cache.hourly.isNotEmpty() && cache.current != null
 }
 
-fun isWeatherDomainSafe(weather: Weather?): Boolean {
-    val isSafe = weather != null &&
-            weather.daily.isNotEmpty() &&
-            weather.hourly.isNotEmpty()
-    return isSafe
+fun isWeatherDailyDomainSafe(
+    weather: Weather?,
+): Boolean {
+    return weather != null && weather.daily.isNotEmpty()
 }
 
-fun isWeatherHourlyDomainSafe(weather: Weather?): Boolean {
-    val isSafe =
-        weather != null &&
-                weather.hourly.isNotEmpty()
-
-    return isSafe
+fun isWeatherDomainSafe(
+    weather: Weather?,
+): Boolean {
+    return weather != null && weather.daily.isNotEmpty() && weather.hourly.isNotEmpty()
 }
 
-fun isWeatherDailyDomainSafe(weather: Weather?): Boolean {
-    val isSafe =
-        weather != null &&
-                weather.daily.isNotEmpty()
-
-    return isSafe
+fun isWeatherHourlyDomainSafe(
+    weather: Weather?,
+): Boolean {
+    return weather != null && weather.hourly.isNotEmpty()
 }
 
 fun shouldReturnWeatherCache(
@@ -44,12 +36,11 @@ fun shouldReturnWeatherCache(
     isManualRefresh: Boolean,
     isForceRefresh: Boolean
 ): WeatherResultType {
+    if (cache == null || cache.current == null || isForceRefresh || isWeatherCacheSafe(cache).not()) {
+        return WeatherResultType.ERROR
+    }
 
-    if (isForceRefresh) return WeatherResultType.ERROR
-
-    if (!isWeatherCacheSafe(cache)) return WeatherResultType.ERROR
-
-    val cacheMilli = cache!!.current!!.lastUpdatedInMilli
+    val cacheMilli = cache.current.lastUpdatedInMilli
     val ageMillis = System.currentTimeMillis() - cacheMilli
     val ageMinutes = TimeUnit.MILLISECONDS.toMinutes(ageMillis)
 

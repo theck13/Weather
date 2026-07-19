@@ -52,12 +52,11 @@ object NwsWeatherConditionMap {
         }
     }
 
-
-    private fun stripUrlAndGetIconId(iconUrl: String?): String? {
-
+    private fun stripUrlAndGetIconId(
+        iconUrl: String?,
+    ): String? {
         val id = iconUrl?.substringAfterLast("/")?.substringBefore("?")?.substringBefore(",")
 
         return id
     }
-
 }

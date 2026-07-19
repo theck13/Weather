@@ -25,20 +25,17 @@ class WeatherWorker @AssistedInject constructor(
     private val repositoryProvider: WeatherRepositoryProvider,
     private val locationsRepository: LocationsRepository,
     private val appVisibility: AppVisibility,
-    private val weatherUnitsRepository: WeatherUnitsRepository
+    private val weatherUnitsRepository: WeatherUnitsRepository,
 ) : CoroutineWorker(context, params) {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
-
         // Only run if app is backgrounded
         if (appVisibility.isForeground) {
             return Result.success()
         }
 
         return try {
-
-
             // Get the locations and units
             val locations = locationsRepository.getLocationsOnce()
             val default = locations.find { it.isDefault }
@@ -52,19 +49,19 @@ class WeatherWorker @AssistedInject constructor(
              * Show a notification whenever the worker runs
              * Don't really need it but why not, i wanna know if its working
              */
-            WeatherNotification.showNotification(default.name, applicationContext)
-
+            WeatherNotification.showNotification(
+                context = applicationContext,
+                locationName = default.name,
+            )
 
             // Get the repository
             val repo = repositoryProvider.getRepository(default.source)
 
-
             val result = repo.getWeather(
-                location = default,
+                isForceRefresh = false,
                 isManualRefresh = true,
-                isForceRefresh = false
+                location = default,
             )
-
 
             if (result !is WeatherResult.Success) {
                 return Result.success()
@@ -72,10 +69,13 @@ class WeatherWorker @AssistedInject constructor(
 
             val weather = result.weather
 
-            updateAllWidgets(applicationContext, weather, units)
+            updateAllWidgets(
+                context = applicationContext,
+                data = weather,
+                units = units,
+            )
 
             return Result.success()
-
         } catch (e: Exception) {
             WeatherNotification.hideNotification(applicationContext)
             Result.failure()
@@ -85,16 +85,18 @@ class WeatherWorker @AssistedInject constructor(
     }
 
     companion object {
-
         suspend fun updateAllWidgets(
             context: Context,
             data: Weather,
-            units: WeatherUnits
+            units: WeatherUnits,
         ) {
-            val json = widgetWeatherMapper(data, context, units)
-
-            WeatherWidgetUpdater(context).update(json)
+            WeatherWidgetUpdater(context).update(
+                json = widgetWeatherMapper(
+                    applicationContext = context,
+                    units = units,
+                    weather = data,
+                ),
+            )
         }
-
     }
 }

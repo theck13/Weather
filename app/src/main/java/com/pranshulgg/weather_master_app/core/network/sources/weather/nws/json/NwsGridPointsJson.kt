@@ -2,23 +2,22 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.nws.json
 
 import com.google.gson.annotations.SerializedName
 
-
 data class NwsGridPointsJson(
     @SerializedName("properties")
-    val points: NwsGridPointsValuesJson
+    val points: NwsGridPointsValuesJson,
 )
 
 data class NwsGridPointsValuesJson(
     @SerializedName("gridId")
     val officeId: String,
     val gridX: Long,
-    val gridY: Long
+    val gridY: Long,
 )
 
 // ---------------------------- GRID POINTS DATA ----------------------------
 
 data class NwsGridPointDataJson(
-    val properties: NwsGridPointDataPropertiesJson
+    val properties: NwsGridPointDataPropertiesJson,
 )
 
 data class NwsGridPointDataPropertiesJson(
@@ -26,7 +25,7 @@ data class NwsGridPointDataPropertiesJson(
     val snowfallAmount: NwsGridPointDataSnowfallAmountJson,
     val maxTemperature: NwsGridPointDataMaxTemperatureJson,
     val minTemperature: NwsGridPointDataMinTemperatureJson,
-    val visibility: NwsGridPointDataVisibilityJson
+    val visibility: NwsGridPointDataVisibilityJson,
 )
 
 data class NwsGridPointDataQuantitativePrecipitationJson(
@@ -35,7 +34,7 @@ data class NwsGridPointDataQuantitativePrecipitationJson(
 
 data class NwsGridPointDataQuantitativePrecipitationValuesJson(
     val validTime: String,
-    val value: Double
+    val value: Double,
 )
 
 data class NwsGridPointDataSnowfallAmountJson(
@@ -44,32 +43,32 @@ data class NwsGridPointDataSnowfallAmountJson(
 
 data class NwsGridPointDataSnowfallAmountValuesJson(
     val validTime: String,
-    val value: Double
+    val value: Double,
 )
 
 data class NwsGridPointDataMaxTemperatureJson(
-    val values: List<NwsGridPointDataMaxTemperatureValuesJson>
+    val values: List<NwsGridPointDataMaxTemperatureValuesJson>,
 )
 
 data class NwsGridPointDataMinTemperatureJson(
-    val values: List<NwsGridPointDataMinTemperatureValuesJson>
+    val values: List<NwsGridPointDataMinTemperatureValuesJson>,
 )
 
 data class NwsGridPointDataMaxTemperatureValuesJson(
     val validTime: String,
-    val value: Double
+    val value: Double,
 )
 
 data class NwsGridPointDataMinTemperatureValuesJson(
     val validTime: String,
-    val value: Double
+    val value: Double,
 )
 
 data class NwsGridPointDataVisibilityJson(
-    val values: List<NwsGridPointDataVisibilityValuesJson>
+    val values: List<NwsGridPointDataVisibilityValuesJson>,
 )
 
 data class NwsGridPointDataVisibilityValuesJson(
     val validTime: String,
-    val value: Double
+    val value: Double,
 )

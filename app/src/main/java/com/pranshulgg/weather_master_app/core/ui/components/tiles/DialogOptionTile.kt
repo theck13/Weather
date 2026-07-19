@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -41,48 +41,55 @@ import com.pranshulgg.weather_master_app.R
 import com.pranshulgg.weather_master_app.core.ui.theme.ShapeRadius
 
 data class DialogOption<T>(
+    val label: String,
     val value: T,
-    val label: String
 )
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+)
 @Composable
 fun <T> DialogOptionTile(
-    headline: String,
     description: String? = null,
+    dialogTitle: String? = null,
+    headline: String,
+    itemBackgroundColor: Color,
+    leading: @Composable (() -> Unit)? = null,
+    onOptionChange: (T) -> Unit = {},
+    onOptionSelected: (T) -> Unit,
     options: List<DialogOption<T>>,
     selectedOption: T?,
-    onOptionSelected: (T) -> Unit,
-    leading: @Composable (() -> Unit)? = null,
     shapes: RoundedCornerShape,
-    dialogTitle: String? = null,
-    itemBgColor: Color
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     val selectedLabel = options.find { it.value == selectedOption }?.label
+    var showDialog by remember { mutableStateOf(false) }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
-
         shape = shapes,
     ) {
         ListItem(
-
-            modifier = Modifier
-                .clickable { showDialog = true },
+            modifier = Modifier.clickable {
+                showDialog = true
+            },
             colors = ListItemDefaults.colors(
-                containerColor = itemBgColor
+                containerColor = itemBackgroundColor,
             ),
+            headlineContent = {
+                Text(
+                    text = headline,
+                )
+            },
             leadingContent = leading,
-            headlineContent = { Text(headline) },
             supportingContent = {
                 if (description != null) Text(
                     description,
                 )
                 else selectedLabel?.let {
                     Text(
-                        selectedLabel,
                         color = MaterialTheme.colorScheme.tertiary,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        text = selectedLabel,
                     )
                 }
             },
@@ -90,8 +97,14 @@ fun <T> DialogOptionTile(
     }
 
     if (showDialog) {
-        var tempSelection by remember { mutableStateOf(selectedOption) }
         val listState = rememberLazyListState()
+        val originalSelection = remember { selectedOption }
+        var tempSelection by remember { mutableStateOf(selectedOption) }
+
+        fun revert() {
+            originalSelection?.let { onOptionChange(it) }
+            showDialog = false
+        }
 
         val showTopDivider by remember {
             derivedStateOf {
@@ -102,114 +115,175 @@ fun <T> DialogOptionTile(
         val showBottomDivider by remember {
             derivedStateOf {
                 val info = listState.layoutInfo
-                val total = info.totalItemsCount
                 val lastVisible = info.visibleItemsInfo.lastOrNull()?.index ?: -1
+                val total = info.totalItemsCount
                 total > 0 && lastVisible < total - 1
             }
         }
 
         Dialog(
             onDismissRequest = {
-                showDialog = false
+                revert()
             }
         ) {
-
             Surface(
                 modifier = Modifier
-                    .width(300.dp)
-                    .heightIn(max = 500.dp),
-                shape = RoundedCornerShape(ShapeRadius.ExtraLarge),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                shadowElevation = 6.dp
-            ) {
-                Column() {
-                    Text(
-                        dialogTitle ?: headline,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                    .heightIn(
+                        max = 500.dp,
                     )
-                    Spacer(Modifier.height(16.dp))
+                    .width(
+                        width = 300.dp,
+                    ),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                shadowElevation = 6.dp,
+                shape = RoundedCornerShape(
+                    size = ShapeRadius.ExtraLarge,
+                ),
+            ) {
+                Column {
+                    Text(
+                        modifier = Modifier.padding(
+                            end = 24.dp,
+                            start = 24.dp,
+                            top = 24.dp,
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.headlineSmall,
+                        text = dialogTitle ?: headline,
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(
+                            height = 16.dp,
+                        )
+                    )
+
                     Box(
                         modifier = Modifier
-                            .weight(1f, fill = false)
                             .fillMaxWidth()
-
+                            .weight(
+                                fill = false,
+                                weight = 1.0f,
+                            ),
                     ) {
                         LazyColumn(
+                            modifier = Modifier.fillMaxWidth(),
                             state = listState,
-                            modifier = Modifier
-                                .fillMaxWidth()
                         ) {
-                            itemsIndexed(options) { index, option ->
+                            items(
+                                items = options,
+                            ) { option ->
                                 Row(
                                     modifier = Modifier
-                                        .clickable { tempSelection = option.value }
+                                        .clickable {
+                                            tempSelection = option.value
+                                            onOptionChange(option.value)
+                                        }
                                         .fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Spacer(
+                                        modifier = Modifier.width(
+                                            width = 16.dp,
+                                        ),
+                                    )
+
                                     RadioButton(
+                                        onClick = {
+                                            tempSelection = option.value
+                                            onOptionChange(option.value)
+                                        },
                                         selected = option.value == tempSelection,
-                                        onClick = { tempSelection = option.value }
                                     )
-                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Spacer(
+                                        modifier = Modifier.width(
+                                            width = 8.dp,
+                                        ),
+                                    )
+
                                     Text(
-                                        option.label,
                                         color = MaterialTheme.colorScheme.onSurface,
-                                        style = MaterialTheme.typography.bodyLarge
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        text = option.label,
                                     )
-                                    Spacer(modifier = Modifier.width(16.dp))
+
+                                    Spacer(
+                                        modifier = Modifier.width(
+                                            width = 16.dp,
+                                        ),
+                                    )
                                 }
                             }
                         }
 
                         androidx.compose.animation.AnimatedVisibility(
+                            modifier = Modifier.align(
+                                alignment = Alignment.TopCenter,
+                            ),
                             visible = showTopDivider,
-                            modifier = Modifier.align(Alignment.TopCenter)
                         ) {
-                            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                            HorizontalDivider(
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
 
                         androidx.compose.animation.AnimatedVisibility(
+                            modifier = Modifier.align(
+                                alignment = Alignment.BottomCenter,
+                            ),
                             visible = showBottomDivider,
-                            modifier = Modifier.align(Alignment.BottomCenter)
                         ) {
-                            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                            HorizontalDivider(
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
-
                     }
 
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(
+                        modifier = Modifier.height(
+                            height = 16.dp,
+                        ),
+                    )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 24.dp, start = 24.dp, end = 24.dp),
-                        horizontalArrangement = Arrangement.End
+                            .padding(
+                                bottom = 24.dp,
+                                end = 24.dp,
+                                start = 24.dp,
+                            ),
+                        horizontalArrangement = Arrangement.End,
                     ) {
                         TextButton(
                             onClick = {
-                                showDialog = false
+                                revert()
                             },
-                            shapes = ButtonDefaults.shapes()
+                            shapes = ButtonDefaults.shapes(),
                         ) {
                             Text(
-                                stringResource(R.string.action_cancel),
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
+                                text = stringResource(R.string.action_cancel),
                             )
                         }
-                        Spacer(Modifier.width(8.dp))
+
+                        Spacer(
+                            modifier = Modifier.width(
+                                width = 8.dp,
+                            ),
+                        )
+
                         TextButton(
                             onClick = {
                                 tempSelection?.let { onOptionSelected(it) }
                                 showDialog = false
                             },
-                            shapes = ButtonDefaults.shapes()
+                            shapes = ButtonDefaults.shapes(),
                         ) {
                             Text(
-                                stringResource(R.string.action_save),
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
+                                text = stringResource(R.string.action_save),
                             )
                         }
                     }

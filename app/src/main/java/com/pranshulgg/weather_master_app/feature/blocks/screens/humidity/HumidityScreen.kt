@@ -1,44 +1,40 @@
 package com.pranshulgg.weather_master_app.feature.blocks.screens.humidity
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.ui.components.Gap
-import com.pranshulgg.weather_master_app.core.ui.components.LargeTopBarScaffold
-import com.pranshulgg.weather_master_app.core.ui.components.NavigateUpBtn
-import com.pranshulgg.weather_master_app.core.ui.components.Symbol
+import com.pranshulgg.weather_master_app.core.ui.components.NavigateBackButton
+import com.pranshulgg.weather_master_app.core.ui.components.TopBarScaffold
 import com.pranshulgg.weather_master_app.core.utils.formatters.toDateString
 import com.pranshulgg.weather_master_app.core.utils.weather.forecast.findMatchingHourly
 import com.pranshulgg.weather_master_app.feature.blocks.BlocksScreenViewModel
 import com.pranshulgg.weather_master_app.feature.blocks.components.AboutCard
 import com.pranshulgg.weather_master_app.feature.blocks.components.AboutCardText
 import com.pranshulgg.weather_master_app.feature.blocks.components.NoHourlyDataAvailable
-import com.pranshulgg.weather_master_app.feature.blocks.screens.humidity.components.DewPointHourlyCard
-import com.pranshulgg.weather_master_app.feature.blocks.screens.humidity.components.HumidityHourlyCard
 
 @Composable
-fun HumidityScreen(navController: NavController, index: Int = 0, locationId: String) {
-
+fun HumidityScreen(
+    index: Int = 0,
+    locationId: String,
+    navController: NavController,
+) {
+    val context = LocalContext.current
     val viewModel: BlocksScreenViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
@@ -46,94 +42,131 @@ fun HumidityScreen(navController: NavController, index: Int = 0, locationId: Str
         viewModel.getWeather(locationId)
     }
 
-
     val uiState = viewModel.uiState.value
-    val weather = uiState.weather
-    val hourly = weather?.hourly ?: return
     val units = uiState.units
+    val weather = uiState.weather
+
+    val hourly = weather?.hourly ?: return
     val time = if (index != 0) weather.daily[index].time else weather.current.time
-    val context = LocalContext.current
-    val data =
-        findMatchingHourly(
-            hourly,
-            time,
-            weather.location.source,
-        )
-
-
-    val date = toDateString(weather.daily[index].time, weather.location.timezone)
-    val dewPointData = data.map { it.dewPoint }
-
     val zoneId = weather.location.timezone
+
+    val data = findMatchingHourly(
+        currentMilli = time,
+        data = hourly,
+        source = weather.location.source,
+    )
+    val date = toDateString(
+        timeMilli = weather.daily[index].time,
+        zoneId = weather.location.timezone,
+    )
+    val dewPointData = data.map { it.dewPoint }
     val humidityData = data.map { it.humidity }
 
-
-    LargeTopBarScaffold(
-        title = stringResource(R.string.weather_humidity),
-        navigationIcon = { NavigateUpBtn(navController) },
+    TopBarScaffold(
         actions = {
             Text(
-                date,
-                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(
+                    end = 16.dp,
+                ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(end = 16.dp)
+                style = MaterialTheme.typography.titleMedium,
+                text = date,
             )
-        }
+        },
+        navigationIcon = {
+            NavigateBackButton(
+                navController = navController,
+            )
+        },
+        title = stringResource(R.string.weather_humidity),
     ) { paddingValues ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues)
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxSize(),
         ) {
-            if (!humidityData.contains(null)) {
-                HumidityHourlyCard(data, zoneId)
-            } else {
-                NoHourlyDataAvailable()
-            }
-            Gap(14.dp)
-            AboutCard {
-                AboutCardText(stringResource(R.string.weather_about_humidity))
-            }
-            Gap(14.dp)
-            DewPointHeader()
-            if (!dewPointData.contains(null)) {
-                DewPointHourlyCard(data, zoneId, units.tempUnit, context)
-            } else {
-                NoHourlyDataAvailable()
-            }
-            Gap(14.dp)
-            AboutCard {
-                AboutCardText(stringResource(R.string.weather_about_dewpoint))
-            }
-            Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 30.dp)
+            val isLandscape = maxWidth > maxHeight
 
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(
+                        state = rememberScrollState(),
+                    )
+                    .padding(
+                        paddingValues = paddingValues,
+                    )
+                    .padding(
+                        bottom = 16.dp,
+                        top = 2.dp,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(
+                    space = 14.dp,
+                ),
+            ) {
+                if (!humidityData.contains(null)) {
+                    HumidityHourlyCard(
+                        data = data,
+                        zoneId = zoneId,
+                    )
+                } else {
+                    NoHourlyDataAvailable()
+                }
+
+                if (isLandscape) {
+                    Row(
+                        modifier = Modifier.padding(
+                            horizontal = 16.dp,
+                        ),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            space = 14.dp,
+                        ),
+                    ) {
+                        AboutCard(
+                            modifier = Modifier.weight(
+                                weight = 1.00f,
+                            ),
+                        ) {
+                            AboutCardText(
+                                text = stringResource(R.string.weather_about_humidity),
+                            )
+                        }
+
+                        AboutCard(
+                            modifier = Modifier.weight(
+                                weight = 1.00f,
+                            ),
+                        ) {
+                            AboutCardText(
+                                text = stringResource(R.string.weather_about_dewpoint),
+                            )
+                        }
+                    }
+                } else {
+                    AboutCard {
+                        AboutCardText(
+                            text = stringResource(R.string.weather_about_humidity),
+                        )
+                    }
+                }
+
+                if (dewPointData.contains(null).not()) {
+                    DewPointHourlyCard(
+                        context = context,
+                        data = data,
+                        unit = units.temperature,
+                        zoneId = zoneId,
+                    )
+                } else {
+                    NoHourlyDataAvailable()
+                }
+
+                if (!isLandscape) {
+                    AboutCard {
+                        AboutCardText(
+                            text = stringResource(R.string.weather_about_dewpoint),
+                        )
+                    }
+                }
+            }
         }
     }
-}
-
-
-@Composable
-private fun DewPointHeader() {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(
-            5.dp, alignment = Alignment.CenterHorizontally
-        ),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(start = 18.dp, bottom = 6.dp)
-    ) {
-        Symbol(
-            R.drawable.dew_point_24px,
-            color = MaterialTheme.colorScheme.secondary
-        )
-        Text(
-            stringResource(R.string.weather_dew_point),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.secondary
-        )
-    }
-
-
 }

@@ -2,7 +2,6 @@ package com.pranshulgg.weather_master_app.core.network.sources.weather.metnorway
 
 import com.pranshulgg.weather_master_app.core.model.weather.WeatherCondition
 
-
 // FROM https://nrkno.github.io/yr-weather-symbols/
 object MetNorwayWeatherConditionMap {
     fun getCondition(id: String?): WeatherCondition {

@@ -1,6 +1,6 @@
 package com.pranshulgg.weather_master_app.data.local.mapper.weather
 
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrent
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherCurrently
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherDaily
 import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherHourly
 import com.pranshulgg.weather_master_app.data.local.entity.weather.CurrentWeatherEntity
@@ -12,8 +12,8 @@ import kotlin.uuid.ExperimentalUuidApi
 
 // CURRENT
 @OptIn(ExperimentalUuidApi::class)
-fun WeatherCurrent.toCurrentWeatherEntity(
-    locationId: String
+fun WeatherCurrently.toCurrentWeatherEntity(
+    locationId: String,
 ): CurrentWeatherEntity =
     CurrentWeatherEntity(
         locationId = locationId,
@@ -24,19 +24,18 @@ fun WeatherCurrent.toCurrentWeatherEntity(
         pressureMsl = pressureMsl,
         visibility = visibility,
         cloudCover = cloudCover,
-        uvIndex = uvIndex,
+        uvIndex = ultraviolet,
         weatherCondition = weatherCondition,
         feelsLike = feelsLike,
         time = time,
         dewPoint = dewPoint,
         utcOffsetSeconds = utcOffsetSeconds,
-        lastUpdatedInMilli = lastUpdatedInMilli
+        lastUpdatedInMilli = lastUpdatedInMilli,
     )
-
 
 @OptIn(ExperimentalUuidApi::class)
 fun List<WeatherHourly>.toHourlyWeatherEntity(
-    locationId: String
+    locationId: String,
 ): List<HourlyWeatherEntity> =
     map { item ->
         HourlyWeatherEntity(
@@ -46,21 +45,20 @@ fun List<WeatherHourly>.toHourlyWeatherEntity(
             windDirection = item.windDirection,
             rain = item.rain,
             snowfall = item.snowfall,
-            uvIndex = item.uvIndex,
+            uvIndex = item.ultraviolet,
             weatherCondition = item.weatherCondition,
             time = item.time,
             precipitationProbability = item.precipitationProbability,
             visibility = item.visibility,
             pressureMsl = item.pressureMsl,
             humidity = item.humidity,
-            dewPoint = item.dewPoint
+            dewPoint = item.dewPoint,
         )
     }
 
-
 @OptIn(ExperimentalUuidApi::class)
 fun List<WeatherDaily>.toDailyWeatherEntity(
-    locationId: String
+    locationId: String,
 ): List<DailyWeatherEntity> =
     map { item ->
         DailyWeatherEntity(
@@ -71,7 +69,7 @@ fun List<WeatherDaily>.toDailyWeatherEntity(
             windDirection = item.windDirection,
             rainSum = item.rainSum,
             snowfallSum = item.snowfallSum,
-            uvIndexMax = item.uvIndexMax,
+            uvIndexMax = item.ultravioletMaximum,
             weatherCondition = item.weatherCondition,
             time = item.time,
             precipitationProbabilityMax = item.precipitationProbabilityMax,
@@ -88,5 +86,3 @@ fun List<WeatherDaily>.toDailyWeatherEntity(
             dewPoint = item.dewPoint,
         )
     }
-
-

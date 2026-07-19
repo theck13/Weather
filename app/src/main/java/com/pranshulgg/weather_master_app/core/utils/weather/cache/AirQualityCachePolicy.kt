@@ -1,20 +1,24 @@
 package com.pranshulgg.weather_master_app.core.utils.weather.cache
 
 import com.pranshulgg.weather_master_app.core.model.domain.airquality.AirQuality
-import com.pranshulgg.weather_master_app.core.model.weather.airquality.AirQualityResultType
+import com.pranshulgg.weather_master_app.core.model.weather.air.AirQualityResultType
 import com.pranshulgg.weather_master_app.core.utils.weather.cache.CacheConfig.AUTO_REFRESH_MAX_MINUTES
 import com.pranshulgg.weather_master_app.core.utils.weather.cache.CacheConfig.MANUAL_REFRESH_MINUTES
 import com.pranshulgg.weather_master_app.data.local.entity.airquality.AirQualityWithRelations
 import java.util.concurrent.TimeUnit
 
-
 fun isCurrentAirQualitySafe(airQuality: AirQuality?): Boolean {
-
     if (airQuality == null) return false
 
     val current = airQuality.current
     val isSafe =
-        current.pm10 != null || current.pm25 != null || current.ozone != null || current.sulphurDioxide != null || current.nitrogenDioxide != null || current.carbonMonoxide != null
+        current.carbonMonoxide != null ||
+        current.nitrogenDioxide != null ||
+        current.ozone != null ||
+        current.pm10 != null ||
+        current.pm25 != null ||
+        current.sulphurDioxide != null ||
+        current.usAqi != null
     return isSafe
 }
 
@@ -22,11 +26,9 @@ fun shouldReturnAirQualityCache(
     cache: AirQualityWithRelations?,
     isManualRefresh: Boolean
 ): AirQualityResultType {
-
     if (cache == null || cache.current == null) {
         return AirQualityResultType.ERROR
     }
-
 
     val cacheMilli = cache.current.lastUpdatedInMilli
     val ageMillis = System.currentTimeMillis() - cacheMilli

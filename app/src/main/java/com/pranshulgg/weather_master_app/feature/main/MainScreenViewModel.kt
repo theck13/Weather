@@ -31,7 +31,9 @@ class MainScreenViewModel @Inject constructor(
 
     fun showWeatherSourcesForLocationSheet(isLoading: Boolean) {
         if (isLoading) {
-            SnackbarManager.show(R.string.error_refresh_waiting_before_action)
+            SnackbarManager.show(
+                message = R.string.error_refresh_waiting_before_action,
+            )
             return
         }
         _uiState.value = _uiState.value.copy(isWeatherSourcesForLocationSheetOpen = true)

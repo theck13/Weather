@@ -5,11 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,28 +16,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.weather_master_app.R
-import com.pranshulgg.weather_master_app.core.model.weather.DistanceUnit
-import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
 import com.pranshulgg.weather_master_app.core.model.domain.weather.Weather
+import com.pranshulgg.weather_master_app.core.model.domain.weather.WeatherUnits
+import com.pranshulgg.weather_master_app.core.model.weather.DistanceUnit
 import com.pranshulgg.weather_master_app.core.model.weather.toName
-import com.pranshulgg.weather_master_app.core.ui.components.Symbol
+import com.pranshulgg.weather_master_app.core.ui.components.Gap
 import com.pranshulgg.weather_master_app.core.ui.theme.ShadowElevation
 import com.pranshulgg.weather_master_app.core.ui.theme.ShapeRadius
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import com.pranshulgg.weather_master_app.core.ui.components.Gap
+import com.pranshulgg.weather_master_app.core.ui.theme.onSurfaceDim
 import com.pranshulgg.weather_master_app.core.utils.formatters.formatLocalizedNumber
 import com.pranshulgg.weather_master_app.core.utils.locale.getCurrentAppLocale
-import java.util.Locale
+import com.pranshulgg.weather_master_app.feature.shared.components.Header
 import kotlin.math.roundToInt
 
 @Composable
-
 fun VisibilityBlock(
     weather: Weather,
     units: WeatherUnits,
@@ -47,16 +44,20 @@ fun VisibilityBlock(
     dailyIndex: Int,
     onClickBlock: () -> Unit
 ) {
-
     val formatter: (Double) -> Double? = {
         DistanceUnit.M.convert(
-            it,
-            units.distanceUnit
+            from = it,
+            to = units.distance,
         )
     }
-
-    val visibility =
-        if (isDaily) weather.daily[dailyIndex].visibility?.toDouble() else weather.current.visibility?.toDouble()
+    val visibility = if (isDaily) weather.daily[dailyIndex].visibility?.toDouble() else weather.current.visibility?.toDouble()
+    val visibilityAlpha = getAlphaFromVisibility(
+        valueKm =
+            DistanceUnit.M.convert(
+                from = visibility,
+                to = DistanceUnit.KM,
+            )?.roundToInt()!!,
+    )
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -66,115 +67,111 @@ fun VisibilityBlock(
     ) {
         Box(
             Modifier
-                .fillMaxSize()
-                .aspectRatio(1f)
+                .aspectRatio(
+                    ratio = 1.00f,
+                )
+                .fillMaxSize(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.visibility_block),
+                modifier = Modifier
+                    .alpha(
+                        alpha = visibilityAlpha,
+                    )
+                    .matchParentSize(),
+                colorFilter = ColorFilter.tint(
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                ),
                 contentDescription = "",
-                modifier = Modifier.matchParentSize(),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inversePrimary)
+                painter = painterResource(R.drawable.il_visibility),
             )
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Gap(28.dp)
-                Header()
+                Gap(
+                    vertical = 28.dp,
+                )
 
-                Row(
-                ) {
+                Header(
+                    color = MaterialTheme.colorScheme.onSurfaceDim,
+                    icon = R.drawable.ic_visibility_24,
+                    padding = PaddingValues(
+                        horizontal = 16.dp,
+                    ),
+                    text = stringResource(R.string.weather_visibility),
+                )
+
+                Row {
                     Text(
-                        formatLocalizedNumber(
-                            number = formatter(visibility!!)!!,
-                            decimalPlaces = 0,
-                            locale = getCurrentAppLocale()
-                        ),
-                        style = MaterialTheme.typography.displayMedium,
                         modifier = Modifier.alignByBaseline(),
                         color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.displayMedium,
+                        text = formatLocalizedNumber(
+                            decimalPlaces = 0,
+                            locale = getCurrentAppLocale(),
+                            number = formatter(visibility!!)!!,
+                        ),
                     )
-                    Gap(horizontal = 2.dp)
+
+                    Gap(
+                        horizontal = 2.dp,
+                    )
+
                     Text(
-                        units.distanceUnit.toName(true, context),
                         modifier = Modifier.alignByBaseline(),
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                        text = units.distance.toName(
+                            context = context,
+                            inShort = true,
+                        )
                     )
                 }
 
                 if (!isDaily) {
                     Text(
-                        stringResource(
-                            visibilityLabels(
+                        style = MaterialTheme.typography.bodyLarge,
+                        text = stringResource(
+                            getVisibilityText(
                                 DistanceUnit.M.convert(
-                                    visibility,
-                                    DistanceUnit.KM
+                                    from = visibility,
+                                    to = DistanceUnit.KM,
                                 )?.roundToInt()!!
                             )
                         ),
-                        style = MaterialTheme.typography.bodyLarge,
                     )
                 } else {
                     Text(
-                        stringResource(R.string.weather_minimum),
                         style = MaterialTheme.typography.bodyLarge,
+                        text = stringResource(R.string.weather_minimum),
                     )
                 }
-//                Text(
-//                    formatLocalizedNumber(
-//                        number = visibility!!,
-//                        decimalPlaces = 0,
-//                        locale = getCurrentAppLocale()
-//                    ),
-//                    style = MaterialTheme.typography.displaySmall,
-//                    color = MaterialTheme.colorScheme.onSurface,
-//                )
-//
-//
-//                Text(
-//                    units.distanceUnit.toName(context = context, inShort = true),
-//                    style = MaterialTheme.typography.bodyLarge,
-//                    color = MaterialTheme.colorScheme.onSurfaceVariant
-//                )
-                Gap(28.dp)
+
+                Gap(
+                    vertical = 28.dp,
+                )
             }
         }
     }
-
 }
 
-@Composable
-private fun Header() {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(
-            5.dp,
-            alignment = Alignment.CenterHorizontally
-        ),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = 16.dp)
-
-    ) {
-        Symbol(
-            R.drawable.visibility_24px,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f),
-        )
-        Text(
-            stringResource(R.string.weather_visibility),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
-
-        )
+private fun getAlphaFromVisibility(
+    valueKm: Int,
+): Float {
+    return when {
+        valueKm >= 20 -> 0.10f
+        valueKm >= 10 -> 0.30f
+        valueKm >= 4 -> 0.50f
+        valueKm >= 1 -> 0.70f
+        else -> 0.80f
     }
 }
 
-private fun visibilityLabels(valueKm: Int): Int {
+private fun getVisibilityText(
+    valueKm: Int,
+): Int {
     return when {
         valueKm >= 20 -> R.string.text_very_good
         valueKm >= 10 -> R.string.text_good
