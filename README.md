@@ -1,23 +1,41 @@
 # Weather
 
 Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?id=com.google.android.apps.weather) and [Weather Master](https://github.com/PranshulGG/WeatherMaster)
- 
+
 ## Screenshots
 
 ### Designs
 
 <table>
     <tr>
-        <th colspan="2">Pixel Weather Design</th>
-        <th colspan="2">Froggy Weather Design</th>
+        <th colspan="3">Pixel Weather Design</th>
+        <th colspan="3">Froggy Weather Design</th>
     </tr>
     <tr>
-        <th>Current Weather Adapted</th>
-        <th>Current Weather Animated</th>
-        <th>Current Weather Adapted</th>
-        <th>Current Weather Animated</th>
+        <th width="16.7%">Current Weather Abstracted</th>
+        <th width="16.7%">Current Weather Adapted</th>
+        <th width="16.7%">Current Weather Animated</th>
+        <th width="16.7%">Current Weather Abstracted</th>
+        <th width="16.7%">Current Weather Adapted</th>
+        <th width="16.7%">Current Weather Animated</th>
     </tr>
     <tr>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_designs_currently_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_designs_currently_light.png"
+                />
+                <img
+                    src="images/screenshot_designs_currently_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
         <td>
             <picture>
                 <source
@@ -46,6 +64,22 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
                 <img
                     src="images/screenshot_designs_adapted_animated_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_designs_froggy_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_designs_froggy_light.png"
+                />
+                <img
+                    src="images/screenshot_designs_froggy_dark.png"
                     style="width:256;"
                 />
             </picture>
@@ -89,81 +123,34 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 
 <table>
     <tr>
-        <th>Humidity</th>
-        <th>Pressure</th>
-        <th>Rain</th>
-        <th>Snow</th>
-        <th>Sun & Moon</th>
-        <th>UV Index</th>
-        <th>Visibility</th>
-        <th>Wind</th>
+        <th width="11.1%">Air</th>
+        <th width="11.1%">Celestial</th>
+        <th width="11.1%">Humidity</th>
+        <th width="11.1%">Pressure</th>
+        <th width="11.1%">Rain</th>
+        <th width="11.1%">Snow</th>
+        <th width="11.1%">Ultraviolet</th>
+        <th width="11.1%">Visibility</th>
+        <th width="11.1%">Wind</th>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
-                    srcset="images/screenshot_conditions_humidity_dark.png"
+                    srcset="images/screenshot_conditions_air_dark.png"
                 />
                 <source
                     media="(prefers-color-scheme: light)"
-                    srcset="images/screenshot_conditions_humidity_light.png"
+                    srcset="images/screenshot_conditions_air_light.png"
                 />
                 <img
-                    src="images/screenshot_conditions_humidity_dark.png"
+                    src="images/screenshot_conditions_air_dark.png"
                     style="width:256;"
                 />
             </picture>
         </td>
-        <td>
-            <picture>
-                <source
-                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
-                    srcset="images/screenshot_conditions_pressure_dark.png"
-                />
-                <source
-                    media="(prefers-color-scheme: light)"
-                    srcset="images/screenshot_conditions_pressure_light.png"
-                />
-                <img
-                    src="images/screenshot_conditions_pressure_dark.png"
-                    style="width:256;"
-                />
-            </picture>
-        </td>
-        <td>
-            <picture>
-                <source
-                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
-                    srcset="images/screenshot_conditions_rain_dark.png"
-                />
-                <source
-                    media="(prefers-color-scheme: light)"
-                    srcset="images/screenshot_conditions_rain_light.png"
-                />
-                <img
-                    src="images/screenshot_conditions_rain_dark.png"
-                    style="width:256;"
-                />
-            </picture>
-        </td>
-        <td>
-            <picture>
-                <source
-                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
-                    srcset="images/screenshot_conditions_snow_dark.png"
-                />
-                <source
-                    media="(prefers-color-scheme: light)"
-                    srcset="images/screenshot_conditions_snow_light.png"
-                />
-                <img
-                    src="images/screenshot_conditions_snow_dark.png"
-                    style="width:256;"
-                />
-            </picture>
-        </td>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -179,7 +166,71 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
-        <td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_humidity_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_humidity_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_humidity_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_pressure_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_pressure_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_pressure_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_rain_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_rain_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_rain_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_snow_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_snow_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_snow_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -195,7 +246,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -211,7 +262,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -230,17 +281,94 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
     </tr>
 </table>
 
+### Locations
+
+<table>
+    <tr>
+        <th width="25%">List</th>
+        <th width="25%">Reorder</th>
+        <th width="25%">Search</th>
+        <th width="25%">Source</th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_locations_list_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_locations_list_light.png"
+                />
+                <img
+                    src="images/screenshot_locations_list_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_locations_reorder_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_locations_reorder_light.png"
+                />
+                <img
+                    src="images/screenshot_locations_reorder_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_search_results_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_search_results_light.png"
+                />
+                <img
+                    src="images/screenshot_search_results_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td valign="top">
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_search_sources_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_search_sources_light.png"
+                />
+                <img
+                    src="images/screenshot_search_sources_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+    </tr>
+</table>
+
 ### Settings
 
 <table>
     <tr>
-        <th>All</th>
-        <th>Appearance</th>
-        <th>Application Languages</th>
-        <th>Weather Sources</th>
+        <th width="25%">All</th>
+        <th width="25%">Appearance</th>
+        <th width="25%">Application Languages</th>
+        <th width="25%">Weather Sources</th>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -256,7 +384,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -272,7 +400,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
@@ -288,7 +416,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
-        <td>
+        <td valign="top">
             <picture>
                 <source
                     media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
