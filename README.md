@@ -1,117 +1,363 @@
-<div align="center">
-   <img src="preview/icon.png" alt="" width="150px">
-</div> 
-<h1 align="center">
- WeatherMaster
-</h1>
-   <div  align="center">
-      <img src="https://img.shields.io/github/license/PranshulGG/WeatherMaster?style=for-the-badge&color=cba6f7&labelColor=302D41">
-      <img src="https://img.shields.io/github/last-commit/PranshulGG/WeatherMaster?style=for-the-badge&color=b1d18a&labelColor=1f3701">
-      <img src="https://img.shields.io/github/release/PranshulGG/WeatherMaster?style=for-the-badge&color=dbc66e&labelColor=3a3000">
-      <br>
-      <img src="https://img.shields.io/github/stars/PranshulGG/WeatherMaster?style=for-the-badge&color=ffb5a0&labelColor=561f0f">
-      <img src="https://img.shields.io/github/downloads/PranshulGG/WeatherMaster/total?label=Downloads&style=for-the-badge&color=aac7ff&labelColor=0a305f">
-      <a href="https://discord.gg/sSW2E4nqmn">
- <img src="https://img.shields.io/discord/1302477023410782229?label=Discord&style=for-the-badge&color=ffb0c8&labelColor=541d32">
-</a>
+# Weather
 
-   </div>
-   <div align="center">
+Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?id=com.google.android.apps.weather) and [Weather Master](https://github.com/PranshulGG/WeatherMaster)
+ 
+## Screenshots
 
-<img src="https://shields.rbtlog.dev/simple/com.pranshulgg.weather_master_app?style=for-the-badge" alt="RB Status">
-   </div>
+### Designs
 
-   <div align="center">
-   <h3>WeatherMaster: inspired by the Google Pixel weather app.</h3>
+<table>
+    <tr>
+        <th colspan="2">Pixel Weather Design</th>
+        <th colspan="2">Froggy Weather Design</th>
+    </tr>
+    <tr>
+        <th>Current Weather Adapted</th>
+        <th>Current Weather Animated</th>
+        <th>Current Weather Adapted</th>
+        <th>Current Weather Animated</th>
+    </tr>
+    <tr>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_designs_adapted_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_designs_adapted_light.png"
+                />
+                <img
+                    src="images/screenshot_designs_adapted_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_designs_adapted_animated_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_designs_adapted_animated_light.png"
+                />
+                <img
+                    src="images/screenshot_designs_adapted_animated_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_designs_froggy_adapted_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_designs_froggy_adapted_light.png"
+                />
+                <img
+                    src="images/screenshot_designs_froggy_adapted_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_designs_froggy_adapted_animated_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_designs_froggy_adapted_animated_light.png"
+                />
+                <img
+                    src="images/screenshot_designs_froggy_adapted_animated_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+    </tr>
+</table>
 
-   </div>
- <div align="center">
+### Conditions
 
-[Features](https://github.com/PranshulGG/WeatherMaster?tab=readme-ov-file#-features) • [Contact](https://github.com/PranshulGG/WeatherMaster?tab=readme-ov-file#%EF%B8%8F-contact) • [License](https://github.com/PranshulGG/WeatherMaster?tab=readme-ov-file#%EF%B8%8F-license) • [Translate](https://github.com/PranshulGG/WeatherMaster?tab=readme-ov-file#-translate-the-app-on-crowdin)
- </div>
+<table>
+    <tr>
+        <th>Humidity</th>
+        <th>Pressure</th>
+        <th>Rain</th>
+        <th>Snow</th>
+        <th>Sun & Moon</th>
+        <th>UV Index</th>
+        <th>Visibility</th>
+        <th>Wind</th>
+    </tr>
+    <tr>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_humidity_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_humidity_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_humidity_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_pressure_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_pressure_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_pressure_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_rain_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_rain_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_rain_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_snow_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_snow_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_snow_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_sun_moon_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_sun_moon_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_sun_moon_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_uv_index_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_uv_index_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_uv_index_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_visibility_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_visibility_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_visibility_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_conditions_wind_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_conditions_wind_light.png"
+                />
+                <img
+                    src="images/screenshot_conditions_wind_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+    </tr>
+</table>
 
-<div align="center">
- <a href="https://github.com/PranshulGG/WeatherMaster/releases"><img alt="GitHub" src="https://user-images.githubusercontent.com/69304392/148696068-0cfea65d-b18f-4685-82b5-329a330b1c0d.png" height="80"/></a>
-   <a href="https://apt.izzysoft.de/fdroid/index/apk/com.pranshulgg.weather_master_app"><img alt="GitHub" src="preview/download_Btn.png" height="80"/></a></div>
-<br>
+### Settings
 
-![app_thumbnail](preview/new_thumbnail.png)
+<table>
+    <tr>
+        <th>All</th>
+        <th>Appearance</th>
+        <th>Application Languages</th>
+        <th>Weather Sources</th>
+    </tr>
+    <tr>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_settings_all_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_settings_all_light.png"
+                />
+                <img
+                    src="images/screenshot_settings_all_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_settings_appearance_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_settings_appearance_light.png"
+                />
+                <img
+                    src="images/screenshot_settings_appearance_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_settings_languages_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_settings_languages_light.png"
+                />
+                <img
+                    src="images/screenshot_settings_languages_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+        <td>
+            <picture>
+                <source
+                    media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+                    srcset="images/screenshot_settings_sources_dark.png"
+                />
+                <source
+                    media="(prefers-color-scheme: light)"
+                    srcset="images/screenshot_settings_sources_light.png"
+                />
+                <img
+                    src="images/screenshot_settings_sources_dark.png"
+                    style="width:256;"
+                />
+            </picture>
+        </td>
+    </tr>
+</table>
 
-# 👁️ Screenshots
+## Sources
 
-<div align="center">
-<img src="preview/preview_1.png"  width="250">
-<img src="preview/preview_2.png"  width="250">
-<img src="preview/preview_3.png"  width="250">
-<img src="preview/preview_4.png"  width="250">
-<img src="preview/preview_5.png"  width="250">
+- **Open Meteo (Global)**
+- **BMKG (Indonesia)**
+- **CNEMC (China)**
+- **DWD (Germany)**
+- **ECCC (Canada)**
+- **FMI (Finland)**
+- **NWS (United States)**
+- **Met (Norway)**
+- **Meteo (France)**
+- **SMHI (Sweden)**
 
-</div>
+## Translations
 
-<br>
+To request a language, feel free to open an issue on [Crowdin](https://crowdin.com/project/weathermaster).
 
-# 🌦️ Supported weather sources
-
-- **Open Meteo**
-- **Met Norway**
-- **NWS**
-- **SMHI**
-- **DWD**
-- **Meteo-France**
-- **FMI**
-- **ECCC**
-- **BMKG**
-- **China**
-- _**And more to be added**_
-
-# 🌐 Translate the app on [Crowdin](https://crowdin.com/project/weathermaster)
-
-_**Feel free to open an issue if you want to request a language**_
-
-<a href="https://crowdin.com/project/weathermaster" style="background-color: red"></a>
-[![ar-SA translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ar-SA&style=flat&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![az translation](https://img.shields.io/badge/dynamic/json?color=blue&label=az&style=flat&logo=crowdin&query=%24.progress.1.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![bg translation](https://img.shields.io/badge/dynamic/json?color=blue&label=bg&style=flat&logo=crowdin&query=%24.progress.2.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![ca translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ca&style=flat&logo=crowdin&query=%24.progress.3.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![cs translation](https://img.shields.io/badge/dynamic/json?color=blue&label=cs&style=flat&logo=crowdin&query=%24.progress.4.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![de translation](https://img.shields.io/badge/dynamic/json?color=blue&label=de&style=flat&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![el translation](https://img.shields.io/badge/dynamic/json?color=blue&label=el&style=flat&logo=crowdin&query=%24.progress.6.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![es-ES translation](https://img.shields.io/badge/dynamic/json?color=blue&label=es-ES&style=flat&logo=crowdin&query=%24.progress.7.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![fa translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fa&style=flat&logo=crowdin&query=%24.progress.8.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![fi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fi&style=flat&logo=crowdin&query=%24.progress.9.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![fil translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fil&style=flat&logo=crowdin&query=%24.progress.10.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![fr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fr&style=flat&logo=crowdin&query=%24.progress.11.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![hu translation](https://img.shields.io/badge/dynamic/json?color=blue&label=hu&style=flat&logo=crowdin&query=%24.progress.12.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![id translation](https://img.shields.io/badge/dynamic/json?color=blue&label=id&style=flat&logo=crowdin&query=%24.progress.13.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![it translation](https://img.shields.io/badge/dynamic/json?color=blue&label=it&style=flat&logo=crowdin&query=%24.progress.14.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![ja translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ja&style=flat&logo=crowdin&query=%24.progress.15.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![ko translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ko&style=flat&logo=crowdin&query=%24.progress.16.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![lt translation](https://img.shields.io/badge/dynamic/json?color=blue&label=lt&style=flat&logo=crowdin&query=%24.progress.17.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![nl translation](https://img.shields.io/badge/dynamic/json?color=blue&label=nl&style=flat&logo=crowdin&query=%24.progress.18.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![pl translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pl&style=flat&logo=crowdin&query=%24.progress.19.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![pt-BR translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pt-BR&style=flat&logo=crowdin&query=%24.progress.20.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![pt-PT translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pt-PT&style=flat&logo=crowdin&query=%24.progress.21.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![ro translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ro&style=flat&logo=crowdin&query=%24.progress.22.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![ru translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ru&style=flat&logo=crowdin&query=%24.progress.23.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![sl translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sl&style=flat&logo=crowdin&query=%24.progress.24.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![sr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sr&style=flat&logo=crowdin&query=%24.progress.25.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![sr-CS translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sr-CS&style=flat&logo=crowdin&query=%24.progress.26.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![sv-SE translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sv-SE&style=flat&logo=crowdin&query=%24.progress.27.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![th translation](https://img.shields.io/badge/dynamic/json?color=blue&label=th&style=flat&logo=crowdin&query=%24.progress.28.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![tr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=tr&style=flat&logo=crowdin&query=%24.progress.29.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![uk translation](https://img.shields.io/badge/dynamic/json?color=blue&label=uk&style=flat&logo=crowdin&query=%24.progress.30.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![vi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=vi&style=flat&logo=crowdin&query=%24.progress.31.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![zh-CN translation](https://img.shields.io/badge/dynamic/json?color=blue&label=zh-CN&style=flat&logo=crowdin&query=%24.progress.32.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![zh-TW translation](https://img.shields.io/badge/dynamic/json?color=blue&label=zh-TW&style=flat&logo=crowdin&query=%24.progress.33.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![ar-SA translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ar-SA&style=flat&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![lt translation](https://img.shields.io/badge/dynamic/json?color=blue&label=lt&style=flat&logo=crowdin&query=%24.progress.18.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-[![he translation](https://img.shields.io/badge/dynamic/json?color=blue&label=he&style=flat&logo=crowdin&query=%24.progress.12.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)
-
-# ✉️ Contact
-
-For any questions or feedback, feel free to open an issue on GitHub or contact
-pranshul.devmain@gmail.com
-
-# ©️ License
-
-This project is licensed under the GPL-3.0 license. See the `LICENSE` file for details.
+[![ar-SA translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ar-SA&style=flat&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![ar-SA translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ar-SA&style=flat&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![az translation](https://img.shields.io/badge/dynamic/json?color=blue&label=az&style=flat&logo=crowdin&query=%24.progress.1.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![bg translation](https://img.shields.io/badge/dynamic/json?color=blue&label=bg&style=flat&logo=crowdin&query=%24.progress.2.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![ca translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ca&style=flat&logo=crowdin&query=%24.progress.3.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![cs translation](https://img.shields.io/badge/dynamic/json?color=blue&label=cs&style=flat&logo=crowdin&query=%24.progress.4.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![de translation](https://img.shields.io/badge/dynamic/json?color=blue&label=de&style=flat&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![el translation](https://img.shields.io/badge/dynamic/json?color=blue&label=el&style=flat&logo=crowdin&query=%24.progress.6.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![es-ES translation](https://img.shields.io/badge/dynamic/json?color=blue&label=es-ES&style=flat&logo=crowdin&query=%24.progress.7.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![fa translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fa&style=flat&logo=crowdin&query=%24.progress.8.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![fi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fi&style=flat&logo=crowdin&query=%24.progress.9.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![fil translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fil&style=flat&logo=crowdin&query=%24.progress.10.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![fr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fr&style=flat&logo=crowdin&query=%24.progress.11.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![he translation](https://img.shields.io/badge/dynamic/json?color=blue&label=he&style=flat&logo=crowdin&query=%24.progress.12.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![hu translation](https://img.shields.io/badge/dynamic/json?color=blue&label=hu&style=flat&logo=crowdin&query=%24.progress.12.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![id translation](https://img.shields.io/badge/dynamic/json?color=blue&label=id&style=flat&logo=crowdin&query=%24.progress.13.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![it translation](https://img.shields.io/badge/dynamic/json?color=blue&label=it&style=flat&logo=crowdin&query=%24.progress.14.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![ja translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ja&style=flat&logo=crowdin&query=%24.progress.15.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![ko translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ko&style=flat&logo=crowdin&query=%24.progress.16.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![lt translation](https://img.shields.io/badge/dynamic/json?color=blue&label=lt&style=flat&logo=crowdin&query=%24.progress.17.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![lt translation](https://img.shields.io/badge/dynamic/json?color=blue&label=lt&style=flat&logo=crowdin&query=%24.progress.18.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![nl translation](https://img.shields.io/badge/dynamic/json?color=blue&label=nl&style=flat&logo=crowdin&query=%24.progress.18.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![pl translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pl&style=flat&logo=crowdin&query=%24.progress.19.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![pt-BR translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pt-BR&style=flat&logo=crowdin&query=%24.progress.20.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![pt-PT translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pt-PT&style=flat&logo=crowdin&query=%24.progress.21.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![ro translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ro&style=flat&logo=crowdin&query=%24.progress.22.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![ru translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ru&style=flat&logo=crowdin&query=%24.progress.23.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![sl translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sl&style=flat&logo=crowdin&query=%24.progress.24.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![sr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sr&style=flat&logo=crowdin&query=%24.progress.25.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![sr-CS translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sr-CS&style=flat&logo=crowdin&query=%24.progress.26.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![sv-SE translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sv-SE&style=flat&logo=crowdin&query=%24.progress.27.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![th translation](https://img.shields.io/badge/dynamic/json?color=blue&label=th&style=flat&logo=crowdin&query=%24.progress.28.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![tr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=tr&style=flat&logo=crowdin&query=%24.progress.29.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![uk translation](https://img.shields.io/badge/dynamic/json?color=blue&label=uk&style=flat&logo=crowdin&query=%24.progress.30.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![vi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=vi&style=flat&logo=crowdin&query=%24.progress.31.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![zh-CN translation](https://img.shields.io/badge/dynamic/json?color=blue&label=zh-CN&style=flat&logo=crowdin&query=%24.progress.32.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
+[![zh-TW translation](https://img.shields.io/badge/dynamic/json?color=blue&label=zh-TW&style=flat&logo=crowdin&query=%24.progress.33.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16727791-741419.json)](https://crowdin.com/project/weathermaster)<br>
