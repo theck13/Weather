@@ -176,7 +176,6 @@ fun LocationsScreen(
                             )
                     } else {
                         Modifier.padding(
-                            bottom = paddingValues.calculateBottomPadding(),
                             top = paddingValues.calculateTopPadding(),
                         )
                     }
@@ -185,6 +184,7 @@ fun LocationsScreen(
         ) {
             LocationsScreenContent(
                 activeLocation = activeLocation,
+                bottomPadding = paddingValues.calculateBottomPadding(),
                 isDeviceLocationLoading =uiState.value.isDeviceLocationLoading,
                 isReordering = uiState.value.isReordering,
                 locations = locations,

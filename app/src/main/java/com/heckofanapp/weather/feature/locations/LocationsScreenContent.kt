@@ -7,8 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -35,6 +35,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
 import com.heckofanapp.weather.TouchMinimum
@@ -57,6 +58,7 @@ import kotlin.math.roundToInt
 @Composable
 fun LocationsScreenContent(
     activeLocation: Location? = null,
+    bottomPadding: Dp,
     isDeviceLocationLoading: Boolean,
     isReordering: Boolean = false,
     locations: List<Location>,
@@ -89,8 +91,10 @@ fun LocationsScreenContent(
     }
 
     LazyColumn(
-        modifier = Modifier.padding(
-            horizontal = 16.dp,
+        contentPadding = PaddingValues(
+            bottom = bottomPadding,
+            end = 16.dp,
+            start = 16.dp,
         ),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(
