@@ -10,7 +10,6 @@ import com.heckofanapp.weather.core.ui.theme.BlueLight100
 import com.heckofanapp.weather.core.ui.theme.BlueLight300
 import com.heckofanapp.weather.core.ui.theme.Green400
 import com.heckofanapp.weather.core.ui.theme.Green600
-import com.heckofanapp.weather.core.ui.theme.Grey300
 import com.heckofanapp.weather.core.ui.theme.Orange600
 import com.heckofanapp.weather.core.ui.theme.Pink900
 import com.heckofanapp.weather.core.ui.theme.Purple800
@@ -63,19 +62,40 @@ fun barColorsHumidity(
     value = humidity,
 )
 
-fun barColorsPrecipitation(
-    amount: Double,
+// Rain intensity colors so hourly bars, scale legend, and home-tile fill share one scale.  Bounds
+// are in mm (hourly bar's value); finite bands fill 0 → 4 in (RainBlock fill maximum) and anything
+// above maximum is "Extreme" fallback.
+fun barColorsRain(
+    amountMm: Double,
 ): Color = barColor(
     fallback = RedAlt700,
     thresholds = listOf(
-        0.001 to Grey300,
-        1.0 to BlueLight100,
-        2.5 to BlueLight300,
-        7.5 to Blue600,
-        20.0 to Blue800,
-        50.0 to Purple800,
+        5.08 to BlueLight100,   // 0.20 in
+        25.4 to BlueLight300,   // 1.00 in
+        50.8 to Blue600,        // 2.00 in
+        76.2 to Blue800,        // 3.00 in
+        101.6 to Purple800,     // 4.00 in (fill maximum)
+        // ≥ 4 in fill maximum → RedAlt700 (Extreme)
     ),
-    value = amount,
+    value = amountMm,
+)
+
+// Snow intensity colors so hourly bars, scale legend, and home-tile fill share one scale.  Bounds
+// are in mm (hourly bar's value); finite bands fill 0 → 24 in (SnowBlock fill maximum) and anything
+// above maximum is "Extreme" fallback.
+fun barColorsSnow(
+    amountMm: Double,
+): Color = barColor(
+    fallback = RedAlt700,
+    thresholds = listOf(
+        25.4 to BlueLight100,   //  1.00 in
+        76.2 to BlueLight300,   //  3.00 in
+        152.4 to Blue600,       //  6.00 in
+        304.8 to Blue800,       // 12.00 in
+        609.6 to Purple800,     // 24.00 in (fill maximum)
+        // ≥ 24 in fill maximum → RedAlt700 (Extreme)
+    ),
+    value = amountMm,
 )
 
 fun barColorsPressure(

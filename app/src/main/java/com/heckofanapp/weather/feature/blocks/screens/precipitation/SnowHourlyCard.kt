@@ -24,7 +24,7 @@ import com.heckofanapp.weather.core.model.domain.weather.WeatherHourly
 import com.heckofanapp.weather.core.model.weather.PrecipitationUnit
 import com.heckofanapp.weather.core.model.weather.toName
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
-import com.heckofanapp.weather.core.ui.barColorsPrecipitation
+import com.heckofanapp.weather.core.ui.barColorsSnow
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.utils.formatters.formatLocalizedNumber
@@ -103,7 +103,7 @@ fun SnowHourlyCard(
                     val snow = item.snowfall ?: 0.0
                     val percentage = ((snow.minus(min)).div((max - min))).times(100)
                     val probability = item.precipitationProbability
-                    val barColor = barColorsPrecipitation(snow)
+                    val barColor = barColorsSnow(snow)
                     val barHeight =
                         if (percentage.isNaN().not()) {
                             max((percentage.div(100)).times(140).roundToInt(), 5)

@@ -404,6 +404,25 @@
     <string name="wind_scale_5">Gale</string>
     <string name="wind_scale_6">Storm</string>
 
+    <string name="precipitation_scale_1">Light</string>
+    <string name="precipitation_scale_2">Moderate</string>
+    <string name="precipitation_scale_3">Heavy</string>
+    <string name="precipitation_scale_4">Very heavy</string>
+    <string name="precipitation_scale_5">Intense</string>
+    <string name="precipitation_scale_6">Extreme</string>
+    <string name="rain_scale_description_1">Barely wets surfaces; puddles form slowly and are easily ignored.</string>
+    <string name="rain_scale_description_2">Steady rain; puddles form quickly and the ground stays wet.</string>
+    <string name="rain_scale_description_3">Falls in sheets; roads and drains struggle to keep up.</string>
+    <string name="rain_scale_description_4">Reduces visibility sharply; surface water pools rapidly.</string>
+    <string name="rain_scale_description_5">Torrential downpour; localized flooding becomes likely.</string>
+    <string name="rain_scale_description_6">Exceptional rainfall; serious flooding and disruption expected.</string>
+    <string name="snow_scale_description_1">Fine flakes that dust surfaces; little to no accumulation.</string>
+    <string name="snow_scale_description_2">Steady snow that begins to cover the ground and roads.</string>
+    <string name="snow_scale_description_3">Rapid accumulation; travel becomes slower and slippery.</string>
+    <string name="snow_scale_description_4">Reduces visibility; roads quickly become difficult to clear.</string>
+    <string name="snow_scale_description_5">Blizzard-like accumulation; significant disruption likely.</string>
+    <string name="snow_scale_description_6">Exceptional snowfall; severe disruption and hazards expected.</string>
+
     <string name="pressure_description_1">Strong high-pressure system; very settled weather, often clear skies and light winds.</string>
     <string name="pressure_description_2">Above-average pressure that generally brings calm, clear, and stable conditions.</string>
     <string name="pressure_description_3">Typical sea-level pressure, usually associated with fair, settled weather.</string>

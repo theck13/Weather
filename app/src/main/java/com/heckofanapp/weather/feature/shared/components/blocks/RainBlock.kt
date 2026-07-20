@@ -133,7 +133,7 @@ fun RainBlock(
                 Header(
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.onSurfaceDim,
-                    icon = R.drawable.ic_rainy_light_24,
+                    icon = R.drawable.ic_water_drop_24,
                     padding = PaddingValues(
                         end = 12.dp,
                         start = 12.dp,

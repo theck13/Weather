@@ -24,7 +24,7 @@ import com.heckofanapp.weather.core.model.domain.weather.WeatherHourly
 import com.heckofanapp.weather.core.model.weather.PrecipitationUnit
 import com.heckofanapp.weather.core.model.weather.toName
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
-import com.heckofanapp.weather.core.ui.barColorsPrecipitation
+import com.heckofanapp.weather.core.ui.barColorsRain
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.utils.formatters.formatLocalizedNumber
@@ -102,7 +102,7 @@ fun RainHourlyCard(
                     val item = data[index]
                     val percentage = ((item.rain.minus(min)).div((max - min))).times(100)
                     val probability = item.precipitationProbability
-                    val barColor = barColorsPrecipitation(item.rain)
+                    val barColor = barColorsRain(item.rain)
                     val barHeight =
                         if (percentage.isNaN().not()) {
                             max((percentage.div(100)).times(140).roundToInt(), 5)

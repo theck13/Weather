@@ -1,15 +1,14 @@
 package com.heckofanapp.weather.feature.blocks.screens.precipitation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,8 +21,9 @@ import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.utils.formatters.toDateString
 import com.heckofanapp.weather.core.utils.weather.forecast.findMatchingHourly
 import com.heckofanapp.weather.feature.blocks.BlocksScreenViewModel
-import com.heckofanapp.weather.feature.blocks.components.AboutCard
-import com.heckofanapp.weather.feature.blocks.components.AboutCardText
+import com.heckofanapp.weather.feature.blocks.components.AboutScaleLayout
+import com.heckofanapp.weather.feature.blocks.components.ScaleCardItem
+import com.heckofanapp.weather.feature.blocks.components.ScaleDialog
 
 @Composable
 fun RainScreen(
@@ -57,7 +57,10 @@ fun RainScreen(
         zoneId = weather.location.timezone,
     )
 
-    val isOnlyPrecipitation = !weather.location.source.providesSnowFall()
+    val isOnlyPrecipitation = weather.location.source.providesSnowFall().not()
+    val scale = getRainScale(units.precipitation)
+
+    var selectedLevel by remember { mutableStateOf<PrecipitationLevel?>(null) }
 
     TopBarScaffold(
         actions = {
@@ -77,22 +80,24 @@ fun RainScreen(
         },
         title = stringResource(if (isOnlyPrecipitation) R.string.weather_precipitation else R.string.weather_rain_block)
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(
-                    state = rememberScrollState(),
+        val scaleItems: @Composable () -> Unit = {
+            scale.forEach {
+                ScaleCardItem(
+                    containerColor = it.color,
+                    headline = it.headline,
+                    icon = R.drawable.ic_water_drop_24,
+                    onClick = {
+                        selectedLevel = it
+                    },
+                    trailing = it.scale,
                 )
-                .padding(
-                    paddingValues = paddingValues,
-                )
-                .padding(
-                    bottom = 16.dp,
-                    top = 2.dp,
-                ),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 14.dp,
-            ),
+            }
+        }
+
+        AboutScaleLayout(
+            aboutText = stringResource(R.string.weather_about_precipitation),
+            paddingValues = paddingValues,
+            scaleItems = scaleItems,
         ) {
             RainHourlyCard(
                 context = context,
@@ -100,12 +105,17 @@ fun RainScreen(
                 unit = units.precipitation,
                 zoneId = zoneId,
             )
-
-            AboutCard {
-                AboutCardText(
-                    text = stringResource(R.string.weather_about_precipitation),
-                )
-            }
         }
+    }
+
+    selectedLevel?.let { info ->
+        ScaleDialog(
+            description = info.description,
+            onDismiss = {
+                selectedLevel = null
+            },
+            range = info.scale,
+            title = info.headline,
+        )
     }
 }

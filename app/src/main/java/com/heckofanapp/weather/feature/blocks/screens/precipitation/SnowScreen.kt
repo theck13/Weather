@@ -1,15 +1,14 @@
 package com.heckofanapp.weather.feature.blocks.screens.precipitation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,8 +21,9 @@ import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.utils.formatters.toDateString
 import com.heckofanapp.weather.core.utils.weather.forecast.findMatchingHourly
 import com.heckofanapp.weather.feature.blocks.BlocksScreenViewModel
-import com.heckofanapp.weather.feature.blocks.components.AboutCard
-import com.heckofanapp.weather.feature.blocks.components.AboutCardText
+import com.heckofanapp.weather.feature.blocks.components.AboutScaleLayout
+import com.heckofanapp.weather.feature.blocks.components.ScaleCardItem
+import com.heckofanapp.weather.feature.blocks.components.ScaleDialog
 
 @Composable
 fun SnowScreen(
@@ -57,6 +57,10 @@ fun SnowScreen(
         zoneId = weather.location.timezone,
     )
 
+    val scale = getSnowScale(units.precipitation)
+
+    var selectedLevel by remember { mutableStateOf<PrecipitationLevel?>(null) }
+
     TopBarScaffold(
         actions = {
             Text(
@@ -75,22 +79,24 @@ fun SnowScreen(
         },
         title = stringResource(R.string.weather_snow_block)
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(
-                    state = rememberScrollState(),
+        val scaleItems: @Composable () -> Unit = {
+            scale.forEach {
+                ScaleCardItem(
+                    containerColor = it.color,
+                    headline = it.headline,
+                    icon = R.drawable.ic_ac_unit_24,
+                    onClick = {
+                        selectedLevel = it
+                    },
+                    trailing = it.scale,
                 )
-                .padding(
-                    paddingValues = paddingValues,
-                )
-                .padding(
-                    bottom = 16.dp,
-                    top = 2.dp,
-                ),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 14.dp,
-            ),
+            }
+        }
+
+        AboutScaleLayout(
+            aboutText = stringResource(R.string.weather_about_snowfall),
+            paddingValues = paddingValues,
+            scaleItems = scaleItems,
         ) {
             SnowHourlyCard(
                 context = context,
@@ -98,12 +104,17 @@ fun SnowScreen(
                 unit = units.precipitation,
                 zoneId = zoneId,
             )
-
-            AboutCard {
-                AboutCardText(
-                    text = stringResource(R.string.weather_about_snowfall),
-                )
-            }
         }
+    }
+
+    selectedLevel?.let { info ->
+        ScaleDialog(
+            description = info.description,
+            onDismiss = {
+                selectedLevel = null
+            },
+            range = info.scale,
+            title = info.headline,
+        )
     }
 }
