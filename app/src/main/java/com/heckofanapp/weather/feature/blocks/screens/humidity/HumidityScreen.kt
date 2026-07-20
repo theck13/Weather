@@ -99,7 +99,7 @@ fun HumidityScreen(
                         top = 2.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 14.dp,
+                    space = 16.dp,
                 ),
             ) {
                 if (!humidityData.contains(null)) {
@@ -113,11 +113,8 @@ fun HumidityScreen(
 
                 if (isLandscape) {
                     Row(
-                        modifier = Modifier.padding(
-                            horizontal = 16.dp,
-                        ),
                         horizontalArrangement = Arrangement.spacedBy(
-                            space = 14.dp,
+                            space = (-16).dp,  // About and Scale have 16dp built in, -16dp removes one.
                         ),
                     ) {
                         AboutCard(
