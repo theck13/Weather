@@ -369,7 +369,7 @@ class WeatherViewModel @Inject constructor(
 
             is WeatherResult.RefreshNotAvailable -> {
                 SnackbarManager.show(
-                    arguments = MANUAL_REFRESH_MINUTES - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - (result.cacheWeather?.current?.lastUpdatedInMilli ?: 0)),
+                    arguments = MANUAL_REFRESH_MINUTES - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - result.cacheWeather.current.lastUpdatedInMilli),
                     message = R.string.weather_refresh_delay,
                 )
             }

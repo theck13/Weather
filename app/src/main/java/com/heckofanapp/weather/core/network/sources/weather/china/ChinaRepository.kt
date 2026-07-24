@@ -35,7 +35,7 @@ class ChinaRepository @Inject constructor(
         val sign = "zUFJoAR2ZVrDy1vF3D07"
 
         when (shouldReturnCache) {
-            WeatherResultType.REFRESH_TOO_EARLY -> return@withContext WeatherResult.RefreshNotAvailable(cache?.toDomain())
+            WeatherResultType.REFRESH_TOO_EARLY -> return@withContext WeatherResult.RefreshNotAvailable(cache!!.toDomain())
             WeatherResultType.SUCCESS -> return@withContext (WeatherResult.Success(cache!!.toDomain()))
             else -> {}
         }

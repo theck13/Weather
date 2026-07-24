@@ -8,7 +8,7 @@ sealed class WeatherResult {
         val exception: Exception,
     ) : WeatherResult()
     data class RefreshNotAvailable(
-        val cacheWeather: Weather? = null,
+        val cacheWeather: Weather,
     ) : WeatherResult()
     data class Success(
         val weather: Weather,

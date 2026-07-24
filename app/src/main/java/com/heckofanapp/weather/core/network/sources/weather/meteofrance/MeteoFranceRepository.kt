@@ -32,7 +32,7 @@ class MeteoFranceRepository @Inject constructor(
         val shouldReturnCache = shouldReturnWeatherCache(cache, isManualRefresh, isForceRefresh)
 
         when (shouldReturnCache) {
-            WeatherResultType.REFRESH_TOO_EARLY -> return@withContext WeatherResult.RefreshNotAvailable()
+            WeatherResultType.REFRESH_TOO_EARLY -> return@withContext WeatherResult.RefreshNotAvailable(cache!!.toDomain())
             WeatherResultType.SUCCESS -> return@withContext WeatherResult.Success(cache!!.toDomain())
             else -> {}
         }
