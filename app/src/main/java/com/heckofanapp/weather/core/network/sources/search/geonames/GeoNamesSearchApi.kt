@@ -28,7 +28,7 @@ interface GeoNamesSearchApi {
                 val newUrl = original.url.newBuilder()
                     .addQueryParameter(
                         name = "username",
-                        value = BuildConfig.GEO_NAMES_USERNAME,
+                        value = BuildConfig.SOURCE_GEO_USERNAME,
                     )
                     .build()
                 val request = original.newBuilder().url(newUrl).build()

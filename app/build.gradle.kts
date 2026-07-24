@@ -14,20 +14,16 @@ val localProps = Properties().apply {
     if (f.exists()) f.inputStream().use { load(it) }
 }
 
-val geoNamesUserNameKey =
-    providers.gradleProperty("GEO_NAMES_USERNAME").orNull
-        ?: System.getenv("GEO_NAMES_USERNAME")
-        ?: ""
-
-val accuKey = providers.gradleProperty("ACCU_KEY").orNull ?: System.getenv("ACCU_KEY") ?: ""
-val mfKey = providers.gradleProperty("MF_KEY").orNull ?: System.getenv("MF_KEY") ?: ""
-
 val keystoreFile = file("../keystore/release.jks")
 val hasKeystore = keystoreFile.exists()
 
 val developer_domain = localProps.getProperty("DEVELOPER_DOMAIN") ?: System.getenv("DEVELOPER_DOMAIN") ?: "com.developer"
 val developer_email = localProps.getProperty("DEVELOPER_EMAIL") ?: System.getenv("DEVELOPER_EMAIL") ?: "developer@email.com"
 val developer_name = localProps.getProperty("DEVELOPER_NAME") ?: System.getenv("DEVELOPER_NAME") ?: "Developer"
+
+val sourceAccuWeather = localProps.getProperty("SOURCE_ACCU_WEATHER") ?: System.getenv("SOURCE_ACCU_WEATHER") ?: ""
+val sourceGeoUsername = localProps.getProperty("SOURCE_GEO_USERNAME") ?: System.getenv("SOURCE_GEO_USERNAME") ?: ""
+val sourceMeteoFrance = localProps.getProperty("SOURCE_METEO_FRANCE") ?: System.getenv("SOURCE_METEO_FRANCE") ?: ""
 
 val package_name = "${developer_domain}.weather"
 val version_code = (project.property("VERSION_CODE") as String).toInt()
@@ -50,24 +46,6 @@ android {
 
         buildConfigField(
             "String",
-            "ACCU_KEY",
-            "\"$accuKey\""
-        )
-
-        buildConfigField(
-            "String",
-            "GEO_NAMES_USERNAME",
-            "\"$geoNamesUserNameKey\""
-        )
-
-        buildConfigField(
-            "String",
-            "MF_KEY",
-            "\"$mfKey\""
-        )
-
-        buildConfigField(
-            "String",
             "DEVELOPER_DOMAIN",
             "\"$developer_domain\""
         )
@@ -82,6 +60,24 @@ android {
             "String",
             "DEVELOPER_NAME",
             "\"$developer_name\""
+        )
+
+        buildConfigField(
+            "String",
+            "SOURCE_ACCU_WEATHER",
+            "\"$sourceAccuWeather\""
+        )
+
+        buildConfigField(
+            "String",
+            "SOURCE_GEO_USERNAME",
+            "\"$sourceGeoUsername\""
+        )
+
+        buildConfigField(
+            "String",
+            "SOURCE_METEO_FRANCE",
+            "\"$sourceMeteoFrance\""
         )
     }
 

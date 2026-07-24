@@ -30,7 +30,7 @@ interface MeteoFranceApi {
                 val newUrl = original.url.newBuilder()
                     .addQueryParameter(
                         name = "token",
-                        value = BuildConfig.MF_KEY,
+                        value = BuildConfig.SOURCE_METEO_FRANCE,
                     )
                     .build()
                 val request = original.newBuilder().url(newUrl).build()

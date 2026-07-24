@@ -51,7 +51,7 @@ interface AccuApi {
                 val newUrl = original.url.newBuilder()
                     .addQueryParameter(
                         name = "apikey",
-                        value = BuildConfig.ACCU_KEY,
+                        value = BuildConfig.SOURCE_ACCU_WEATHER,
                     )
                     .build()
                 val request = original.newBuilder().url(newUrl).build()
