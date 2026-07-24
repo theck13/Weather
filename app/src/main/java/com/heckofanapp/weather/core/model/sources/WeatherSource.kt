@@ -51,6 +51,11 @@ enum class WeatherSource(
         displayName = "Météo (France)",
         fullName = "Météo-France"
     ),
+    METEOAM(
+        displayLink = "https://www.meteoam.it/",
+        displayName = "Meteo AM (Italy)",
+        fullName = "Meteorologia Aeronautica Militare"
+    ),
     OPEN(
         displayLink = "https://open-meteo.com/",
         displayName = "Open Meteo (Global)",
@@ -75,15 +80,21 @@ enum class WeatherSource(
 }
 
 // Map every weather source here as they are added.
-private val weatherSourcesByCountry = mapOf(
-    "CA" to listOf(WeatherSource.ECCC),
-    "CN" to listOf(WeatherSource.CNEMC),
-    "DE" to listOf(WeatherSource.DWD),
-    "FI" to listOf(WeatherSource.FMI),
-    "ID" to listOf(WeatherSource.BMKG),
-    "SE" to listOf(WeatherSource.SMHI),
-    "US" to listOf(WeatherSource.NWS),
-)
+private val weatherSourcesByCountry = buildMap {
+    put("CA", listOf(WeatherSource.ECCC))
+    put("CN", listOf(WeatherSource.CNEMC))
+    put("DE", listOf(WeatherSource.DWD))
+    put("FI", listOf(WeatherSource.FMI))
+    put("ID", listOf(WeatherSource.BMKG))
+    put("SE", listOf(WeatherSource.SMHI))
+    put("US", listOf(WeatherSource.NWS))
+    listOf(
+        "IT",
+        "VA",
+    ).forEach {
+        put(it, listOf(WeatherSource.METEOAM))
+    }
+}
 
 fun getWeatherSourcesForCountry(
     countryCode: String?,

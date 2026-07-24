@@ -446,6 +446,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 - **NWS (United States)**
 - **Met (Norway)**
 - **Meteo (France)**
+- **Meteo AM (Italy)**
 - **Open Meteo (Global)**
 - **SMHI (Sweden)**
 

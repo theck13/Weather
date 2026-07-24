@@ -12,6 +12,7 @@ import com.heckofanapp.weather.core.network.sources.weather.china.ChinaApi
 import com.heckofanapp.weather.core.network.sources.weather.dwd.DwdApi
 import com.heckofanapp.weather.core.network.sources.weather.eccc.EcccApi
 import com.heckofanapp.weather.core.network.sources.weather.fmi.FmiApi
+import com.heckofanapp.weather.core.network.sources.weather.meteoam.MeteoAmApi
 import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFranceApi
 import com.heckofanapp.weather.core.network.sources.weather.metnorway.MetNorwayApi
 import com.heckofanapp.weather.core.network.sources.weather.nws.NwsApi
@@ -73,6 +74,10 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideDwdApi(): DwdApi = DwdApi.create()
+
+    @Provides
+    @Singleton
+    fun provideMeteoAmApi(): MeteoAmApi = MeteoAmApi.create()
 
     @Provides
     @Singleton

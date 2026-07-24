@@ -7,6 +7,7 @@ import com.heckofanapp.weather.core.network.sources.weather.china.ChinaRepositor
 import com.heckofanapp.weather.core.network.sources.weather.dwd.DwdRepository
 import com.heckofanapp.weather.core.network.sources.weather.eccc.EcccRepository
 import com.heckofanapp.weather.core.network.sources.weather.fmi.FmiRepository
+import com.heckofanapp.weather.core.network.sources.weather.meteoam.MeteoAmRepository
 import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFranceRepository
 import com.heckofanapp.weather.core.network.sources.weather.metnorway.MetNorwayRepository
 import com.heckofanapp.weather.core.network.sources.weather.nws.NwsRepository
@@ -27,8 +28,11 @@ class WeatherRepositoryProvider @Inject constructor(
     private val chinaRepository: ChinaRepository,
     private val bmkgRepository: BmkgRepository,
     private val accuRepository: AccuRepository,
+    private val meteoAmRepository: MeteoAmRepository,
 ) {
-    fun getRepository(source: WeatherSource): WeatherRepository {
+    fun getRepository(
+        source: WeatherSource,
+    ): WeatherRepository {
         return when (source) {
             WeatherSource.ACCU -> accuRepository
             WeatherSource.BMKG -> bmkgRepository
@@ -38,6 +42,7 @@ class WeatherRepositoryProvider @Inject constructor(
             WeatherSource.FMI -> fmiRepository
             WeatherSource.MET -> metNorwayRepository
             WeatherSource.METEO -> meteoFranceRepository
+            WeatherSource.METEOAM -> meteoAmRepository
             WeatherSource.NWS -> nwsRepository
             WeatherSource.OPEN -> openMeteoRepository
             WeatherSource.SMHI -> smhiRepository
