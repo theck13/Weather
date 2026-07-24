@@ -2,6 +2,8 @@ package com.heckofanapp.weather.core.di.weather
 
 import com.heckofanapp.weather.core.network.sources.airquality.openmeteo.OpenMeteoAqiApi
 import com.heckofanapp.weather.core.network.sources.airquality.openmeteo.OpenMeteoAqiRepository
+import com.heckofanapp.weather.core.network.sources.weather.accu.AccuApi
+import com.heckofanapp.weather.core.network.sources.weather.accu.AccuRepository
 import com.heckofanapp.weather.core.network.sources.weather.bmkg.BmkgApi
 import com.heckofanapp.weather.core.network.sources.weather.bmkg.BmkgRepository
 import com.heckofanapp.weather.core.network.sources.weather.china.ChinaApi
@@ -37,6 +39,14 @@ import javax.inject.Singleton
     SingletonComponent::class,
 )
 object WeatherRepositoryModule {
+    @Provides
+    @Singleton
+    fun provideAccuRepository(
+        dao: LocationsDao,
+        api: AccuApi,
+        weatherDao: WeatherDao,
+    ): AccuRepository = AccuRepository(dao, weatherDao, api)
+
     @Provides
     @Singleton
     fun provideBmkgRepository(

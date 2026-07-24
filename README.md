@@ -437,7 +437,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 
 ## Sources
 
-- **Open Meteo (Global)**
+- **AccuWeather (Global)**
 - **BMKG (Indonesia)**
 - **CNEMC (China)**
 - **DWD (Germany)**
@@ -446,6 +446,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 - **NWS (United States)**
 - **Met (Norway)**
 - **Meteo (France)**
+- **Open Meteo (Global)**
 - **SMHI (Sweden)**
 
 ## Translations

@@ -1,6 +1,7 @@
 package com.heckofanapp.weather.data.provider
 
 import com.heckofanapp.weather.core.model.sources.WeatherSource
+import com.heckofanapp.weather.core.network.sources.weather.accu.AccuRepository
 import com.heckofanapp.weather.core.network.sources.weather.bmkg.BmkgRepository
 import com.heckofanapp.weather.core.network.sources.weather.china.ChinaRepository
 import com.heckofanapp.weather.core.network.sources.weather.dwd.DwdRepository
@@ -25,9 +26,11 @@ class WeatherRepositoryProvider @Inject constructor(
     private val fmiRepository: FmiRepository,
     private val chinaRepository: ChinaRepository,
     private val bmkgRepository: BmkgRepository,
+    private val accuRepository: AccuRepository,
 ) {
     fun getRepository(source: WeatherSource): WeatherRepository {
         return when (source) {
+            WeatherSource.ACCU -> accuRepository
             WeatherSource.BMKG -> bmkgRepository
             WeatherSource.CNEMC -> chinaRepository
             WeatherSource.DWD -> dwdRepository

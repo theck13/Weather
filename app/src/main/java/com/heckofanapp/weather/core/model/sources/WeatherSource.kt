@@ -6,10 +6,10 @@ enum class WeatherSource(
     val displayLink: String,
     val fullName: String,
 ) {
-    OPEN(
-        displayLink = "https://open-meteo.com/",
-        displayName = "Open Meteo (Global)",
-        fullName = "Open Meteo"
+    ACCU(
+        displayLink = "https://www.accuweather.com/",
+        displayName = "AccuWeather (Global)",
+        fullName = "AccuWeather"
     ),
     BMKG(
         displayLink = "https://www.bmkg.go.id/",
@@ -51,6 +51,11 @@ enum class WeatherSource(
         displayName = "Météo (France)",
         fullName = "Météo-France"
     ),
+    OPEN(
+        displayLink = "https://open-meteo.com/",
+        displayName = "Open Meteo (Global)",
+        fullName = "Open Meteo"
+    ),
     SMHI(
         displayLink = "https://opendata.smhi.se",
         displayName = "SMHI (Sweden)",
@@ -88,6 +93,7 @@ fun getWeatherSourcesForCountry(
 
 // Global Source
 private val weatherSourcesGlobal = listOf(
+    WeatherSource.ACCU,
     WeatherSource.MET,
     WeatherSource.METEO,
     WeatherSource.OPEN,

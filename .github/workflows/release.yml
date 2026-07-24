@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-24.04
 
     env:
-      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ACCU_KEY: ${{ secrets.ACCU_KEY }}
       GEO_NAMES_USERNAME: ${{ secrets.GEO_NAMES_USERNAME }}
       MF_KEY: ${{ secrets.MF_KEY }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     steps:
       - name: Checkout
@@ -48,6 +49,7 @@ jobs:
           ./gradlew \
             --no-daemon \
             --no-build-cache \
+            -PACCU_KEY="${{ secrets.ACCU_KEY }}" \
             -PGEO_NAMES_USERNAME="${{ secrets.GEO_NAMES_USERNAME }}" \
             -PMF_KEY="${{ secrets.MF_KEY }}" \
             clean assembleRelease

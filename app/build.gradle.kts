@@ -19,6 +19,7 @@ val geoNamesUserNameKey =
         ?: System.getenv("GEO_NAMES_USERNAME")
         ?: ""
 
+val accuKey = providers.gradleProperty("ACCU_KEY").orNull ?: System.getenv("ACCU_KEY") ?: ""
 val mfKey = providers.gradleProperty("MF_KEY").orNull ?: System.getenv("MF_KEY") ?: ""
 
 val keystoreFile = file("../keystore/release.jks")
@@ -47,6 +48,11 @@ android {
         versionCode = version_code
         versionName = version_name
 
+        buildConfigField(
+            "String",
+            "ACCU_KEY",
+            "\"$accuKey\""
+        )
 
         buildConfigField(
             "String",

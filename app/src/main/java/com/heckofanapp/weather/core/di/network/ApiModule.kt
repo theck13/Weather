@@ -6,6 +6,7 @@ import com.heckofanapp.weather.core.network.sources.airquality.openmeteo.OpenMet
 import com.heckofanapp.weather.core.network.sources.search.geonames.GeoNamesSearchApi
 import com.heckofanapp.weather.core.network.sources.search.geonames.timezone.GeoNamesTimezoneApi
 import com.heckofanapp.weather.core.network.sources.search.openmeteo.OpenMeteoSearchApi
+import com.heckofanapp.weather.core.network.sources.weather.accu.AccuApi
 import com.heckofanapp.weather.core.network.sources.weather.bmkg.BmkgApi
 import com.heckofanapp.weather.core.network.sources.weather.china.ChinaApi
 import com.heckofanapp.weather.core.network.sources.weather.dwd.DwdApi
@@ -25,6 +26,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
+    @Provides
+    @Singleton
+    fun provideAccuApi(): AccuApi = AccuApi.create()
+
     @Provides
     @Singleton
     fun provideOpenMeteoApi(): OpenMeteoApi = OpenMeteoApi.create()
