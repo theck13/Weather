@@ -17,49 +17,49 @@ val localProps = Properties().apply {
 val keystoreFile = file("../keystore/release.jks")
 val hasKeystore = keystoreFile.exists()
 
-val developer_domain = localProps.getProperty("DEVELOPER_DOMAIN") ?: System.getenv("DEVELOPER_DOMAIN") ?: "com.developer"
-val developer_email = localProps.getProperty("DEVELOPER_EMAIL") ?: System.getenv("DEVELOPER_EMAIL") ?: "developer@email.com"
-val developer_name = localProps.getProperty("DEVELOPER_NAME") ?: System.getenv("DEVELOPER_NAME") ?: "Developer"
+val developerDomain = localProps.getProperty("DEVELOPER_DOMAIN") ?: System.getenv("DEVELOPER_DOMAIN") ?: "com.developer"
+val developerEmail = localProps.getProperty("DEVELOPER_EMAIL") ?: System.getenv("DEVELOPER_EMAIL") ?: "developer@email.com"
+val developerName = localProps.getProperty("DEVELOPER_NAME") ?: System.getenv("DEVELOPER_NAME") ?: "Developer"
 
 val sourceAccuWeather = localProps.getProperty("SOURCE_ACCU_WEATHER") ?: System.getenv("SOURCE_ACCU_WEATHER") ?: ""
 val sourceGeoUsername = localProps.getProperty("SOURCE_GEO_USERNAME") ?: System.getenv("SOURCE_GEO_USERNAME") ?: ""
 val sourceMeteoFrance = localProps.getProperty("SOURCE_METEO_FRANCE") ?: System.getenv("SOURCE_METEO_FRANCE") ?: ""
 
-val package_name = "${developer_domain}.weather"
-val version_code = (project.property("VERSION_CODE") as String).toInt()
-val version_name = project.property("VERSION_NAME") as String
+val packageName = "${developerDomain}.weather"
+val versionCode = (project.property("VERSION_CODE") as String).toInt()
+val versionName = project.property("VERSION_NAME") as String
 
 android {
     android.buildFeatures.buildConfig = true
-    namespace = package_name
+    namespace = packageName
 
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = package_name
+        applicationId = packageName
         minSdk = 26
         targetSdk = 37
-        versionCode = version_code
-        versionName = version_name
+        this.versionCode = versionCode
+        this.versionName = versionName
 
         buildConfigField(
             "String",
             "DEVELOPER_DOMAIN",
-            "\"$developer_domain\""
+            "\"$developerDomain\""
         )
 
         buildConfigField(
             "String",
             "DEVELOPER_EMAIL",
-            "\"$developer_email\""
+            "\"$developerEmail\""
         )
 
         buildConfigField(
             "String",
             "DEVELOPER_NAME",
-            "\"$developer_name\""
+            "\"$developerName\""
         )
 
         buildConfigField(
@@ -135,7 +135,7 @@ androidComponents {
     onVariants { variant ->
         variant.outputs.onEach { output ->
             if (output is com.android.build.api.variant.impl.VariantOutputImpl) {
-                output.outputFileName = "${package_name}-${version_code}(${version_name}).apk"
+                output.outputFileName = "${packageName}-${versionCode}(${versionName}).apk"
             }
         }
     }
