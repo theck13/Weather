@@ -3,9 +3,10 @@ package com.heckofanapp.weather.core.network.sources.weather.fmi
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 object FmiConditionMap {
-
-    // FIXME: Wrong mapping because of missing conditions
-    fun getCondition(code: Int?): WeatherCondition {
+    // FIXME: Update incorrect mapping because of missing conditions.
+    fun getCondition(
+        code: Int?,
+    ): WeatherCondition {
         return when (code) {
             1 -> WeatherCondition.CLEAR_SKY
             2 -> WeatherCondition.PARTLY_CLOUDY
@@ -19,7 +20,9 @@ object FmiConditionMap {
         }
     }
 
-    fun getCurrentCondition(code: Int?): WeatherCondition {
+    fun getCurrentCondition(
+        code: Int?,
+    ): WeatherCondition {
         return when (code) {
             0 -> WeatherCondition.NO_CONDITION_FOUND
             4, 5, 10, 20, 30, 31, 32, 33, 34 -> WeatherCondition.FOG_HAZE
@@ -31,6 +34,4 @@ object FmiConditionMap {
             else -> WeatherCondition.NO_CONDITION_FOUND
         }
     }
-
 }
-

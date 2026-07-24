@@ -6,14 +6,16 @@ import com.heckofanapp.weather.data.local.entity.weather.nws.NwsGridPointsEntity
 
 // ---------------------------- DOMAIN TO ENTITY ----------------------------
 
-fun NwsGridPoints.toEntity(location: Location): NwsGridPointsEntity {
+fun NwsGridPoints.toEntity(
+    location: Location,
+): NwsGridPointsEntity {
     return NwsGridPointsEntity(
         locationId = location.id,
         officeId = this.officeId,
         gridX = this.gridX,
         gridY = this.gridY,
         stationIdentifier = stationIdentifier!!, // CAN'T BE NULL, WE NEED THIS :P
-        lastUpdatedMilli = lastUpdatedMilli
+        lastUpdatedMilli = lastUpdatedMilli,
     )
 }
 
@@ -21,11 +23,11 @@ fun NwsGridPoints.toEntity(location: Location): NwsGridPointsEntity {
 
 fun NwsGridPointsEntity.toDomain(): NwsGridPoints {
     return NwsGridPoints(
-        locationId = this.locationId,
-        officeId = this.officeId,
         gridX = this.gridX,
         gridY = this.gridY,
+        lastUpdatedMilli = this.lastUpdatedMilli,
+        locationId = this.locationId,
+        officeId = this.officeId,
         stationIdentifier = this.stationIdentifier,
-        lastUpdatedMilli = this.lastUpdatedMilli
     )
 }

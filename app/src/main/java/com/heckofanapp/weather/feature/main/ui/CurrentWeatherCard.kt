@@ -202,11 +202,11 @@ private fun FeelsMaxMinLayout(
         to = units.temperature,
     )
     val temperatureMaximum = TemperatureUnit.CELSIUS.convert(
-        from = daily?.temperatureMax,
+        from = daily?.temperatureMaximum,
         to = units.temperature,
     )
     val temperatureMinimum = TemperatureUnit.CELSIUS.convert(
-        from = daily?.temperatureMin,
+        from = daily?.temperatureMinimum,
         to = units.temperature,
     )
 

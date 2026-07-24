@@ -28,7 +28,11 @@ interface MeteoFranceApi {
             val auth = Interceptor { chain ->
                 val original = chain.request()
                 val newUrl = original.url.newBuilder()
-                    .addQueryParameter("token", BuildConfig.MF_KEY).build()
+                    .addQueryParameter(
+                        name = "token",
+                        value = BuildConfig.MF_KEY,
+                    )
+                    .build()
                 val request = original.newBuilder().url(newUrl).build()
                 chain.proceed(request)
             }

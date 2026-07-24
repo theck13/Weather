@@ -56,11 +56,11 @@ fun widgetWeatherMapper(
         .take(6)
         .map {
             val maxTemperature = TemperatureUnit.CELSIUS.convert(
-                from = it.temperatureMax,
+                from = it.temperatureMaximum,
                 to = units.temperature,
             )?.roundToInt()
             val minTemperature = TemperatureUnit.CELSIUS.convert(
-                from = it.temperatureMin,
+                from = it.temperatureMinimum,
                 to = units.temperature,
             )?.roundToInt()
             val icon = it.weatherCondition.toIcon(

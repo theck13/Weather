@@ -3,8 +3,9 @@ package com.heckofanapp.weather.core.network.sources.weather.smhi
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 object SmhiWeatherConditionMap {
-
-    fun getCondition(code: Int?): WeatherCondition {
+    fun getCondition(
+        code: Int?,
+    ): WeatherCondition {
         return when (code) {
             1, 2 -> WeatherCondition.CLEAR_SKY
             3, 5 -> WeatherCondition.PARTLY_CLOUDY
@@ -21,5 +22,4 @@ object SmhiWeatherConditionMap {
             else -> WeatherCondition.NO_CONDITION_FOUND
         }
     }
-
 }

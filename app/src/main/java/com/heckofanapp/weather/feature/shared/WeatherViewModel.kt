@@ -48,7 +48,7 @@ class WeatherViewModel @Inject constructor(
     private val weatherBlocksRepository: WeatherBlocksRepository,
     private val openMeteoAqiRepository: OpenMeteoAqiRepository,
     private val weatherDataReconcilerRepository: WeatherDataReconcilerRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     private var _uiState = mutableStateOf(MainScreenWeatherUiState())
     private var weatherJob: Job? = null

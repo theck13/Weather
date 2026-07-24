@@ -48,13 +48,13 @@ fun DailyDaysHeader(
             )
             val temperatureMaximum =
                 TemperatureUnit.CELSIUS.convert(
-                    from = it.temperatureMax,
+                    from = it.temperatureMaximum,
                     to = units.temperature,
                 )?.roundToInt()
                     ?: "-"
             val temperatureMinimum =
                 TemperatureUnit.CELSIUS.convert(
-                    from = it.temperatureMin,
+                    from = it.temperatureMinimum,
                     to = units.temperature,
                 )?.roundToInt()
                     ?: "-"

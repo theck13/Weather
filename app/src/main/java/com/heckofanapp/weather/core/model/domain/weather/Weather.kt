@@ -6,10 +6,10 @@ import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.model.weather.wind.WindDirection
 
 data class Weather(
-    val location: Location,
     val current: WeatherCurrently,
-    val hourly: List<WeatherHourly>,
     val daily: List<WeatherDaily>,
+    val hourly: List<WeatherHourly>,
+    val location: Location,
 )
 
 data class WeatherCurrently(
@@ -54,27 +54,27 @@ data class WeatherCurrently(
 }
 
 data class WeatherDaily(
-    val temperatureMin: Double?, // NOTE: ALWAYS C
-    val temperatureMax: Double?, // NOTE: ALWAYS C
-    val windSpeed: Double?, // NOTE: ALWAYS KMH (Average)
-    val windDirection: WindDirection?, // NOTE: ALWAYS DOMINANT
-    val rainSum: Double,  // NOTE: ALWAYS MM
-    val snowfallSum: Double?, // NOTE: ALWAYS CM
-    val ultravioletMaximum: Double?,
-    val weatherCondition: WeatherCondition,
-    val time: Long, // NOTE: ALWAYS MILLISECONDS
-    val precipitationProbabilityMax: Int?,
-    val pressureMsl: Double?, // NOTE: ALWAYS HPA (Average)
-    val visibility: Int?,  // NOTE: ALWAYS METERS (Minimum)
-    val humidity: Double?, // (Average)
+    val dawn: Long,
     val dewPoint: Double?, // (Average)
-    val sunrise: Long, // NOTE: ALWAYS MILLISECONDS
-    val sunset: Long, // NOTE: ALWAYS MILLISECONDS
+    val dusk: Long,
+    val humidity: Double?, // (Average)
+    val moonPhase: MoonPhase,
     val moonrise: Long, // NOTE: ALWAYS MILLISECONDS
     val moonset: Long, // NOTE: ALWAYS MILLISECONDS
-    val moonPhase: MoonPhase,
-    val dawn: Long,
-    val dusk: Long,
+    val precipitationProbabilityMax: Int?,
+    val pressureMsl: Double?, // NOTE: ALWAYS HPA (Average)
+    val rainSum: Double,  // NOTE: ALWAYS MM
+    val snowfallSum: Double?, // NOTE: ALWAYS CM
+    val sunrise: Long, // NOTE: ALWAYS MILLISECONDS
+    val sunset: Long, // NOTE: ALWAYS MILLISECONDS
+    val temperatureMaximum: Double?, // NOTE: ALWAYS C
+    val temperatureMinimum: Double?, // NOTE: ALWAYS C
+    val time: Long, // NOTE: ALWAYS MILLISECONDS
+    val ultravioletMaximum: Double?,
+    val visibility: Int?,  // NOTE: ALWAYS METERS (Minimum)
+    val weatherCondition: WeatherCondition,
+    val windDirection: WindDirection?, // NOTE: ALWAYS DOMINANT
+    val windSpeed: Double?, // NOTE: ALWAYS KMH (Average)
 ) {
 
     fun isHumidityValid(): Boolean {

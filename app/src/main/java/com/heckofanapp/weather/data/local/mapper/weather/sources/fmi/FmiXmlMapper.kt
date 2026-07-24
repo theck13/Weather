@@ -79,38 +79,41 @@ fun FmiWeather.toDomain(
     val daily = computeDaily(this.data, location)
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = currentDataForParam("t2m"),
+            cloudCover = null,
+            dewPoint = currentDataForParam("td"),
+            feelsLike = computeApparentTemperature(
+                humidity = currentDataForParam("rh"),
+                tempC = currentDataForParam("t2m"),
+                windMs = currentDataForParam("ws_10min"),
+            ),
             humidity = currentDataForParam("rh") ?: 0.0,
+            lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = currentDataForParam("p_sea"),
+            temperature = currentDataForParam("t2m"),
+            time = if (current != null) current["t2m"]?.get(0)!!.time!!.iso8601TimestampToMilliseconds() else forecast.keys.sorted()[currentHour],
+            ultraviolet = null,
+            utcOffsetSeconds = null,
+            visibility = currentDataForParam("vis")?.toInt(),
+            weatherCondition =
+                if (currentIcon == 0.0 || currentIcon == null || currentIcon.isNaN()) {
+                    FmiConditionMap.getCondition(
+                        hourDataForParam(
+                            forecast.keys.sorted()[currentHour],
+                            "WeatherSymbol3"
+                        )?.toInt()
+                    )
+                } else {
+                    FmiConditionMap.getCurrentCondition(currentDataForParam("wawa")?.toInt())
+                },
+            windDirection = WindDirection.toWindDirectionFromDegrees(currentDataForParam("wd_10min")?.toInt()),
             windSpeed = WindUnit.MPS.convert(
                 from = currentDataForParam("ws_10min"),
                 to = WindUnit.KPH,
             ),
-            windDirection = WindDirection.toWindDirectionFromDegrees(currentDataForParam("wd_10min")?.toInt()),
-            pressureMsl = currentDataForParam("p_sea"),
-            visibility = currentDataForParam("vis")?.toInt(),
-            cloudCover = null,
-            ultraviolet = null,
-            weatherCondition = if (currentIcon == 0.0 || currentIcon == null || currentIcon.isNaN()
-            ) FmiConditionMap.getCondition(
-                hourDataForParam(
-                    forecast.keys.sorted()[currentHour],
-                    "WeatherSymbol3"
-                )?.toInt()
-            ) else FmiConditionMap.getCurrentCondition(currentDataForParam("wawa")?.toInt()),
-            feelsLike = computeApparentTemperature(
-                currentDataForParam("t2m"),
-                currentDataForParam("rh"),
-                currentDataForParam("ws_10min")
-            ),
-            time = if (current != null) current["t2m"]?.get(0)!!.time!!.iso8601TimestampToMilliseconds() else forecast.keys.sorted()[currentHour],
-            dewPoint = currentDataForParam("td"),
-            utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis()
         ),
-        hourly = forecast.keys.mapIndexed { index, time ->
-
+        daily = daily,
+        hourly = forecast.keys.map { time ->
             WeatherHourly(
                 temperature = hourDataForParam(time, "Temperature"),
                 windSpeed = WindUnit.MPS.convert(
@@ -131,16 +134,16 @@ fun FmiWeather.toDomain(
                 humidity = hourDataForParam(time, "Humidity"),
                 dewPoint = hourDataForParam(time, "DewPoint"),
                 weatherCondition = FmiConditionMap.getCondition(
-                    hourDataForParam(
+                    code = hourDataForParam(
                         time,
                         "WeatherSymbol3"
-                    )?.toInt()
+                    )?.toInt(),
                 ),
                 time = time,
                 precipitationProbability = hourDataForParam(time, "PoP")?.roundToInt()
             )
         },
-        daily = daily
+        location = location,
     )
 }
 
@@ -176,19 +179,18 @@ private fun computeDaily(
         groupedByDay[hour]?.filter { it.parameterName == param } ?: emptyList()
     }
     return groupedByDay.map { dailyIt ->
-
         val minTemperature =
             dataForParam(
                 dailyIt.key,
                 "Temperature"
             )?.mapNotNull { it.parameterValue?.toSafeDouble() }
-                ?.minOf { it }.takeIf { it != null && !it.isNaN() }
+                ?.minOf { it }.takeIf { it != null && it.isNaN().not() }
         val maxTemperature =
             dataForParam(
                 dailyIt.key,
                 "Temperature"
             )?.mapNotNull { it.parameterValue?.toSafeDouble() }
-                ?.maxOf { it }.takeIf { it != null && !it.isNaN() }
+                ?.maxOf { it }.takeIf { it != null && it.isNaN().not() }
 
         val windDirection =
             dataForParam(dailyIt.key, "WindDirection")?.mapNotNull { it.parameterValue }
@@ -200,7 +202,7 @@ private fun computeDaily(
 
         val windSpeed = dataForParam(dailyIt.key, "WindSpeedMS")
             ?.mapNotNull { it.parameterValue?.toSafeDouble() }
-            ?.average().takeIf { it != null && !it.isNaN() }
+            ?.average().takeIf { it != null && it.isNaN().not() }
 
         val icon = dataForParam(dailyIt.key, "WeatherSymbol3")?.map { it.parameterValue }
             ?.groupingBy { it }
@@ -219,11 +221,11 @@ private fun computeDaily(
 
         val avgHumidity =
             dataForParam(dailyIt.key, "Humidity")?.map { it.parameterValue.toSafeDouble() ?: -1.0 }
-                ?.average().takeIf { it != null && !it.isNaN() }
+                ?.average().takeIf { it != null && it.isNaN().not() }
 
         val avgPressure =
             dataForParam(dailyIt.key, "Pressure")?.map { it.parameterValue.toSafeDouble() ?: -1.0 }
-                ?.average().takeIf { it != null && !it.isNaN() }
+                ?.average().takeIf { it != null && it.isNaN().not() }
 
         val minVisibility = dataForParam(dailyIt.key, "Visibility")?.minOfOrNull {
             it.parameterValue.toSafeDouble() ?: -1.0
@@ -231,34 +233,34 @@ private fun computeDaily(
 
         val avgDewPoint =
             dataForParam(dailyIt.key, "DewPoint")?.map { it.parameterValue.toSafeDouble() ?: -1.0 }
-                ?.average().takeIf { it != null && !it.isNaN() }
+                ?.average().takeIf { it != null && it.isNaN().not() }
 
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
         WeatherDaily(
-            temperatureMin = minTemperature,
-            temperatureMax = maxTemperature,
-            windSpeed = windSpeed,
-            windDirection = WindDirection.toWindDirectionFromDegrees(
-                windDirection?.toSafeDouble()?.toInt()
-            ),
-            rainSum = rainSum,
-            snowfallSum = null,
-            ultravioletMaximum = null,
-            weatherCondition = condition,
-            time = dailyIt.key,
-            precipitationProbabilityMax = precipitationProbabilityMax,
-            sunrise = sunTimings[index].sunrise ?: -0L,
-            sunset = sunTimings[index].sunset ?: -0L,
+            dawn = sunTimings[index].dawn ?: 0L,
+            dewPoint = avgDewPoint,
+            dusk = sunTimings[index].dusk ?: 0L,
+            humidity = avgHumidity,
+            moonPhase = moonTimings[index].phase,
             moonrise = moonTimings[index].moonrise ?: -0L,
             moonset = moonTimings[index].moonset ?: -0L,
-            moonPhase = moonTimings[index].phase,
-            dawn = sunTimings[index].dawn ?: 0L,
-            dusk = sunTimings[index].dusk ?: 0L,
+            precipitationProbabilityMax = precipitationProbabilityMax,
             pressureMsl = avgPressure,
+            rainSum = rainSum,
+            snowfallSum = null,
+            sunrise = sunTimings[index].sunrise ?: -0L,
+            sunset = sunTimings[index].sunset ?: -0L,
+            temperatureMaximum = maxTemperature,
+            temperatureMinimum = minTemperature,
+            time = dailyIt.key,
+            ultravioletMaximum = null,
             visibility = minVisibility?.roundToInt(),
-            humidity = avgHumidity,
-            dewPoint = avgDewPoint,
+            weatherCondition = condition,
+            windDirection = WindDirection.toWindDirectionFromDegrees(
+                value = windDirection?.toSafeDouble()?.toInt(),
+            ),
+            windSpeed = windSpeed,
         )
     }
 }

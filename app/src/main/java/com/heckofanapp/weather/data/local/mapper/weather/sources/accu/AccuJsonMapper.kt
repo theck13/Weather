@@ -42,7 +42,6 @@ fun AccuWeatherBundle.toDomain(
     )
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
             cloudCover = null, // NOT USED IN THE APP
             dewPoint = current.dewPoint.metric.value,
@@ -59,25 +58,7 @@ fun AccuWeatherBundle.toDomain(
             windDirection = WindDirection.toWindDirectionFromDegrees(current.wind.direction.degrees),
             windSpeed = current.wind.speed.metric.value,
         ),
-        hourly = hourly.map { hour ->
-            WeatherHourly(
-                dewPoint = hour.dewPoint.value,
-                humidity = hour.humidity?.toDouble(),
-                precipitationProbability = hour.precipitation,
-                pressureMsl = null,
-                rain = hour.rain.value ?: 0.0,
-                snowfall = PrecipitationUnit.CM.convert(hour.snowCm.value, PrecipitationUnit.MM),
-                temperature = hour.temperature.value,
-                time = hour.time.secondsToMilliseconds(),
-                ultraviolet = hour.ultraviolet,
-                visibility = DistanceUnit.KM.convert(hour.visibility.value, DistanceUnit.M)?.roundToInt(),
-                weatherCondition = AccuWeatherConditionMap.getCondition(hour.icon),
-                windDirection = WindDirection.toWindDirectionFromDegrees(hour.wind.direction.degrees),
-                windSpeed = hour.wind.speed.value,
-            )
-        },
         daily = daily.mapIndexed { index, item ->
-
             val windSpeed = listOf(
                 item.day.wind.speed.value ?: 0.0,
                 item.night.wind.speed.value ?: 0.0
@@ -123,8 +104,8 @@ fun AccuWeatherBundle.toDomain(
                 snowfallSum = PrecipitationUnit.CM.convert(snow, PrecipitationUnit.MM),
                 sunrise = sunTimings[index].sunrise ?: -0L,
                 sunset = sunTimings[index].sunset ?: -0L,
-                temperatureMax = item.temperature.maximum.value,
-                temperatureMin = item.temperature.minimum.value,
+                temperatureMaximum = item.temperature.maximum.value,
+                temperatureMinimum = item.temperature.minimum.value,
                 time = item.time.secondsToMilliseconds().normalizeToDay(location.timezone),
                 ultravioletMaximum = item.day.ultraviolet.value,
                 visibility = null,
@@ -133,5 +114,23 @@ fun AccuWeatherBundle.toDomain(
                 windSpeed = windSpeed,
             )
         },
+        hourly = hourly.map { hour ->
+            WeatherHourly(
+                dewPoint = hour.dewPoint.value,
+                humidity = hour.humidity?.toDouble(),
+                precipitationProbability = hour.precipitation,
+                pressureMsl = null,
+                rain = hour.rain.value ?: 0.0,
+                snowfall = PrecipitationUnit.CM.convert(hour.snowCm.value, PrecipitationUnit.MM),
+                temperature = hour.temperature.value,
+                time = hour.time.secondsToMilliseconds(),
+                ultraviolet = hour.ultraviolet,
+                visibility = DistanceUnit.KM.convert(hour.visibility.value, DistanceUnit.M)?.roundToInt(),
+                weatherCondition = AccuWeatherConditionMap.getCondition(hour.icon),
+                windDirection = WindDirection.toWindDirectionFromDegrees(hour.wind.direction.degrees),
+                windSpeed = hour.wind.speed.value,
+            )
+        },
+        location = location,
     )
 }

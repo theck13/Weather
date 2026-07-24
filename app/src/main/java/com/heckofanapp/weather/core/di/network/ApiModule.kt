@@ -33,55 +33,15 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideOpenMeteoApi(): OpenMeteoApi = OpenMeteoApi.create()
+    fun provideBmkgApi(): BmkgApi = BmkgApi.create()
 
     @Provides
     @Singleton
-    fun provideOpenMeteoSearchApi(): OpenMeteoSearchApi = OpenMeteoSearchApi.create()
-
-    @Provides
-    @Singleton
-    fun provideGeoNamesSearchApi(): GeoNamesSearchApi = GeoNamesSearchApi.create()
-
-    @Provides
-    @Singleton
-    fun provideGeoNamesTimezoneApi(): GeoNamesTimezoneApi = GeoNamesTimezoneApi.create()
-
-    @Provides
-    @Singleton
-    fun provideOpenMeteoAqiApi(): OpenMeteoAqiApi = OpenMeteoAqiApi.create()
-
-    @Provides
-    @Singleton
-    fun provideNwsApi(): NwsApi = NwsApi.create()
-
-    @Provides
-    @Singleton
-    fun provideMetNorwayApi(): MetNorwayApi = MetNorwayApi.create()
-
-    @Provides
-    @Singleton
-    fun provideSmhiApi(): SmhiApi = SmhiApi.create()
-
-    @Provides
-    @Singleton
-    fun provideGithubApi(): GithubApi = GithubApi.create()
-
-    @Provides
-    @Singleton
-    fun provideNominatimApi(): NominatimApi = NominatimApi.create()
+    fun provideChinaApi(): ChinaApi = ChinaApi.create()
 
     @Provides
     @Singleton
     fun provideDwdApi(): DwdApi = DwdApi.create()
-
-    @Provides
-    @Singleton
-    fun provideMeteoAmApi(): MeteoAmApi = MeteoAmApi.create()
-
-    @Provides
-    @Singleton
-    fun provideMeteoFranceApi(): MeteoFranceApi = MeteoFranceApi.create()
 
     @Provides
     @Singleton
@@ -93,9 +53,49 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideChinaApi(): ChinaApi = ChinaApi.create()
+    fun provideGeoNamesSearchApi(): GeoNamesSearchApi = GeoNamesSearchApi.create()
 
     @Provides
     @Singleton
-    fun provideBmkgApi(): BmkgApi = BmkgApi.create()
+    fun provideGeoNamesTimezoneApi(): GeoNamesTimezoneApi = GeoNamesTimezoneApi.create()
+
+    @Provides
+    @Singleton
+    fun provideGithubApi(): GithubApi = GithubApi.create()
+
+    @Provides
+    @Singleton
+    fun provideMeteoAmApi(): MeteoAmApi = MeteoAmApi.create()
+
+    @Provides
+    @Singleton
+    fun provideMeteoFranceApi(): MeteoFranceApi = MeteoFranceApi.create()
+
+    @Provides
+    @Singleton
+    fun provideMetNorwayApi(): MetNorwayApi = MetNorwayApi.create()
+
+    @Provides
+    @Singleton
+    fun provideNominatimApi(): NominatimApi = NominatimApi.create()
+
+    @Provides
+    @Singleton
+    fun provideNwsApi(): NwsApi = NwsApi.create()
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoApi(): OpenMeteoApi = OpenMeteoApi.create()
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoAqiApi(): OpenMeteoAqiApi = OpenMeteoAqiApi.create()
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoSearchApi(): OpenMeteoSearchApi = OpenMeteoSearchApi.create()
+
+    @Provides
+    @Singleton
+    fun provideSmhiApi(): SmhiApi = SmhiApi.create()
 }

@@ -3,7 +3,9 @@ package com.heckofanapp.weather.core.network.sources.weather.openmeteo
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 object OpenMeteoWeatherConditionMap {
-    fun getCondition(code: Int): WeatherCondition {
+    fun getCondition(
+        code: Int,
+    ): WeatherCondition {
         return when (code) {
             0 -> WeatherCondition.CLEAR_SKY
             1 -> WeatherCondition.MOSTLY_CLEAR

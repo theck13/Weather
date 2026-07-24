@@ -11,13 +11,12 @@ import com.heckofanapp.weather.data.local.entity.weather.HourlyWeatherEntity
 
 @Dao
 interface WeatherDao {
-
     @Transaction
     suspend fun insertWeather(
         currentWeather: CurrentWeatherEntity,
         hourlyWeather: List<HourlyWeatherEntity>,
         dailyWeather: List<DailyWeatherEntity>,
-        id: String
+        id: String,
     ) {
         deleteDailyDataForLocation(id)
         deleteHourlyDataForLocation(id)
@@ -26,13 +25,13 @@ interface WeatherDao {
         insertDailyWeather(dailyWeather)
     }
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCurrentWeather(currentWeather: CurrentWeatherEntity)
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHourlyWeather(hourlyWeather: List<HourlyWeatherEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDailyWeather(dailyWeather: List<DailyWeatherEntity>)
 
     @Query("DELETE FROM weather_daily WHERE locationId = :id")

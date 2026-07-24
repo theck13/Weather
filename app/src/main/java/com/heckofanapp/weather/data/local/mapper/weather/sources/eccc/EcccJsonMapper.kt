@@ -55,81 +55,80 @@ fun EcccWeatherJson.toDomain(
     )
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = current.temperature.metric?.toSafeDouble(),
-            humidity = current.humidity?.toSafeDouble() ?: 0.0,
-            windSpeed = current.windSpeed.metric?.toSafeDouble(),
-            windDirection = WindDirection.toWindDirectionFromString(current.windDirection),
-            pressureMsl = PressureUnit.INHG.convert(
-                from = current.pressure.imperial?.toSafeDouble(),
-                to = PressureUnit.HPA,
-            ),
-            visibility = DistanceUnit.KM.convert(
-                from = current.visibility.metric?.toSafeDouble(),
-                to = DistanceUnit.M,
-            )?.roundToInt(),
             cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = null,
-            weatherCondition = EcccConditionMap.getCondition(current.iconCode),
+            dewPoint = current.dewpoint.metric?.toSafeDouble(),
             feelsLike = current.feelsLike.metric?.toSafeDouble() ?: computeApparentTemperature(
-                tempC = current.temperature.metric?.toSafeDouble(),
                 humidity = current.humidity?.toSafeDouble(),
+                tempC = current.temperature.metric?.toSafeDouble(),
                 windMs = WindUnit.KPH.convert(
                     from = current.windSpeed.metric?.toSafeDouble(),
                     to = WindUnit.MPS,
                 ),
             ),
-            time = current.timeStamp.iso8601TimestampToMilliseconds(),
-            dewPoint = current.dewpoint.metric?.toSafeDouble(),
-            utcOffsetSeconds = null,
+            humidity = current.humidity?.toSafeDouble() ?: 0.0,
             lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = PressureUnit.INHG.convert(
+                from = current.pressure.imperial?.toSafeDouble(),
+                to = PressureUnit.HPA,
+            ),
+            temperature = current.temperature.metric?.toSafeDouble(),
+            time = current.timeStamp.iso8601TimestampToMilliseconds(),
+            ultraviolet = null,
+            utcOffsetSeconds = null,
+            weatherCondition = EcccConditionMap.getCondition(current.iconCode),
+            windDirection = WindDirection.toWindDirectionFromString(current.windDirection),
+            windSpeed = current.windSpeed.metric?.toSafeDouble(),
+            visibility = DistanceUnit.KM.convert(
+                from = current.visibility.metric?.toSafeDouble(),
+                to = DistanceUnit.M,
+            )?.roundToInt(),
         ),
-        hourly = hourly.map {
-            WeatherHourly(
-                temperature = it.temperature.metric?.toSafeDouble(),
-                windSpeed = it.windSpeed.metric?.toSafeDouble(),
-                windDirection = WindDirection.toWindDirectionFromString(it.windDir),
-                rain = 0.0, // NULL
-                snowfall = null,
-                ultraviolet = null,
-                pressureMsl = null,
-                visibility = null,
-                humidity = null,
-                dewPoint = null,
-                weatherCondition = EcccConditionMap.getCondition(it.iconCode),
-                time = it.epochTime.secondsToMilliseconds(),
-                precipitationProbability = it.precipProbability?.toIntOrNull(),
-            )
-        },
         daily = daily.mapIndexed { index, it ->
             val time = dateToMillis(it.date, location.timezone)
 
             WeatherDaily(
-                temperatureMin = dailyNight[index].temperature.metric?.toSafeDouble(),
-                temperatureMax = it.temperature.metric?.toSafeDouble(),
-                windSpeed = null,
-                windDirection = null,
-                rainSum = 0.0,
-                snowfallSum = null,
-                ultravioletMaximum = null,
-                weatherCondition = EcccConditionMap.getCondition(it.iconCode),
-                time = time,
-                precipitationProbabilityMax = it.precipProbability?.toSafeDouble()?.roundToInt()
-                    ?: getMaxPrecipitationProbability(hourly, time),
-                sunrise = sunTimings[index].sunrise ?: -0L,
-                sunset = sunTimings[index].sunset ?: -0L,
+                dawn = sunTimings[index].dawn ?: 0L,
+                dewPoint = null,
+                dusk = sunTimings[index].dusk ?: 0L,
+                humidity = null,
+                moonPhase = moonTimings[index].phase,
                 moonrise = moonTimings[index].moonrise ?: -0L,
                 moonset = moonTimings[index].moonset ?: -0L,
-                moonPhase = moonTimings[index].phase,
-                dawn = sunTimings[index].dawn ?: 0L,
-                dusk = sunTimings[index].dusk ?: 0L,
+                precipitationProbabilityMax = it.precipProbability?.toSafeDouble()?.roundToInt() ?: getMaxPrecipitationProbability(hourly, time),
                 pressureMsl = null,
+                rainSum = 0.0,
+                snowfallSum = null,
+                sunrise = sunTimings[index].sunrise ?: -0L,
+                sunset = sunTimings[index].sunset ?: -0L,
+                temperatureMaximum = it.temperature.metric?.toSafeDouble(),
+                temperatureMinimum = dailyNight[index].temperature.metric?.toSafeDouble(),
+                time = time,
+                ultravioletMaximum = null,
                 visibility = null,
-                humidity = null,
-                dewPoint = null,
+                weatherCondition = EcccConditionMap.getCondition(it.iconCode),
+                windDirection = null,
+                windSpeed = null,
             )
         },
+        hourly = hourly.map {
+            WeatherHourly(
+                dewPoint = null,
+                humidity = null,
+                precipitationProbability = it.precipProbability?.toIntOrNull(),
+                pressureMsl = null,
+                rain = 0.0, // NULL
+                snowfall = null,
+                temperature = it.temperature.metric?.toSafeDouble(),
+                time = it.epochTime.secondsToMilliseconds(),
+                ultraviolet = null,
+                visibility = null,
+                weatherCondition = EcccConditionMap.getCondition(it.iconCode),
+                windDirection = WindDirection.toWindDirectionFromString(it.windDir),
+                windSpeed = it.windSpeed.metric?.toSafeDouble(),
+            )
+        },
+        location = location,
     )
 }
 
@@ -140,9 +139,7 @@ private fun dateToMillis(
     val formatted = dateStr.replace(Regex(" (\\d) ")) { " 0${it.groupValues[1]} " }
 
     val dateWithYear = "$formatted ${Year.now().value}"
-
     val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
-
     val localDate = LocalDate.parse(dateWithYear, formatter)
 
     return localDate.atStartOfDay(
@@ -156,9 +153,7 @@ private fun getMaxPrecipitationProbability(
     hourly: List<EcccHourlyWeatherItemJson>,
     time: Long,
 ): Int? {
-    val startIndex =
-        hourly.indexOfFirst { it.epochTime.secondsToMilliseconds() >= time }.takeIf { it != -1 } ?: 0
-
+    val startIndex = hourly.indexOfFirst { it.epochTime.secondsToMilliseconds() >= time }.takeIf { it != -1 } ?: 0
     val data = hourly.drop(maxOf(0, startIndex - 1))
         .take(WeatherSource.FMI.hourlyAggregationLimitHours)
 

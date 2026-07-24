@@ -33,50 +33,51 @@ fun MeteoFranceForecastJson.toDomain(location: Location): Weather {
     )
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = forecast[currentHour].temperature,
+            cloudCover = null, // NOT USED IN THE APP
+            dewPoint = null,
+            feelsLike = computeApparentTemperature(
+                humidity = forecast[currentHour].humidity?.toDouble(),
+                tempC = forecast[currentHour].temperature,
+                windMs = forecast[currentHour].windSpeed?.toDouble(),
+            ),
             humidity = forecast[currentHour].humidity?.toDouble() ?: 0.0,
+            lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = forecast[currentHour].pressureMsl,
+            temperature = forecast[currentHour].temperature,
+            time = forecast[currentHour].time.secondsToMilliseconds(),
+            ultraviolet = null, // Only daily
+            utcOffsetSeconds = null,
+            visibility = null,
+            weatherCondition = MeteoFranceConditionMap.getCondition(forecast[currentHour].icon),
+            windDirection = WindDirection.toWindDirectionFromDegrees(forecast[currentHour].windDirection),
             windSpeed = WindUnit.MPS.convert(
                 from = forecast[currentHour].windSpeed?.toDouble(),
                 to = WindUnit.KPH,
             ),
-            windDirection = WindDirection.toWindDirectionFromDegrees(forecast[currentHour].windDirection),
-            pressureMsl = forecast[currentHour].pressureMsl,
-            visibility = null,
-            cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = null, // Only daily
-            weatherCondition = MeteoFranceConditionMap.getCondition(forecast[currentHour].icon),
-            feelsLike = computeApparentTemperature(
-                forecast[currentHour].temperature, forecast[currentHour].humidity?.toDouble(),
-                forecast[currentHour].windSpeed?.toDouble()
-            ),
-            time = forecast[currentHour].time.secondsToMilliseconds(),
-            dewPoint = null,
-            utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis()
         ),
+        daily = daily,
         hourly = forecast.filter { it.temperature != null }.map {
             WeatherHourly(
+                dewPoint = null,
+                humidity = it.humidity?.toDouble(),
+                precipitationProbability = null,
+                pressureMsl = it.pressureMsl,
+                rain = it.rain ?: 0.0,
+                snowfall = it.snow,
                 temperature = it.temperature,
+                time = it.time.secondsToMilliseconds(),
+                ultraviolet = null,
+                visibility = null,
+                weatherCondition = MeteoFranceConditionMap.getCondition(it.icon),
+                windDirection = WindDirection.toWindDirectionFromDegrees(it.windDirection),
                 windSpeed = WindUnit.MPS.convert(
                     from = it.windSpeed?.toDouble(),
                     to = WindUnit.KPH,
                 ),
-                windDirection = WindDirection.toWindDirectionFromDegrees(it.windDirection),
-                rain = it.rain ?: 0.0,
-                snowfall = it.snow,
-                ultraviolet = null,
-                pressureMsl = it.pressureMsl,
-                visibility = null,
-                humidity = it.humidity?.toDouble(),
-                dewPoint = null,
-                weatherCondition = MeteoFranceConditionMap.getCondition(it.icon),
-                time = it.time.secondsToMilliseconds(),
-                precipitationProbability = null
             )
         },
-        daily = daily
+        location = location,
     )
 }
 
@@ -139,30 +140,30 @@ private fun computeDaily(
         val avgPressure = dailyIt.value.map { it.pressureMsl ?: -1.0 }.average()
 
         WeatherDaily(
-            temperatureMin = temperatureMinimum,
-            temperatureMax = temperatureMaximum,
-            windSpeed = WindUnit.MPS.convert(
-                from = windSpeed?.toDouble(),
-                to = WindUnit.KPH,
-            ),
-            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
-            rainSum = rainSum,
-            snowfallSum = snowSum,
-            ultravioletMaximum = null,
-            weatherCondition = condition,
-            time = time,
-            precipitationProbabilityMax = null,
-            sunrise = sunTimings[index].sunrise ?: -0L,
-            sunset = sunTimings[index].sunset ?: -0L,
+            dawn = sunTimings[index].dawn ?: 0L,
+            dewPoint = null,
+            dusk = sunTimings[index].dusk ?: 0L,
+            humidity = avgHumidity,
+            moonPhase = moonTimings[index].phase,
             moonrise = moonTimings[index].moonrise ?: -0L,
             moonset = moonTimings[index].moonset ?: -0L,
-            moonPhase = moonTimings[index].phase,
-            dawn = sunTimings[index].dawn ?: 0L,
-            dusk = sunTimings[index].dusk ?: 0L,
+            precipitationProbabilityMax = null,
             pressureMsl = avgPressure,
+            rainSum = rainSum,
+            snowfallSum = snowSum,
+            sunrise = sunTimings[index].sunrise ?: -0L,
+            sunset = sunTimings[index].sunset ?: -0L,
+            temperatureMinimum = temperatureMinimum,
+            temperatureMaximum = temperatureMaximum,
+            time = time,
+            ultravioletMaximum = null,
             visibility = null,
-            humidity = avgHumidity,
-            dewPoint = null,
+            weatherCondition = condition,
+            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
+            windSpeed = WindUnit.MPS.convert(
+                from = windSpeed,
+                to = WindUnit.KPH,
+            ),
         )
     }
 }

@@ -20,15 +20,16 @@ interface GeoNamesSearchApi {
     ): Response<GeoNamesSearchJson>
 
     companion object {
-
         private const val BASE_URL = "https://secure.geonames.org/"
 
         fun create(): GeoNamesSearchApi {
-
             val auth = Interceptor { chain ->
                 val original = chain.request()
                 val newUrl = original.url.newBuilder()
-                    .addQueryParameter("username", BuildConfig.GEO_NAMES_USERNAME)
+                    .addQueryParameter(
+                        name = "username",
+                        value = BuildConfig.GEO_NAMES_USERNAME,
+                    )
                     .build()
                 val request = original.newBuilder().url(newUrl).build()
                 chain.proceed(request)

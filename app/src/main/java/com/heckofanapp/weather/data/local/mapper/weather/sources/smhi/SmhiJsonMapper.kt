@@ -38,33 +38,33 @@ fun SmhiForecastJson.toDomain(
     val daily = computeDaily(this, location)
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = current.temperature,
-            humidity = current.humidity?.toDouble() ?: 0.0,
-            windSpeed = WindUnit.MPS.convert(
-                from = current.windSpeed,
-                to = WindUnit.KPH,
+            cloudCover = null, // NOT USED IN THE APP
+            dewPoint = null,
+            feelsLike = computeApparentTemperature(
+                humidity = current.humidity?.toDouble(),
+                tempC = current.temperature,
+                windMs = current.windSpeed,
             ),
-            windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
+            humidity = current.humidity?.toDouble() ?: 0.0,
+            lastUpdatedInMilli = System.currentTimeMillis(),
             pressureMsl = current.pressureMsl,
+            temperature = current.temperature,
+            time = currentTime,
+            ultraviolet = null,
+            utcOffsetSeconds = null,
             visibility = DistanceUnit.KM.convert(
                 from = current.visibility,
                 to = DistanceUnit.M,
             )?.roundToInt(),
-            cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = null,
             weatherCondition = SmhiWeatherConditionMap.getCondition(current.symbolCode),
-            feelsLike = computeApparentTemperature(
-                tempC = current.temperature,
-                humidity = current.humidity?.toDouble(),
-                windMs = current.windSpeed,
+            windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
+            windSpeed = WindUnit.MPS.convert(
+                from = current.windSpeed,
+                to = WindUnit.KPH,
             ),
-            time = currentTime,
-            dewPoint = null,
-            utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis(),
         ),
+        daily = daily,
         hourly = this.timeSeries.map { item ->
             val data = item.data
 
@@ -85,28 +85,28 @@ fun SmhiForecastJson.toDomain(
                 }
 
             WeatherHourly(
-                temperature = data.temperature,
-                windSpeed = WindUnit.MPS.convert(
-                    from = data.windSpeed,
-                    to = WindUnit.KPH,
-                ),
-                windDirection = WindDirection.toWindDirectionFromDegrees(data.windDirection),
-                rain = rain,
-                snowfall = snowfall,
-                ultraviolet = null,
-                weatherCondition = SmhiWeatherConditionMap.getCondition(data.symbolCode),
-                time = item.time.iso8601TimestampToMilliseconds(),
+                dewPoint = null,
+                humidity = data.humidity?.toDouble(),
                 precipitationProbability = data.precipitationProbability,
                 pressureMsl = data.pressureMsl,
-                humidity = data.humidity?.toDouble(),
+                rain = rain,
+                snowfall = snowfall,
+                temperature = data.temperature,
+                time = item.time.iso8601TimestampToMilliseconds(),
+                ultraviolet = null,
                 visibility = DistanceUnit.KM.convert(
                     from = data.visibility,
                     to = DistanceUnit.M,
                 )?.roundToInt(),
-                dewPoint = null,
+                weatherCondition = SmhiWeatherConditionMap.getCondition(data.symbolCode),
+                windDirection = WindDirection.toWindDirectionFromDegrees(data.windDirection),
+                windSpeed = WindUnit.MPS.convert(
+                    from = data.windSpeed,
+                    to = WindUnit.KPH,
+                ),
             )
         },
-        daily = daily,
+        location = location,
     )
 }
 
@@ -172,36 +172,36 @@ private fun computeDaily(
         val minVisibility = dailyIt.value.minOf { it.data.visibility ?: -1.0 }
 
         WeatherDaily(
-            temperatureMin = minTemperature,
-            temperatureMax = maxTemperature,
-            windSpeed = WindUnit.MPS.convert(
-                from = windSpeed,
-                to = WindUnit.KPH,
-            ),
-            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
+            dawn = sunTimings[index].dawn ?: 0L,
+            dewPoint = null,
+            dusk = sunTimings[index].dusk ?: 0L,
+            humidity = avgHumidity,
+            moonPhase = moonTimings[index].phase,
+            moonrise = moonTimings[index].moonrise ?: -0L,
+            moonset = moonTimings[index].moonset ?: -0L,
+            precipitationProbabilityMax = precipitationProbabilityMax,
+            pressureMsl = avgPressure,
             rainSum = rainSum,
             snowfallSum = PrecipitationUnit.MM.convert(
                 from = snowfallSum,
                 to = PrecipitationUnit.CM,
             ),
-            ultravioletMaximum = null,
-            weatherCondition = condition,
-            time = time,
-            precipitationProbabilityMax = precipitationProbabilityMax,
             sunrise = sunTimings[index].sunrise ?: -0L,
             sunset = sunTimings[index].sunset ?: -0L,
-            moonrise = moonTimings[index].moonrise ?: -0L,
-            moonset = moonTimings[index].moonset ?: -0L,
-            moonPhase = moonTimings[index].phase,
-            dawn = sunTimings[index].dawn ?: 0L,
-            dusk = sunTimings[index].dusk ?: 0L,
-            pressureMsl = avgPressure,
+            temperatureMaximum = maxTemperature,
+            temperatureMinimum = minTemperature,
+            time = time,
+            ultravioletMaximum = null,
             visibility = DistanceUnit.KM.convert(
                 from = minVisibility,
                 to = DistanceUnit.M,
             )?.roundToInt(),
-            humidity = avgHumidity,
-            dewPoint = null,
+            weatherCondition = condition,
+            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
+            windSpeed = WindUnit.MPS.convert(
+                from = windSpeed,
+                to = WindUnit.KPH,
+            ),
         )
     }
 }

@@ -20,8 +20,6 @@ import com.heckofanapp.weather.core.utils.weather.computing.computeDailyWeatherC
 import com.heckofanapp.weather.core.utils.weather.forecast.findHourlyIndexForTime
 import kotlin.math.roundToInt
 
-// ---------------------------- JSON TO DOMAIN ----------------------------
-
 fun MetNorwayForecastJson.toDomain(
     location: Location,
 ): Weather {
@@ -41,26 +39,26 @@ fun MetNorwayForecastJson.toDomain(
 
     return Weather(
         current = WeatherCurrently(
-            temperature = current.instant.details.temperature,
-            humidity = current.instant.details.relativeHumidity ?: 0.0,
-            windSpeed = current.instant.details.windSpeed,
-            windDirection = WindDirection.toWindDirectionFromDegrees(current.instant.details.windDirection.roundToInt()),
-            pressureMsl = current.instant.details.pressureMsl,
-            visibility = null,
             cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = current.instant.details.uvIndex,
-            weatherCondition = MetNorwayWeatherConditionMap.getCondition(nextHour[currentHour]?.summary?.symbolCode),
-            feelsLike = computeApparentTemperature(
-                current.instant.details.temperature,
-                current.instant.details.relativeHumidity,
-                current.instant.details.windSpeed
-            ),
-            time = currentTime,
             dewPoint = current.instant.details.dewPoint,
-            utcOffsetSeconds = null,
+            feelsLike = computeApparentTemperature(
+                humidity = current.instant.details.relativeHumidity,
+                tempC = current.instant.details.temperature,
+                windMs = current.instant.details.windSpeed,
+            ),
+            humidity = current.instant.details.relativeHumidity ?: 0.0,
             lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = current.instant.details.pressureMsl,
+            temperature = current.instant.details.temperature,
+            time = currentTime,
+            ultraviolet = current.instant.details.uvIndex,
+            utcOffsetSeconds = null,
+            visibility = null,
+            weatherCondition = MetNorwayWeatherConditionMap.getCondition(nextHour[currentHour]?.summary?.symbolCode),
+            windDirection = WindDirection.toWindDirectionFromDegrees(current.instant.details.windDirection.roundToInt()),
+            windSpeed = current.instant.details.windSpeed,
         ),
-        location = location,
+        daily = daily,
         hourly = this.properties.data.map { item ->
             val data = item.data.instant.details
 
@@ -75,22 +73,22 @@ fun MetNorwayForecastJson.toDomain(
                     ?: item.data.next12Hours?.summary?.symbolCode
 
             WeatherHourly(
-                temperature = data.temperature,
-                windSpeed = data.windSpeed,
-                windDirection = WindDirection.toWindDirectionFromDegrees(data.windDirection.roundToInt()),
-                rain = nextHourDetails?.precipitationAmount ?: 0.0,
-                snowfall = null,
-                ultraviolet = data.uvIndex,
-                weatherCondition = MetNorwayWeatherConditionMap.getCondition(icon),
-                time = item.time.iso8601TimestampToMilliseconds(),
+                dewPoint = data.dewPoint,
+                humidity = data.relativeHumidity,
                 precipitationProbability = null,
                 pressureMsl = data.pressureMsl,
-                humidity = data.relativeHumidity,
+                rain = nextHourDetails?.precipitationAmount ?: 0.0,
+                snowfall = null,
+                temperature = data.temperature,
+                time = item.time.iso8601TimestampToMilliseconds(),
+                ultraviolet = data.uvIndex,
                 visibility = null,
-                dewPoint = data.dewPoint,
+                weatherCondition = MetNorwayWeatherConditionMap.getCondition(icon),
+                windDirection = WindDirection.toWindDirectionFromDegrees(data.windDirection.roundToInt()),
+                windSpeed = data.windSpeed,
             )
         },
-        daily = daily,
+        location = location,
     )
 }
 
@@ -159,27 +157,27 @@ private fun computeDaily(
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
         WeatherDaily(
-            temperatureMin = minTemperature,
-            temperatureMax = maxTemperature,
-            windSpeed = windSpeed,
-            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
-            rainSum = rainSum,
-            snowfallSum = null,
-            ultravioletMaximum = uvIndexMax,
-            weatherCondition = condition,
-            time = time,
-            precipitationProbabilityMax = null,
-            sunrise = sunTimings[index].sunrise ?: -0L,
-            sunset = sunTimings[index].sunset ?: -0L,
+            dawn = sunTimings[index].dawn ?: 0L,
+            dewPoint = avgDewPoint,
+            dusk = sunTimings[index].dusk ?: 0L,
+            humidity = avgHumidity,
+            moonPhase = moonTimings[index].phase,
             moonrise = moonTimings[index].moonrise ?: -0L,
             moonset = moonTimings[index].moonset ?: -0L,
-            moonPhase = moonTimings[index].phase,
-            dawn = sunTimings[index].dawn ?: 0L,
-            dusk = sunTimings[index].dusk ?: 0L,
+            precipitationProbabilityMax = null,
             pressureMsl = avgPressure,
+            rainSum = rainSum,
+            snowfallSum = null,
+            sunrise = sunTimings[index].sunrise ?: -0L,
+            sunset = sunTimings[index].sunset ?: -0L,
+            temperatureMaximum = maxTemperature,
+            temperatureMinimum = minTemperature,
+            time = time,
+            ultravioletMaximum = uvIndexMax,
             visibility = null,
-            humidity = avgHumidity,
-            dewPoint = avgDewPoint,
+            weatherCondition = condition,
+            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
+            windSpeed = windSpeed,
         )
     }.take(4)
 }

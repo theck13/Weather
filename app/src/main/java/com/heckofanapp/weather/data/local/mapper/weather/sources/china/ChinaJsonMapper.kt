@@ -20,21 +20,11 @@ fun ChinaForecastJson.toDomain(
     location: Location,
 ): Weather {
     val current = this.current
-    val hourly = this.forecastHourly
     val daily = this.forecastDaily
-
-    val time = daily.pubTime.iso8601TimestampToMilliseconds()
-
+    val hourly = this.forecastHourly
     val msDay = 24L * 60 * 60 * 1000
 
-    val sunTimings = getSunTimings(
-        List(daily.temperature.value.size) {
-            (time + (it * msDay)).normalizeToDay(location.timezone)
-        },
-        location.timezone,
-        location.latitude,
-        location.longitude,
-    )
+    val time = daily.pubTime.iso8601TimestampToMilliseconds()
 
     val moonTimings = getMoonTimings(
         List(daily.temperature.value.size) {
@@ -44,90 +34,88 @@ fun ChinaForecastJson.toDomain(
         location.latitude,
         location.longitude,
     )
+    val sunTimings = getSunTimings(
+        List(daily.temperature.value.size) {
+            (time + (it * msDay)).normalizeToDay(location.timezone)
+        },
+        location.timezone,
+        location.latitude,
+        location.longitude,
+    )
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = current.temperature.value.toSafeDouble(),
+            cloudCover = null, // NOT USED IN THE APP
+            dewPoint = null,
+            feelsLike = current.feelsLike.value.toSafeDouble(),
             humidity = current.humidity.value.toSafeDouble() ?: 0.0,
-            windSpeed = current.wind.speed.value.toSafeDouble(),
-            windDirection = WindDirection.toWindDirectionFromDegrees(
-                current.wind.direction.value.toSafeDouble()?.roundToInt()
-            ),
+            lastUpdatedInMilli = System.currentTimeMillis(),
             pressureMsl = current.pressure.value.toSafeDouble(),
+            temperature = current.temperature.value.toSafeDouble(),
+            time = current.pubTime.iso8601TimestampToMilliseconds(),
+            ultraviolet = current.uvIndex.toSafeDouble(),
+            utcOffsetSeconds = null,
             visibility = DistanceUnit.KM.convert(
                 from = current.visibility.value.toSafeDouble(),
                 to = DistanceUnit.M,
             )?.roundToInt(),
-            cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = current.uvIndex.toSafeDouble(),
-            weatherCondition = ChinaWeatherConditionMap.getCondition(
-                current.weather.toSafeDouble()?.toInt()
-            ),
-            feelsLike = current.feelsLike.value.toSafeDouble(),
-            time = current.pubTime.iso8601TimestampToMilliseconds(),
-            dewPoint = null,
-            utcOffsetSeconds = null,
-            lastUpdatedInMilli = System.currentTimeMillis(),
+            weatherCondition = ChinaWeatherConditionMap.getCondition(current.weather.toSafeDouble()?.toInt()),
+            windDirection = WindDirection.toWindDirectionFromDegrees(current.wind.direction.value.toSafeDouble()?.roundToInt()),
+            windSpeed = current.wind.speed.value.toSafeDouble(),
         ),
-        hourly = List(hourly.wind.value.size) {
-            WeatherHourly(
-                temperature = hourly.temperature.value[it].toDouble(),
-                windSpeed = hourly.wind.value[it].speed.toSafeDouble(),
-                windDirection = WindDirection.toWindDirectionFromDegrees(
-                    hourly.wind.value[it].direction.toSafeDouble()?.roundToInt()
-                ),
-                rain = 0.0,
-                snowfall = null,
-                ultraviolet = null,
-                pressureMsl = null,
-                visibility = null,
-                humidity = null,
-                dewPoint = null,
-                weatherCondition = ChinaWeatherConditionMap.getCondition(hourly.weather.value[it]),
-                time = hourly.wind.value[it].datetime.iso8601TimestampToMilliseconds(),
-                precipitationProbability = null,
-            )
-        },
         daily = List(daily.temperature.value.size) {
             val dailyTime = time + (it * msDay)
+
             val avgWindSpeed = listOf(
                 daily.wind.speed.value[it].from.toSafeDouble() ?: -1.0,
-                daily.wind.speed.value[it].to.toSafeDouble() ?: -1.0
+                daily.wind.speed.value[it].to.toSafeDouble() ?: -1.0,
             ).average()
-
             val windDirection = listOf(
                 daily.wind.direction.value[it].from.toSafeDouble() ?: -1.0,
-                daily.wind.direction.value[it].to.toSafeDouble() ?: -1.0
+                daily.wind.direction.value[it].to.toSafeDouble() ?: -1.0,
             ).average()
 
             WeatherDaily(
-                temperatureMin = daily.temperature.value[it].min.toSafeDouble(),
-                temperatureMax = daily.temperature.value[it].max.toSafeDouble(),
-                windSpeed = if (avgWindSpeed >= 0.0) avgWindSpeed else null,
-                windDirection = WindDirection.toWindDirectionFromDegrees(windDirection.roundToInt()),
-                rainSum = 0.0,
-                snowfallSum = null,
-                ultravioletMaximum = null,
-                weatherCondition = ChinaWeatherConditionMap.getCondition(
-                    daily.weather.value[it].from?.toSafeDouble()?.toInt()
-                ),
-                time = dailyTime.normalizeToDay(location.timezone),
-                precipitationProbabilityMax = daily.precipitationProbability.value.getOrNull(it)
-                    .toSafeDouble()
-                    ?.roundToInt(),
-                pressureMsl = null,
-                visibility = null,
-                humidity = null,
+                dawn = sunTimings[it].dawn ?: -1L,
                 dewPoint = null,
-                sunrise = sunTimings[it].sunrise ?: -1L,
-                sunset = sunTimings[it].sunset ?: -1L,
+                dusk = sunTimings[it].dusk ?: -1L,
+                humidity = null,
+                moonPhase = moonTimings[it].phase,
                 moonrise = moonTimings[it].moonrise ?: -1L,
                 moonset = moonTimings[it].moonset ?: -1L,
-                moonPhase = moonTimings[it].phase,
-                dawn = sunTimings[it].dawn ?: -1L,
-                dusk = sunTimings[it].dusk ?: -1L,
+                precipitationProbabilityMax = daily.precipitationProbability.value.getOrNull(it).toSafeDouble()?.roundToInt(),
+                pressureMsl = null,
+                rainSum = 0.0,
+                snowfallSum = null,
+                sunrise = sunTimings[it].sunrise ?: -1L,
+                sunset = sunTimings[it].sunset ?: -1L,
+                temperatureMaximum = daily.temperature.value[it].max.toSafeDouble(),
+                temperatureMinimum = daily.temperature.value[it].min.toSafeDouble(),
+                time = dailyTime.normalizeToDay(location.timezone),
+                ultravioletMaximum = null,
+                visibility = null,
+                weatherCondition = ChinaWeatherConditionMap.getCondition(daily.weather.value[it].from?.toSafeDouble()?.toInt()),
+                windDirection = WindDirection.toWindDirectionFromDegrees(windDirection.roundToInt()),
+                windSpeed = if (avgWindSpeed >= 0.0) avgWindSpeed else null,
             )
         },
+        hourly = List(hourly.wind.value.size) {
+            WeatherHourly(
+                dewPoint = null,
+                humidity = null,
+                precipitationProbability = null,
+                pressureMsl = null,
+                rain = 0.0,
+                snowfall = null,
+                temperature = hourly.temperature.value[it].toDouble(),
+                time = hourly.wind.value[it].datetime.iso8601TimestampToMilliseconds(),
+                ultraviolet = null,
+                visibility = null,
+                weatherCondition = ChinaWeatherConditionMap.getCondition(hourly.weather.value[it]),
+                windDirection = WindDirection.toWindDirectionFromDegrees(hourly.wind.value[it].direction.toSafeDouble()?.roundToInt()),
+                windSpeed = hourly.wind.value[it].speed.toSafeDouble(),
+            )
+        },
+        location = location,
     )
 }

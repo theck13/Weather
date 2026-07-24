@@ -85,14 +85,11 @@ fun DailyCard(
                     }
 
                     DailyItem(
-                        weekDay,
-                        item.temperatureMax,
-                        item.temperatureMin,
-                        item.weatherCondition.toIconPair(
+                        icons = item.weatherCondition.toIconPair(
                             targetTimeMilli = System.currentTimeMillis(),
                         ),
-                        item.precipitationProbabilityMax,
-                        units,
+                        maxTemp = item.temperatureMaximum,
+                        minTemp = item.temperatureMinimum,
                         onDailyItemClick = {
                             navController.navigate(
                                 NavigationRoutes.daily(
@@ -100,7 +97,10 @@ fun DailyCard(
                                     weather.location.id
                                 )
                             )
-                        }
+                        },
+                        precipitationProbability = item.precipitationProbabilityMax,
+                        units = units,
+                        weekday = weekDay,
                     )
 
                     if (index == daily.size - 1) {
@@ -116,13 +116,13 @@ fun DailyCard(
 
 @Composable
 private fun DailyItem(
-    weekday: String,
+    icons: Pair<Int, Int?>,
     maxTemp: Double?,
     minTemp: Double?,
-    icons: Pair<Int, Int?>,
+    onDailyItemClick: () -> Unit,
     precipitationProbability: Int?,
     units: WeatherUnits,
-    onDailyItemClick: () -> Unit
+    weekday: String,
 ) {
     val maxTemp = TemperatureUnit.CELSIUS.convert(
         from = maxTemp,

@@ -38,12 +38,12 @@ fun DailyForecastHeroHeader(
     )
     val temperatureMaximum =
         TemperatureUnit.CELSIUS.convert(
-            from = daily.temperatureMax,
+            from = daily.temperatureMaximum,
             to = units.temperature,
         )?.roundToInt() ?: "-"
     val temperatureMinimum =
         TemperatureUnit.CELSIUS.convert(
-            from = daily.temperatureMin,
+            from = daily.temperatureMinimum,
             to = units.temperature,
         )?.roundToInt() ?: "-"
 

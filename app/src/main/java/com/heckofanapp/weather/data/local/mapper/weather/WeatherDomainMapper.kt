@@ -63,8 +63,8 @@ fun List<WeatherDaily>.toDailyWeatherEntity(
     map { item ->
         DailyWeatherEntity(
             locationId = locationId,
-            temperatureMin = item.temperatureMin,
-            temperatureMax = item.temperatureMax,
+            temperatureMin = item.temperatureMinimum,
+            temperatureMax = item.temperatureMaximum,
             windSpeed = item.windSpeed,
             windDirection = item.windDirection,
             rainSum = item.rainSum,

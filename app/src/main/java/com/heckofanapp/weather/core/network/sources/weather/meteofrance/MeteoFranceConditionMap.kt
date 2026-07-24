@@ -7,7 +7,9 @@ import com.heckofanapp.weather.core.model.weather.WeatherCondition
  * https://github.com/breezy-weather/breezy-weather/blob/11043cdefe8f350ba8887ec4fcc012a51f6fd472/app/src/src_nonfreenet/org/breezyweather/sources/mf/MfService.kt#L879
  */
 object MeteoFranceConditionMap {
-    fun getCondition(icon: String?): WeatherCondition {
+    fun getCondition(
+        icon: String?,
+    ): WeatherCondition {
         return if (icon == null) {
             WeatherCondition.NO_CONDITION_FOUND
         } else {

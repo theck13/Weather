@@ -4,7 +4,9 @@ import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 // FROM https://nrkno.github.io/yr-weather-symbols/
 object MetNorwayWeatherConditionMap {
-    fun getCondition(id: String?): WeatherCondition {
+    fun getCondition(
+        id: String?,
+    ): WeatherCondition {
         return when (id?.substringBefore("_")) {
             "clearsky", "fair" ->
                 WeatherCondition.CLEAR_SKY

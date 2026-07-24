@@ -36,19 +36,17 @@ private data class NwsValidTime(
     val duration: Duration,
 )
 
-// ---------------------------- JSON TO DOMAIN ----------------------------
-
 fun NwsGridPointsJson.toDomain(
     location: Location,
     stationIdentifier: String?,
 ): NwsGridPoints {
     return NwsGridPoints(
-        locationId = location.id,
-        officeId = this.points.officeId,
         gridX = this.points.gridX,
         gridY = this.points.gridY,
-        stationIdentifier = stationIdentifier,
         lastUpdatedMilli = System.currentTimeMillis(),
+        locationId = location.id,
+        officeId = this.points.officeId,
+        stationIdentifier = stationIdentifier,
     )
 }
 
@@ -119,52 +117,26 @@ fun NwsWeatherJsonBundle.toDomain(
     )
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = currentTemperature,
-            humidity = current.relativeHumidity.value,
-            windSpeed = current.windSpeed.value,
-            windDirection = WindDirection.toWindDirectionFromString(hourly.periods[currentHourIndex].windDirection),
-            pressureMsl = current.seaLevelPressure.value?.pressurePaToHpa(),
-            visibility = current.visibility.value?.toInt(),
             cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = null,
-            weatherCondition = NwsWeatherConditionMap.getCondition(currentIcon),
-            feelsLike = computeApparentTemperature(
-                currentTemperature,
-                current.relativeHumidity.value,
-                current.windSpeed.value?.kmhToMs()
-            ),
-            time = current.timestamp.iso8601TimestampToMilliseconds(),
             dewPoint = hourly.periods[currentHourIndex].dewPoint.value,
-            utcOffsetSeconds = null,
+            feelsLike = computeApparentTemperature(
+                humidity = current.relativeHumidity.value,
+                tempC = currentTemperature,
+                windMs = current.windSpeed.value?.kmhToMs(),
+            ),
+            humidity = current.relativeHumidity.value,
             lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = current.seaLevelPressure.value?.pressurePaToHpa(),
+            temperature = currentTemperature,
+            time = current.timestamp.iso8601TimestampToMilliseconds(),
+            ultraviolet = null,
+            utcOffsetSeconds = null,
+            visibility = current.visibility.value?.toInt(),
+            weatherCondition = NwsWeatherConditionMap.getCondition(currentIcon),
+            windDirection = WindDirection.toWindDirectionFromString(hourly.periods[currentHourIndex].windDirection),
+            windSpeed = current.windSpeed.value,
         ),
-        hourly = hourly.periods.map {
-            val hourTime = it.startTime.iso8601TimestampToMilliseconds()
-            val rainAmount = rainMap[hourTime]
-            val snowFall = snowMap[hourTime]
-            val visibility = visibilityMap[hourTime]
-
-            WeatherHourly(
-                temperature = TemperatureUnit.FAHRENHEIT.convert(
-                    from = it.temperature,
-                    to = TemperatureUnit.CELSIUS,
-                ),
-                windSpeed = fixHourlyNwsWindSpeedValue(it.windSpeed),
-                windDirection = WindDirection.toWindDirectionFromString(it.windDirection),
-                rain = rainAmount ?: 0.0,
-                snowfall = snowFall ?: 0.0,
-                ultraviolet = null,
-                weatherCondition = NwsWeatherConditionMap.getCondition(it.icon),
-                time = hourTime,
-                precipitationProbability = it.probabilityOfPrecipitation.value?.toInt(),
-                humidity = it.relativeHumidity.value,
-                pressureMsl = null,
-                visibility = visibility?.roundToInt(),
-                dewPoint = it.dewPoint.value,
-            )
-        },
         daily = daily.periods.filter { it.isDayTime }.map { item ->
             val index = daily.periods.indexOf(item)
             val time = item.startTime.iso8601TimestampToMilliseconds().normalizeToDay(zoneId)
@@ -193,32 +165,58 @@ fun NwsWeatherJsonBundle.toDomain(
             val minVisibility = getMinVisibility(visibilityMap, time)
 
             WeatherDaily(
-                temperatureMin = minTemperature?.value ?: 0.0,
-                temperatureMax = maxTemperature?.value ?: 0.0,
-                windSpeed = windSpeed,
-                windDirection = WindDirection.toWindDirectionFromString(item.windDirection),
+                dawn = sunTimings[index].dawn ?: 0L,
+                dewPoint = avgDewPoint,
+                dusk = sunTimings[index].dusk ?: 0L,
+                humidity = avgHumidity,
+                moonPhase = moonTimings[index].phase,
+                moonrise = moonTimings[index].moonrise ?: -0L,
+                moonset = moonTimings[index].moonset ?: -0L,
+                precipitationProbabilityMax = precipitationProbabilityMax.roundToInt(), // item.probabilityOfPrecipitation.value from daily is wrong?
+                pressureMsl = null,
                 rainSum = rainSum,
                 snowfallSum = PrecipitationUnit.MM.convert(
                     from = snowfallSum,
                     to = PrecipitationUnit.CM,
                 ),
-                ultravioletMaximum = null,
-                weatherCondition = condition,
-                time = time,
-                precipitationProbabilityMax = precipitationProbabilityMax.roundToInt(), // item.probabilityOfPrecipitation.value from daily is wrong?
                 sunrise = sunTimings[index].sunrise ?: -0L,
                 sunset = sunTimings[index].sunset ?: -0L,
-                moonrise = moonTimings[index].moonrise ?: -0L,
-                moonset = moonTimings[index].moonset ?: -0L,
-                moonPhase = moonTimings[index].phase,
-                dawn = sunTimings[index].dawn ?: 0L,
-                dusk = sunTimings[index].dusk ?: 0L,
-                pressureMsl = null,
+                temperatureMaximum = maxTemperature?.value ?: 0.0,
+                temperatureMinimum = minTemperature?.value ?: 0.0,
+                time = time,
+                ultravioletMaximum = null,
                 visibility = minVisibility.roundToInt(),
-                humidity = avgHumidity,
-                dewPoint = avgDewPoint,
+                weatherCondition = condition,
+                windDirection = WindDirection.toWindDirectionFromString(item.windDirection),
+                windSpeed = windSpeed,
             )
-        }
+        },
+        hourly = hourly.periods.map {
+            val hourTime = it.startTime.iso8601TimestampToMilliseconds()
+            val rainAmount = rainMap[hourTime]
+            val snowFall = snowMap[hourTime]
+            val visibility = visibilityMap[hourTime]
+
+            WeatherHourly(
+                dewPoint = it.dewPoint.value,
+                humidity = it.relativeHumidity.value,
+                precipitationProbability = it.probabilityOfPrecipitation.value?.toInt(),
+                pressureMsl = null,
+                rain = rainAmount ?: 0.0,
+                snowfall = snowFall ?: 0.0,
+                temperature = TemperatureUnit.FAHRENHEIT.convert(
+                    from = it.temperature,
+                    to = TemperatureUnit.CELSIUS,
+                ),
+                time = hourTime,
+                ultraviolet = null,
+                visibility = visibility?.roundToInt(),
+                weatherCondition = NwsWeatherConditionMap.getCondition(it.icon),
+                windDirection = WindDirection.toWindDirectionFromString(it.windDirection),
+                windSpeed = fixHourlyNwsWindSpeedValue(it.windSpeed),
+            )
+        },
+        location = location
     )
 }
 

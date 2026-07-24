@@ -20,8 +20,6 @@ import com.heckofanapp.weather.core.utils.weather.calculations.computeApparentTe
 import com.heckofanapp.weather.core.utils.weather.computing.computeDailyWeatherCondition
 import kotlin.math.roundToInt
 
-// ---------------------------- JSON TO DOMAIN ----------------------------
-
 fun DwdWeatherJsonBundle.toDomain(
     location: Location,
 ): Weather {
@@ -30,45 +28,45 @@ fun DwdWeatherJsonBundle.toDomain(
     val daily = computeDaily(forecast, location)
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = current.temperature,
-            humidity = current.humidity?.toDouble() ?: 0.0,
-            windSpeed = current.windSpeed,
-            windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
-            pressureMsl = current.pressureMsl,
-            visibility = current.visibility,
             cloudCover = null, // NOT USED IN THE APP
-            ultraviolet = null,
-            weatherCondition = DwdWeatherConditionMap.getCondition(current.icon),
-            feelsLike = computeApparentTemperature(
-                tempC = current.temperature,
-                humidity = current.humidity?.toDouble(),
-                windMs = current.windSpeed?.kmhToMs()
-            ),
-            time = current.timestamp.iso8601TimestampToMilliseconds(),
             dewPoint = current.dewPoint,
-            utcOffsetSeconds = null,
+            feelsLike = computeApparentTemperature(
+                humidity = current.humidity?.toDouble(),
+                tempC = current.temperature,
+                windMs = current.windSpeed?.kmhToMs(),
+            ),
+            humidity = current.humidity?.toDouble() ?: 0.0,
             lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = current.pressureMsl,
+            temperature = current.temperature,
+            time = current.timestamp.iso8601TimestampToMilliseconds(),
+            ultraviolet = null,
+            utcOffsetSeconds = null,
+            visibility = current.visibility,
+            weatherCondition = DwdWeatherConditionMap.getCondition(current.icon),
+            windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
+            windSpeed = current.windSpeed,
         ),
+        daily = daily,
         hourly = forecast.map {
             WeatherHourly(
-                temperature = it.temperature,
-                windSpeed = it.windSpeed,
-                windDirection = WindDirection.toWindDirectionFromDegrees(it.windDirection),
+                dewPoint = it.dewPoint,
+                humidity = it.humidity?.toDouble(),
+                precipitationProbability = it.precipitationProbability,
+                pressureMsl = it.pressureMsl,
                 rain = it.precipitation ?: 0.0,
                 snowfall = null,
-                ultraviolet = null,
-                pressureMsl = it.pressureMsl,
-                visibility = it.visibility,
-                humidity = it.humidity?.toDouble(),
-                dewPoint = it.dewPoint,
-                weatherCondition = DwdWeatherConditionMap.getCondition(it.icon),
+                temperature = it.temperature,
                 time = it.timestamp.iso8601TimestampToMilliseconds(),
-                precipitationProbability = it.precipitationProbability,
+                ultraviolet = null,
+                visibility = it.visibility,
+                weatherCondition = DwdWeatherConditionMap.getCondition(it.icon),
+                windDirection = WindDirection.toWindDirectionFromDegrees(it.windDirection),
+                windSpeed = it.windSpeed,
             )
         },
-        daily = daily,
+        location = location,
     )
 }
 
@@ -101,63 +99,52 @@ private fun computeDaily(
     )
 
     return groupedByDay.filter {(key, value) -> (value.size == 24) || key == groupedByDay.keys.firstOrNull()}.map{ dailyIt ->
-        val minTemperature = dailyIt.value.minOf { it.temperature }
-        val maxTemperature = dailyIt.value.maxOf { it.temperature }
-
-        val avgHumidity = dailyIt.value.map { it.humidity?.toDouble() ?: -1.0 }.average()
-
-        val avgPressure = dailyIt.value.map { it.pressureMsl ?: -1.0 }.average()
-
-        val minVisibility = dailyIt.value.minOf { it.visibility?.toDouble() ?: -1.0 }
-
-        val avgDewPoint = dailyIt.value.map { it.dewPoint ?: -1.0 }.average()
-
+        val dewPoint = dailyIt.value.map { it.dewPoint ?: -1.0 }.average()
+        val humidity = dailyIt.value.map { it.humidity?.toDouble() ?: -1.0 }.average()
+        val icon = dailyIt.value.map { it.icon }.groupingBy { it }.eachCount().entries.maxByOrNull { it.value }
+        val pressure = dailyIt.value.map { it.pressureMsl ?: -1.0 }.average()
+        val rainSum = dailyIt.value.sumOf { it.precipitation ?: 0.0 }
+        val temperatureMaximum = dailyIt.value.maxOf { it.temperature }
+        val temperatureMinimum = dailyIt.value.minOf { it.temperature }
+        val time = dailyIt.key
+        val visibility = dailyIt.value.minOf { it.visibility?.toDouble() ?: -1.0 }
+        val windDirection = dailyIt.value.mapNotNull { it.windDirection }.maxOrNull()
         val windSpeed = dailyIt.value
             .mapNotNull { it.windSpeed }
-            .average() ?: null
-
-        val windDirection =
-            dailyIt.value.mapNotNull { it.windDirection }.maxOrNull()
-
-        val rainSum =
-            dailyIt.value.sumOf { it.precipitation ?: 0.0 }
-
-        val time = dailyIt.key
-        val icon = dailyIt.value.map { it.icon }.groupingBy { it }
-            .eachCount().entries.maxByOrNull { it.value }
-
+            .average()
         val condition = computeDailyWeatherCondition(
-            getHourlyConditionsForDay(dailyIt.value, time),
+            getHourlyConditionsForDay(
+                data = dailyIt.value,
+                time = time,
+            ),
             MetNorwayWeatherConditionMap.getCondition(icon?.key)
         )
 
-        val precipitationProbabilityMax = dailyIt.value.mapNotNull { it.precipitationProbability }
-            .maxOrNull()
-
+        val precipitationProbabilityMax = dailyIt.value.mapNotNull { it.precipitationProbability }.maxOrNull()
         val index = groupedByDay.keys.indexOf(dailyIt.key)
 
         WeatherDaily(
-            temperatureMin = minTemperature,
-            temperatureMax = maxTemperature,
-            windSpeed = windSpeed,
-            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
-            rainSum = rainSum,
-            snowfallSum = null,
-            ultravioletMaximum = null,
-            weatherCondition = condition,
-            time = time,
-            precipitationProbabilityMax = precipitationProbabilityMax,
-            sunrise = sunTimings[index].sunrise ?: -0L,
-            sunset = sunTimings[index].sunset ?: -0L,
+            dawn = sunTimings[index].dawn ?: 0L,
+            dewPoint = dewPoint,
+            dusk = sunTimings[index].dusk ?: 0L,
+            humidity = humidity,
+            moonPhase = moonTimings[index].phase,
             moonrise = moonTimings[index].moonrise ?: -0L,
             moonset = moonTimings[index].moonset ?: -0L,
-            moonPhase = moonTimings[index].phase,
-            dawn = sunTimings[index].dawn ?: 0L,
-            dusk = sunTimings[index].dusk ?: 0L,
-            humidity = avgHumidity,
-            pressureMsl = avgPressure,
-            visibility = minVisibility.roundToInt(),
-            dewPoint = avgDewPoint,
+            precipitationProbabilityMax = precipitationProbabilityMax,
+            pressureMsl = pressure,
+            rainSum = rainSum,
+            snowfallSum = null,
+            sunrise = sunTimings[index].sunrise ?: -0L,
+            sunset = sunTimings[index].sunset ?: -0L,
+            temperatureMaximum = temperatureMaximum,
+            temperatureMinimum = temperatureMinimum,
+            time = time,
+            ultravioletMaximum = null,
+            visibility = visibility.roundToInt(),
+            weatherCondition = condition,
+            windDirection = WindDirection.toWindDirectionFromDegrees(windDirection),
+            windSpeed = windSpeed,
         )
     }
 }

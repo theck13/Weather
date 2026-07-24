@@ -7,8 +7,8 @@ import kotlin.math.exp
  * Source: https://www.vcalc.com/wiki/australian-apparent-temperature
  */
 fun computeApparentTemperature(
-    tempC: Double?,
     humidity: Double?,
+    tempC: Double?,
     windMs: Double?,
 ): Double? {
     if (tempC == null || humidity == null || windMs == null) {

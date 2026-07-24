@@ -3,7 +3,9 @@ package com.heckofanapp.weather.core.network.sources.weather.eccc
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 object EcccConditionMap {
-    fun getCondition(icon: String?): WeatherCondition {
+    fun getCondition(
+        icon: String?,
+    ): WeatherCondition {
         return when (icon) {
             "00", "01", "30", "31" -> WeatherCondition.CLEAR_SKY
             "02", "03", "04", "05", "22", "32", "33", "34", "35" -> WeatherCondition.PARTLY_CLOUDY
@@ -18,5 +20,4 @@ object EcccConditionMap {
             else -> WeatherCondition.NO_CONDITION_FOUND
         }
     }
-
 }

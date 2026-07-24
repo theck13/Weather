@@ -17,8 +17,6 @@ import com.heckofanapp.weather.core.utils.weather.computing.computeDailyWeatherC
 import com.heckofanapp.weather.core.utils.weather.forecast.findHourlyIndexForTime
 import kotlin.uuid.ExperimentalUuidApi
 
-// ---------------------------- JSON TO DOMAIN ----------------------------
-
 @OptIn(ExperimentalUuidApi::class)
 fun OpenMeteoWeatherJson.toDomain(
     location: Location,
@@ -46,40 +44,22 @@ fun OpenMeteoWeatherJson.toDomain(
     )
 
     return Weather(
-        location = location,
         current = WeatherCurrently(
-            temperature = current.temperature,
-            humidity = current.relativeHumidity,
-            windSpeed = current.windSpeed,
-            windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
-            pressureMsl = current.pressureMsl,
-            visibility = hourly.visibility[currentHourIndex],
             cloudCover = current.cloudCover,
-            ultraviolet = current.uvIndex,
-            weatherCondition = OpenMeteoWeatherConditionMap.getCondition(current.weatherCode),
-            feelsLike = current.feelsLike,
-            time = current.time.secondsToMilliseconds(), // Open-Meteo returns in seconds
             dewPoint = hourly.dewPoint[currentHourIndex],
-            utcOffsetSeconds = utcOffsetSeconds,
+            feelsLike = current.feelsLike,
+            humidity = current.relativeHumidity,
             lastUpdatedInMilli = System.currentTimeMillis(),
+            pressureMsl = current.pressureMsl,
+            temperature = current.temperature,
+            time = current.time.secondsToMilliseconds(), // Open-Meteo returns in seconds
+            ultraviolet = current.uvIndex,
+            utcOffsetSeconds = utcOffsetSeconds,
+            visibility = hourly.visibility[currentHourIndex],
+            weatherCondition = OpenMeteoWeatherConditionMap.getCondition(current.weatherCode),
+            windDirection = WindDirection.toWindDirectionFromDegrees(current.windDirection),
+            windSpeed = current.windSpeed,
         ),
-        hourly = List(hourly.time.size) {
-            WeatherHourly(
-                temperature = hourly.temperature[it],
-                windSpeed = hourly.windSpeed[it],
-                windDirection = WindDirection.toWindDirectionFromDegrees(hourly.windDirection[it]),
-                rain = hourly.rain[it],
-                snowfall = hourly.snowfall[it],
-                ultraviolet = hourly.uvIndex[it],
-                weatherCondition = OpenMeteoWeatherConditionMap.getCondition(hourly.weatherCode[it]),
-                time = hourly.time[it].secondsToMilliseconds(), // Open-Meteo returns in seconds
-                precipitationProbability = hourly.precipitationProbability[it],
-                humidity = hourly.relativeHumidity[it],
-                visibility = hourly.visibility[it],
-                pressureMsl = hourly.pressureMsl[it],
-                dewPoint = hourly.dewPoint[it],
-            )
-        },
         daily = List(daily.time.size) {
             val meanCondition = getHourlyConditionsForDay(
                 hourly,
@@ -93,29 +73,47 @@ fun OpenMeteoWeatherJson.toDomain(
             )
 
             WeatherDaily(
-                temperatureMin = daily.temperatureMin[it],
-                temperatureMax = daily.temperatureMax[it],
-                windSpeed = daily.windSpeedMean[it],
-                windDirection = WindDirection.toWindDirectionFromDegrees(daily.windDirectionDominant[it]),
-                rainSum = daily.rainSum[it],
-                snowfallSum = daily.snowfallSum[it],
-                ultravioletMaximum = daily.uvIndexMax[it],
-                weatherCondition = condition,
-                time = daily.time[it].secondsToMilliseconds(), // Open-Meteo returns in seconds
-                precipitationProbabilityMax = daily.precipitationProbabilityMax[it],
-                sunrise = sunTimings[it].sunrise ?: -0L,
-                sunset = sunTimings[it].sunset ?: -0L,
+                dawn = sunTimings[it].dawn ?: 0L,
+                dewPoint = daily.dewPoint[it],
+                dusk = sunTimings[it].dusk ?: 0L,
+                humidity = daily.humidity[it]?.toDouble(),
+                moonPhase = moonTimings[it].phase,
                 moonrise = moonTimings[it].moonrise ?: -0L,
                 moonset = moonTimings[it].moonset ?: -0L,
-                moonPhase = moonTimings[it].phase,
-                dawn = sunTimings[it].dawn ?: 0L,
-                dusk = sunTimings[it].dusk ?: 0L,
+                precipitationProbabilityMax = daily.precipitationProbabilityMax[it],
                 pressureMsl = daily.pressureMsl[it],
+                rainSum = daily.rainSum[it],
+                snowfallSum = daily.snowfallSum[it],
+                sunrise = sunTimings[it].sunrise ?: -0L,
+                sunset = sunTimings[it].sunset ?: -0L,
+                temperatureMaximum = daily.temperatureMax[it],
+                temperatureMinimum = daily.temperatureMin[it],
+                time = daily.time[it].secondsToMilliseconds(), // Open-Meteo returns in seconds
+                ultravioletMaximum = daily.uvIndexMax[it],
                 visibility = daily.visibility[it],
-                humidity = daily.humidity[it]?.toDouble(),
-                dewPoint = daily.dewPoint[it],
+                weatherCondition = condition,
+                windDirection = WindDirection.toWindDirectionFromDegrees(daily.windDirectionDominant[it]),
+                windSpeed = daily.windSpeedMean[it],
             )
         },
+        hourly = List(hourly.time.size) {
+            WeatherHourly(
+                dewPoint = hourly.dewPoint[it],
+                humidity = hourly.relativeHumidity[it],
+                precipitationProbability = hourly.precipitationProbability[it],
+                pressureMsl = hourly.pressureMsl[it],
+                rain = hourly.rain[it],
+                snowfall = hourly.snowfall[it],
+                temperature = hourly.temperature[it],
+                time = hourly.time[it].secondsToMilliseconds(), // Open-Meteo returns in seconds
+                ultraviolet = hourly.uvIndex[it],
+                visibility = hourly.visibility[it],
+                weatherCondition = OpenMeteoWeatherConditionMap.getCondition(hourly.weatherCode[it]),
+                windDirection = WindDirection.toWindDirectionFromDegrees(hourly.windDirection[it]),
+                windSpeed = hourly.windSpeed[it],
+            )
+        },
+        location = location,
     )
 }
 

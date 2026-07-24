@@ -3,14 +3,15 @@ package com.heckofanapp.weather.core.network.sources.weather.nws
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 object NwsWeatherConditionMap {
-
     /**
      * From https://api.weather.gov/icons
      * App doesn't support many conditions (for e.g. Windy, Tornado, Hurricane)
      * We can map them as "THUNDERSTORM" until supported
      * Example Icon Url: https://api.weather.gov/icons/land/day/skc?size=medium
      */
-    fun getCondition(iconUrl: String?): WeatherCondition {
+    fun getCondition(
+        iconUrl: String?,
+    ): WeatherCondition {
         val icon = stripUrlAndGetIconId(iconUrl) ?: "error"
 
         return when (icon) {

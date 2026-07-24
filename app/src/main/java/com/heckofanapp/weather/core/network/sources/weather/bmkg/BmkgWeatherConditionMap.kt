@@ -3,7 +3,9 @@ package com.heckofanapp.weather.core.network.sources.weather.bmkg
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 
 object BmkgWeatherConditionMap {
-    fun getCondition(id: Int?): WeatherCondition {
+    fun getCondition(
+        id: Int?,
+    ): WeatherCondition {
         return when (id) {
             0, 1 -> WeatherCondition.CLEAR_SKY
             2 -> WeatherCondition.PARTLY_CLOUDY
