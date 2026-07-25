@@ -19,10 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LocationsScreenViewModel @Inject constructor(
-    private val locationsRepo: LocationsRepository,
+    private val locationsRepository: LocationsRepository,
     private val weatherRepositoryProvider: WeatherRepositoryProvider
 ) : ViewModel() {
-    val allLocationsWeather = locationsRepo.getWeatherForAllLocations().stateIn(
+    val allLocationsWeather = locationsRepository.getWeatherForAllLocations().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(
             stopTimeoutMillis = 5_000,
@@ -32,13 +32,13 @@ class LocationsScreenViewModel @Inject constructor(
 
     fun updateDefaultLocation(id: String) {
         viewModelScope.launch {
-            locationsRepo.updateDefaultLocation(id)
+            locationsRepository.updateDefaultLocation(id)
         }
     }
 
     fun updateLocationsOrder(orderedIds: List<String>) {
         viewModelScope.launch {
-            locationsRepo.updateLocationsOrder(orderedIds)
+            locationsRepository.updateLocationsOrder(orderedIds)
         }
     }
 
@@ -108,7 +108,7 @@ class LocationsScreenViewModel @Inject constructor(
         )
         viewModelScope.launch {
             try {
-                locationsRepo.saveDeviceLocation()
+                locationsRepository.saveDeviceLocation()
                 onSaved()
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
@@ -135,12 +135,12 @@ class LocationsScreenViewModel @Inject constructor(
                 // Move device-location pin to current position first, so list read below picks up
                 // its new coordinates and weather is fetched for where device is now.
                 try {
-                    locationsRepo.updateDeviceLocationPosition()
+                    locationsRepository.updateDeviceLocationPosition()
                 } catch (e: Exception) {
                     if (e is CancellationException) throw e
                 }
 
-                val locations = locationsRepo.getLocationsOnce()
+                val locations = locationsRepository.getLocationsOnce()
                 locations.forEach { location ->
                     val repo = weatherRepositoryProvider.getRepository(location.source)
                     repo.getWeather(

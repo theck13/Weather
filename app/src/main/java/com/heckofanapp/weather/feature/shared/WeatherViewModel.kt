@@ -43,7 +43,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val repo: WeatherRepositoryProvider,
-    private val locationsRepo: LocationsRepository,
+    private val locationsRepository: LocationsRepository,
     appWeatherUnitsRepo: WeatherUnitsRepository,
     private val weatherBlocksRepository: WeatherBlocksRepository,
     private val openMeteoAqiRepository: OpenMeteoAqiRepository,
@@ -60,14 +60,14 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch {
             if (_uiState.value.activeLocation == null && _uiState.value.weather == null && !_uiState.value.isInitialized) {
 
-                val isLocationsEmpty = locationsRepo.isLocationsEmpty()
+                val isLocationsEmpty = locationsRepository.isLocationsEmpty()
                 if (isLocationsEmpty) {
                     // Locations Empty? not possible, likely a first launch
                     _uiState.value = uiState.value.copy(
                         isInitialized = true,
                     )
                 }
-                val default = locationsRepo.getDefaultLocation().filterNotNull().first()
+                val default = locationsRepository.getDefaultLocation().filterNotNull().first()
                 setActiveLocation(default)
             }
             loadBlocks()
@@ -76,7 +76,7 @@ class WeatherViewModel @Inject constructor(
             // title and weather reflect where device is now.  Runs after active location is set to
             // tell whether moved pin is on screen.
             try {
-                val moved = locationsRepo.updateDeviceLocationPosition()
+                val moved = locationsRepository.updateDeviceLocationPosition()
                 if (moved != null) {
                     if (_uiState.value.activeLocation?.id == moved.id) {
                         // On Screen: Refresh through main flow so title and weather update.
@@ -102,7 +102,7 @@ class WeatherViewModel @Inject constructor(
         }
 
         // KEEP TRACK OF ALL LOCATIONS
-        locationsRepo.getLocations().distinctUntilChanged()
+        locationsRepository.getLocations().distinctUntilChanged()
             .onEach { locations ->
                 val previous = _uiState.value.locations
 
@@ -198,7 +198,7 @@ class WeatherViewModel @Inject constructor(
 
     fun deleteLocation(id: String) {
         viewModelScope.launch {
-            locationsRepo.deleteLocation(id)
+            locationsRepository.deleteLocation(id)
 
             if (_uiState.value.activeLocation?.id == id) {
                 setActiveLocation(_uiState.value.locations.first { it.isDefault })
@@ -208,7 +208,7 @@ class WeatherViewModel @Inject constructor(
 
     fun restoreLocation(location: Location) {
         viewModelScope.launch {
-            locationsRepo.saveLocation(location)
+            locationsRepository.saveLocation(location)
         }
     }
 
@@ -223,8 +223,8 @@ class WeatherViewModel @Inject constructor(
         newDefault: Location,
     ) {
         viewModelScope.launch {
-            locationsRepo.updateDefaultLocation(newDefault.id)
-            locationsRepo.deleteLocation(deleteId)
+            locationsRepository.updateDefaultLocation(newDefault.id)
+            locationsRepository.deleteLocation(deleteId)
 
             if (_uiState.value.activeLocation?.id == deleteId) {
                 setActiveLocation(
@@ -287,7 +287,7 @@ class WeatherViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            locationsRepo.updateSourceForLocation(location.id, source)
+            locationsRepository.updateSourceForLocation(location.id, source)
             val allowForceRefresh = location.source != source
 
             if (allowForceRefresh) {
@@ -336,7 +336,7 @@ class WeatherViewModel @Inject constructor(
     }
 
     private suspend fun handleDeviceLocation(): Location? {
-        return locationsRepo.updateDeviceLocationPosition()
+        return locationsRepository.updateDeviceLocationPosition()
     }
 
     private suspend fun handleWeatherData(

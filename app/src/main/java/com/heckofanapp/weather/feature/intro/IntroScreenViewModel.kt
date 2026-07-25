@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 
 class IntroScreenViewModel @Inject constructor(
-    val locationsRepo: LocationsRepository,
+    val locationsRepository: LocationsRepository,
     @ApplicationContext private val context: Context,
     private val nominatimRepository: NominatimRepository,
 ) : ViewModel() {
@@ -28,7 +28,7 @@ class IntroScreenViewModel @Inject constructor(
             )
 
             if (address != null && address.city != null) {
-                locationsRepo.saveLocation(
+                locationsRepository.saveLocation(
                     location = location.toDomain(context).copy(
                         country = address.country,
                         countryCode = address.countryCode,
@@ -36,7 +36,7 @@ class IntroScreenViewModel @Inject constructor(
                     )
                 )
             } else {
-                locationsRepo.saveLocation(
+                locationsRepository.saveLocation(
                     location = location.toDomain(
                         context = context,
                     ),

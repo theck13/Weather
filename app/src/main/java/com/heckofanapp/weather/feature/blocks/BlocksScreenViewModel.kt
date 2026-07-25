@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BlocksScreenViewModel @Inject constructor(
-    private val locationsRepo: LocationsRepository,
+    private val locationsRepository: LocationsRepository,
     private val weatherUnitsRepository: WeatherUnitsRepository,
 ) : ViewModel() {
     private var _uiState = mutableStateOf(BlockScreenUiState())
@@ -24,7 +24,7 @@ class BlocksScreenViewModel @Inject constructor(
         locationId: String,
     ) {
         viewModelScope.launch {
-            val data = locationsRepo.getAirQualityForLocation(locationId)
+            val data = locationsRepository.getAirQualityForLocation(locationId)
             _uiState.value = _uiState.value.copy(
                 air = data,
             )
@@ -44,7 +44,7 @@ class BlocksScreenViewModel @Inject constructor(
         locationId: String,
     ) {
         viewModelScope.launch {
-            val data = locationsRepo.getWeatherForLocation(locationId)
+            val data = locationsRepository.getWeatherForLocation(locationId)
             _uiState.value = _uiState.value.copy(
                 weather = data,
             )

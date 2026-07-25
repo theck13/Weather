@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchScreenViewModel @Inject constructor(
     val repo: SearchRepositoryProvider,
-    val locationsRepo: LocationsRepository,
+    val locationsRepository: LocationsRepository,
     val geoNamesTimezoneRepository: GeoNamesTimezoneRepository,
 ) : ViewModel() {
     var loading by mutableStateOf(false)
@@ -78,7 +78,7 @@ class SearchScreenViewModel @Inject constructor(
                 } else {
                     location
                 }
-                locationsRepo.saveLocation(resolved.copy(source = weatherSource))
+                locationsRepository.saveLocation(resolved.copy(source = weatherSource))
                 onBack()
             } catch (e: Exception) {
                 val appExpectation = e.toAppException()
