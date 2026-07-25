@@ -485,6 +485,8 @@
     <string name="day_length_hr">%1$s hrs</string>
     <string name="error_no_results">No results found</string>
 
+    <string name="notification_error">Updating weather failed.</string>
+    <string name="notification_error_message">Updating weather failed:\n\n%1$s</string>
     <string name="notification_updating">Updating weather&#8230;</string>
     <string name="notification_updating_location">Updating weather for %1$s&#8230;</string>
 

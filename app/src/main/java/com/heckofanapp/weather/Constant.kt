@@ -33,8 +33,11 @@ const val KEY_THEME_VARIANT_TYPE = "theme_variant_type"
 const val KEY_TIME_FORMAT = "time_format"
 
 const val NOTIFICATION_CHANNEL_ID = "weather_updates"
+const val NOTIFICATION_CHANNEL_ID_ERROR = "weather_error"
 const val NOTIFICATION_CHANNEL_NAME = "Weather Updates"
+const val NOTIFICATION_CHANNEL_NAME_ERROR = "Weather Error"
 const val NOTIFICATION_ID = 1001
+const val NOTIFICATION_ID_ERROR = 1002
 
 const val SYSTEM_BAR_ALPHA = 0.75f
 

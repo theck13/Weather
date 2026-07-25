@@ -385,6 +385,8 @@
     <string name="moon_phase_waning_gibbous_description">The illumination begins to shrink (wane) after the full moon.</string>
     <string name="moon_phase_last_quarter_description">Moon is exactly half-illuminated on the left side.</string>
     <string name="moon_phase_waning_crescent_description">A shrinking sliver of light remains before the next New Moon.</string>
+    <string name="notification_error">Updating weather failed.</string>
+    <string name="notification_error_message">Updating weather failed:\n\n%1$s</string>
     <string name="notification_updating">Updating weather&#8230;</string>
     <string name="notification_updating_location">Updating weather for %1$s&#8230;</string>
     <string name="widget_card">Card</string>

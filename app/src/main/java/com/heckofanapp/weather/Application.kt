@@ -30,13 +30,21 @@ class Application : Application(), Configuration.Provider {
             .lifecycle
             .addObserver(visibilityTracker)
 
-        val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-
         val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
+
+        manager.createNotificationChannel(
+            NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+        )
+        manager.createNotificationChannel(
+            NotificationChannel(
+                NOTIFICATION_CHANNEL_ID_ERROR,
+                NOTIFICATION_CHANNEL_NAME_ERROR,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+        )
     }
 }

@@ -51,7 +51,7 @@ class WeatherWorker @AssistedInject constructor(
              */
             WeatherNotification.showNotification(
                 context = applicationContext,
-                locationName = default.name,
+                location = default.name,
             )
 
             // Get the repository
@@ -77,10 +77,18 @@ class WeatherWorker @AssistedInject constructor(
 
             return Result.success()
         } catch (e: Exception) {
-            WeatherNotification.hideNotification(applicationContext)
+            WeatherNotification.hideNotification(
+                context = applicationContext,
+            )
+            WeatherNotification.showNotificationError(
+                context = applicationContext,
+                message = e.message,
+            )
             Result.failure()
         } finally {
-            WeatherNotification.hideNotification(applicationContext)
+            WeatherNotification.hideNotification(
+                context = applicationContext,
+            )
         }
     }
 
