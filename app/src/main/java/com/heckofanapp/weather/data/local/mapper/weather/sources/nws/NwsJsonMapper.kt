@@ -44,6 +44,7 @@ private data class NwsValidTime(
  * and daily (start-of-day, millis) values.
  */
 data class NwsSupplemental(
+    val currentPressure: Double?,                   // hPa
     val currentUltraviolet: Double?,
     val dailyPressure: Map<Long, Double>,           // dayStartMillis  -> hPa (mean)
     val dailyUltravioletMaximum: Map<Long, Double>, // dayStartMillis  -> ultraviolet maximum
@@ -83,6 +84,7 @@ fun OpenMeteoWeatherJson.toNwsSupplemental(
         .toMap()
 
     return NwsSupplemental(
+        currentPressure = current.pressureMsl,
         currentUltraviolet = current.uvIndex,
         dailyPressure = dailyPressure,
         dailyUltravioletMaximum = dailyUltravioletMaximum,
@@ -185,7 +187,8 @@ fun NwsWeatherJsonBundle.toDomain(
             ),
             humidity = current.relativeHumidity.value,
             lastUpdatedInMilli = System.currentTimeMillis(),
-            pressureMsl = current.seaLevelPressure.value?.pressurePaToHpa(),
+            pressureMsl = current.seaLevelPressure.value?.pressurePaToHpa()
+                ?: supplemental?.currentPressure,
             temperature = currentTemperature,
             time = current.timestamp.iso8601TimestampToMilliseconds(),
             ultraviolet = supplemental?.currentUltraviolet,

@@ -48,7 +48,7 @@ fun PressureBlock(
         from = pressure!!,
         to = units.pressure,
     )
-    val pressureHpa = weather.current.pressureMsl!!.roundToInt()
+    val pressureHpa = pressure!!.roundToInt()
 
     val progressDrawable = when {
         pressureHpa < 980 -> R.drawable.il_pressure_progress_low
