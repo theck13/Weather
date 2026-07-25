@@ -163,6 +163,13 @@ data class WeatherBlock(
                 position = 8,
                 type = WeatherBlockType.UV_INDEX_BLOCK,
             ),
+            WeatherBlock(
+                id = (999L..2000L).random(),
+                isDaily = true,
+                isHidden = false,
+                position = 9,
+                type = WeatherBlockType.AIR_QUALITY_BLOCK,
+            ),
         )
     }
 }

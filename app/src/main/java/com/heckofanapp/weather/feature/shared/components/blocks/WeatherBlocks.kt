@@ -27,11 +27,13 @@ import com.heckofanapp.weather.core.model.weather.PrecipitationUnit
 import com.heckofanapp.weather.core.model.weather.air.AirQualityIndexStandard
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
 import com.heckofanapp.weather.core.ui.navigation.NavigationRoutes
+import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.normalizeToDay
 import com.heckofanapp.weather.core.utils.weather.cache.isCurrentAirQualitySafe
 import com.heckofanapp.weather.feature.shared.WeatherViewModel
 import sh.calvin.reorderable.DragGestureDetector
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
+import kotlin.math.roundToInt
 
 private data class BlockRules(
     val isAirQualityValid: Boolean,
@@ -82,7 +84,22 @@ fun WeatherBlocks(
     val preferences = LocalAppPrefs.current
     val viewModel: WeatherViewModel = hiltViewModel()
 
-    val isAirQualityValid = airQuality != null && isCurrentAirQualitySafe(airQuality)
+    val airQualityStandard = AirQualityIndexStandard.forCountryCode(weather.location.countryCode)
+    // On daily screen, air quality block shows day's average derived from hourly.
+    // Otherwise, air quality block shows the current value.
+    val airQualityIndex: Int? = airQuality?.let { data ->
+        if (isDaily) {
+            val dayStart = weather.daily[dailyIndex].time.normalizeToDay(weather.location.timezone)
+            val values = data.hourly
+                .filter { it.time.normalizeToDay(weather.location.timezone) == dayStart }
+                .map { data.getAqi(it, airQualityStandard) }
+                .filter { it > 0 }
+            if (values.isEmpty()) null else values.average().roundToInt()
+        } else {
+            data.getAqi(airQualityStandard)
+        }
+    }
+    val isAirQualityValid = airQuality != null && isCurrentAirQualitySafe(airQuality) && airQualityIndex != null
     val isHumidityValid = if (isDaily) weather.daily[dailyIndex].isHumidityValid() else true
     val isPrecipitation = weather.location.source.providesSnowFall().not() // Some sources do not provide rain/snow precipitation separately.
     val isPressureValid = if (isDaily) weather.daily[dailyIndex].isPressureValid() else weather.current.isPressureValid()
@@ -180,13 +197,12 @@ fun WeatherBlocks(
                     when (item.type) {
                         WeatherBlockType.AIR_QUALITY_BLOCK -> AirQualityBlock(
                             airQuality = airQuality,
+                            airQualityIndex = airQualityIndex ?: 0,
                             context = context,
                             onClickBlock = {
                                 onClickBlock(NavigationRoutes.AIR)
                             },
-                            standard = AirQualityIndexStandard.forCountryCode(
-                                countryCode = weather.location.countryCode,
-                            ),
+                            standard = airQualityStandard,
                         )
 
                         WeatherBlockType.HUMIDITY_BLOCK -> HumidityBlock(

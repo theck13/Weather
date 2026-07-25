@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.core.model.domain.airquality.AirQuality
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherBlock
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
@@ -33,6 +34,7 @@ import com.heckofanapp.weather.feature.shared.ui.HourlyCard
 import com.heckofanapp.weather.feature.shared.ui.SummaryCard
 
 data class DailyScreenUiState(
+    val air: AirQuality? = null,
     val blocks: List<WeatherBlock> = WeatherBlock.getDefaultForDaily(),
     val units: WeatherUnits = WeatherUnits.getDefault(),
     val weather: Weather? = null,
@@ -56,9 +58,10 @@ fun DailyScreen(
     var selectedIndex by rememberSaveable { mutableIntStateOf(index) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadBlocks()
-        viewModel.getUnitsOnce()
+        viewModel.getAirQuality(locationId)
         viewModel.getDailyWeather(locationId)
+        viewModel.getUnitsOnce()
+        viewModel.loadBlocks()
     }
 
     if (weather == null) return
@@ -135,7 +138,7 @@ fun DailyScreen(
                 )
 
                 WeatherBlocks(
-                    airQuality = null,
+                    airQuality = uiState.air,
                     blocks = uiState.blocks,
                     dailyIndex = selectedIndex,
                     context = context,

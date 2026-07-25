@@ -32,13 +32,13 @@ import com.heckofanapp.weather.feature.shared.components.Header
 @Composable
 fun AirQualityBlock(
     airQuality: AirQuality?,
+    airQualityIndex: Int,
     context: Context,
     standard: AirQualityIndexStandard,
     onClickBlock: () -> Unit,
 ) {
-    val aqi = airQuality!!.getAqi(standard)
-    val aqiBar = airQuality.getAqiBarValue(aqi, standard)
-    val category = airQuality.getAqiCategory(aqi, standard)
+    val airQualityBar = airQuality!!.getAqiBarValue(airQualityIndex, standard)
+    val category = airQuality.getAqiCategory(airQualityIndex, standard)
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -87,7 +87,7 @@ fun AirQualityBlock(
                         ),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.displayMedium,
-                    text = aqi.toString(),
+                    text = airQualityIndex.toString(),
                     textAlign = TextAlign.Center,
                 )
 
@@ -113,7 +113,7 @@ fun AirQualityBlock(
                         category = category,
                     ),
                     progress = {
-                        aqiBar
+                        airQualityBar
                     },
                     trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 )
