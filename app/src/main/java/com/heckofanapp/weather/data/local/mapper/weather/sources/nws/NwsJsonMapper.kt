@@ -38,16 +38,19 @@ private data class NwsValidTime(
 )
 
 /**
- * NWS provides no ultraviolet data and no daily/hourly pressure.  So, those are
- * backfilled from supplemental Open Meteo call.  Maps are keyed to match how NWS
- * mapper looks up hourly (hour, millis) and daily (start-of-day, millis) values.
+ * NWS provides no ultraviolet data and no daily/hourly pressure, and visibility is sparse.
+ * So, those are backfilled from supplemental Open Meteo call (visibility only fills gaps
+ * where NWS has none).  Maps are keyed to match how NWS mapper looks up hourly (hour, millis)
+ * and daily (start-of-day, millis) values.
  */
 data class NwsSupplemental(
     val currentUltraviolet: Double?,
     val dailyPressure: Map<Long, Double>,           // dayStartMillis  -> hPa (mean)
     val dailyUltravioletMaximum: Map<Long, Double>, // dayStartMillis  -> ultraviolet maximum
+    val dailyVisibility: Map<Long, Double>,         // dayStartMillis  -> meters (minimum)
     val hourlyPressure: Map<Long, Double>,          // hourStartMillis -> hPa
     val hourlyUltraviolet: Map<Long, Double>,       // hourStartMillis -> ultraviolet
+    val hourlyVisibility: Map<Long, Double>,        // hourStartMillis -> meters
 )
 
 fun OpenMeteoWeatherJson.toNwsSupplemental(
@@ -60,6 +63,9 @@ fun OpenMeteoWeatherJson.toNwsSupplemental(
     val hourlyPressure = hourly.time.indices
         .mapNotNull { i -> hourly.pressureMsl.getOrNull(i)?.let { (hourly.time[i] * 1000) to it } }
         .toMap()
+    val hourlyVisibility = hourly.time.indices
+        .mapNotNull { i -> hourly.visibility.getOrNull(i)?.let { (hourly.time[i] * 1000) to it.toDouble() } }
+        .toMap()
     val dailyUltravioletMaximum = daily.time.indices
         .mapNotNull { i ->
             daily.uvIndexMax.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it }
@@ -70,13 +76,20 @@ fun OpenMeteoWeatherJson.toNwsSupplemental(
             daily.pressureMsl.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it }
         }
         .toMap()
+    val dailyVisibility = daily.time.indices
+        .mapNotNull { i ->
+            daily.visibility.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it.toDouble() }
+        }
+        .toMap()
 
     return NwsSupplemental(
         currentUltraviolet = current.uvIndex,
         dailyPressure = dailyPressure,
         dailyUltravioletMaximum = dailyUltravioletMaximum,
+        dailyVisibility = dailyVisibility,
         hourlyPressure = hourlyPressure,
         hourlyUltraviolet = hourlyUltraviolet,
+        hourlyVisibility = hourlyVisibility,
     )
 }
 
@@ -177,7 +190,12 @@ fun NwsWeatherJsonBundle.toDomain(
             time = current.timestamp.iso8601TimestampToMilliseconds(),
             ultraviolet = supplemental?.currentUltraviolet,
             utcOffsetSeconds = null,
-            visibility = current.visibility.value?.toInt(),
+            visibility = (
+                current.visibility.value
+                    ?: hourly.periods.getOrNull(currentHourIndex)
+                        ?.startTime?.iso8601TimestampToMilliseconds()
+                        ?.let { supplemental?.hourlyVisibility?.get(it) }
+                )?.toInt(),
             weatherCondition = NwsWeatherConditionMap.getCondition(currentIcon),
             windDirection = WindDirection.toWindDirectionFromString(hourly.periods[currentHourIndex].windDirection),
             windSpeed = current.windSpeed.value,
@@ -210,13 +228,14 @@ fun NwsWeatherJsonBundle.toDomain(
 
             val dewPoint = getDataForDay(hourly, time).map { it.dewPoint.value ?: -1.0 }.average()
             val humidity = getDataForDay(hourly, time).map { it.relativeHumidity.value ?: -1.0 }.average()
-            val visibility = getMinVisibility(
-                data = visibilityMap,
-                time = time,
-            )
             // Backfilled from Open Meteo.  Days may not align exactly.  So, match nearest.
             val pressure = supplemental?.dailyPressure.nearestByDay(time)
             val ultravioletMaximum = supplemental?.dailyUltravioletMaximum.nearestByDay(time)
+            // NWS visibility can be sparse; fall back to Open Meteo only where NWS has none.
+            val visibility = getMinVisibility(
+                data = visibilityMap,
+                time = time,
+            ) ?: supplemental?.dailyVisibility.nearestByDay(time)
 
             WeatherDaily(
                 dawn = sunTimings[index].dawn ?: 0L,
@@ -249,7 +268,7 @@ fun NwsWeatherJsonBundle.toDomain(
             val hourTime = it.startTime.iso8601TimestampToMilliseconds()
             val rainAmount = rainMap[hourTime]
             val snowFall = snowMap[hourTime]
-            val visibility = visibilityMap[hourTime]
+            val visibility = visibilityMap[hourTime] ?: supplemental?.hourlyVisibility?.get(hourTime)
 
             WeatherHourly(
                 dewPoint = it.dewPoint.value,
