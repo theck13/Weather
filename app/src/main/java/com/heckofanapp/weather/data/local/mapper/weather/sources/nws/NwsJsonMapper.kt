@@ -142,10 +142,10 @@ fun NwsWeatherJsonBundle.toDomain(
             val time = item.startTime.iso8601TimestampToMilliseconds().normalizeToDay(zoneId)
 
             // Time doesn't align so we get the closest difference
-            val maxTemperature = maxTemperatureMap.entries.minByOrNull { (key, _) ->
+            val temperatureMaximum = maxTemperatureMap.entries.minByOrNull { (key, _) ->
                 abs(key - time)
             }
-            val minTemperature = minTemperatureMap.entries.minByOrNull { (key, _) ->
+            val temperatureMinimum = minTemperatureMap.entries.minByOrNull { (key, _) ->
                 abs(key - time)
             }
             val rainSum = getRainSum(rainMap, time)
@@ -156,19 +156,25 @@ fun NwsWeatherJsonBundle.toDomain(
             val precipitationProbabilityMax = getMaxPrecipitationProbability(hourly, time)
 
             val condition = computeDailyWeatherCondition(
-                getHourlyConditionsForDay(hourly, time),
+                getHourlyConditionsForDay(
+                    data = hourly,
+                    time = time,
+                ),
                 NwsWeatherConditionMap.getCondition(item.icon)
             )
 
-            val avgHumidity = getDataForDay(hourly, time).map { it.relativeHumidity.value ?: -1.0 }.average()
-            val avgDewPoint = getDataForDay(hourly, time).map { it.dewPoint.value ?: -1.0 }.average()
-            val minVisibility = getMinVisibility(visibilityMap, time)
+            val dewPoint = getDataForDay(hourly, time).map { it.dewPoint.value ?: -1.0 }.average()
+            val humidity = getDataForDay(hourly, time).map { it.relativeHumidity.value ?: -1.0 }.average()
+            val visibility = getMinVisibility(
+                data = visibilityMap,
+                time = time,
+            )
 
             WeatherDaily(
                 dawn = sunTimings[index].dawn ?: 0L,
-                dewPoint = avgDewPoint,
+                dewPoint = dewPoint,
                 dusk = sunTimings[index].dusk ?: 0L,
-                humidity = avgHumidity,
+                humidity = humidity,
                 moonPhase = moonTimings[index].phase,
                 moonrise = moonTimings[index].moonrise ?: -0L,
                 moonset = moonTimings[index].moonset ?: -0L,
@@ -181,11 +187,11 @@ fun NwsWeatherJsonBundle.toDomain(
                 ),
                 sunrise = sunTimings[index].sunrise ?: -0L,
                 sunset = sunTimings[index].sunset ?: -0L,
-                temperatureMaximum = maxTemperature?.value ?: 0.0,
-                temperatureMinimum = minTemperature?.value ?: 0.0,
+                temperatureMaximum = temperatureMaximum?.value ?: 0.0,
+                temperatureMinimum = temperatureMinimum?.value ?: 0.0,
                 time = time,
                 ultravioletMaximum = null,
-                visibility = minVisibility.roundToInt(),
+                visibility = visibility?.roundToInt(),
                 weatherCondition = condition,
                 windDirection = WindDirection.toWindDirectionFromString(item.windDirection),
                 windSpeed = windSpeed,
@@ -334,12 +340,12 @@ private fun getSnowfallSum(
 private fun getMinVisibility(
     data: Map<Long, Double>,
     time: Long,
-): Double {
+): Double? {
     val startIndex = data.toList().indexOfFirst { it.first >= time }
         .takeIf { it != -1 } ?: 0
 
     val data = data.toList().drop(maxOf(0, startIndex)).take(WeatherSource.NWS.hourlyAggregationLimitHours)
-    val minVisibility = data.minOf { it.second }
+    val minVisibility = data.minOfOrNull { it.second }
 
     return minVisibility
 }
@@ -356,7 +362,7 @@ private fun getMaxPrecipitationProbability(
         .take(WeatherSource.NWS.hourlyAggregationLimitHours)
         .map { it.probabilityOfPrecipitation.value?.toDouble() }
 
-    return maxProbability.maxOf { it ?: 0.0 }
+    return maxProbability.maxOfOrNull { it ?: 0.0 } ?: 0.0
 }
 
 private fun getDataForDay(
