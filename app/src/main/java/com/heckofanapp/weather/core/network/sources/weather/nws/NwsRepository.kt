@@ -1,6 +1,5 @@
 package com.heckofanapp.weather.core.network.sources.weather.nws
 
-import androidx.compose.runtime.mutableStateOf
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.weather.WeatherResult
 import com.heckofanapp.weather.core.model.weather.WeatherResultType
@@ -22,6 +21,8 @@ import com.heckofanapp.weather.data.local.mapper.weather.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.toHourlyWeatherEntity
 import com.heckofanapp.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -49,120 +50,132 @@ class NwsRepository @Inject constructor(
         }
 
         /**
-         * NWS has everything as a separate endpoints
-         * Makes it annoying to get the data, but we'll still do it cuz why not
-         * Sequential flow, cache the annoying data (e.g. grid points and station, but we'll still update it time to time)
+         * NWS has everything as separate endpoints.  Makes it annoying to get data.
+         * Grid points and station discovery is an inherent dependency chain and is
+         * cached, so it only runs on first fetch.  Everything after it only needs
+         * grid coordinates (and station id).  Calls are fanned out concurrently
+         * instead of awaited one at a time.
          */
         return@withContext try {
-            val currentObservation = mutableStateOf<NwsCurrentForecastJson?>(null)
-            val nwsStationsDomain = if (cachedGridPointsData != null) {
-                cachedGridPointsData.toDomain()
-            } else {
-                val gridPointsResponse = api.fetchGridPoints(
-                    location.latitude,
-                    location.longitude
-                )
-                val gridPointsBody = gridPointsResponse.body()
-                    ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-                val gridPointsDomain =
-                    gridPointsBody.toDomain(location, stationIdentifier = null)
-
-                val nwsStationsResponse = api.fetchStations(
-                    gridPointsDomain.officeId,
-                    gridPointsDomain.gridX,
-                    gridPointsDomain.gridY
-                )
-
-                val nwsStationsBody = nwsStationsResponse.body()
-                    ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-                // Get all the stations
-                val stations = nwsStationsBody.features
-                val station = getValidObservationAndStation(stations, api)
-                // New domain with stationIdentifier
-                val domain = gridPointsDomain.copy(
-                    stationIdentifier = station?.first,
-                )
-
-                if (domain.stationIdentifier == null) {
-                    return@withContext WeatherResult.Error(
-                        exception = UnknownHostException(),
-                    )
+            coroutineScope {
+                // NWS provides no ultraviolet and no daily/hourly pressure.  Backfill from
+                // Open Meteo best-effort.  Failure here must not fail whole NWS result.
+                // Depends only on the location, so start it immediately, overlapping the
+                // grid points / station discovery below.
+                val supplementalDeferred = async {
+                    runCatching {
+                        openMeteoApi.fetchWeather(
+                            latitude = location.latitude,
+                            longitude = location.longitude,
+                            timezone = location.timezone,
+                        ).body()
+                    }.getOrNull()?.toNwsSupplemental(location.timezone)
                 }
 
-                currentObservation.value = station?.second
-                domain
+                var currentObservation: NwsCurrentForecastJson? = null
+                val nwsStationsDomain = if (cachedGridPointsData != null) {
+                    cachedGridPointsData.toDomain()
+                } else {
+                    val gridPointsResponse = api.fetchGridPoints(
+                        location.latitude,
+                        location.longitude
+                    )
+                    val gridPointsBody = gridPointsResponse.body()
+                        ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+
+                    val gridPointsDomain =
+                        gridPointsBody.toDomain(location, stationIdentifier = null)
+
+                    val nwsStationsResponse = api.fetchStations(
+                        gridPointsDomain.officeId,
+                        gridPointsDomain.gridX,
+                        gridPointsDomain.gridY
+                    )
+
+                    val nwsStationsBody = nwsStationsResponse.body()
+                        ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+
+                    // Get all the stations
+                    val stations = nwsStationsBody.features
+                    val station = getValidObservationAndStation(stations, api)
+                    // New domain with stationIdentifier
+                    val domain = gridPointsDomain.copy(
+                        stationIdentifier = station?.first,
+                    )
+
+                    if (domain.stationIdentifier == null) {
+                        return@coroutineScope WeatherResult.Error(
+                            exception = UnknownHostException(),
+                        )
+                    }
+
+                    currentObservation = station?.second
+                    domain
+                }
+
+                // These only need grid coordinates (and station id), so fetch them
+                // concurrently rather than awaiting each in turn.
+                val forecastDeferred = async {
+                    api.fetchForecast(
+                        nwsStationsDomain.officeId,
+                        nwsStationsDomain.gridX,
+                        nwsStationsDomain.gridY
+                    )
+                }
+                val hourlyDeferred = async {
+                    api.fetchHourlyForecast(
+                        nwsStationsDomain.officeId,
+                        nwsStationsDomain.gridX,
+                        nwsStationsDomain.gridY
+                    )
+                }
+                // USING FOR QuantitativePrecipitation and Snowfall
+                val gridPointDataDeferred = async {
+                    api.fetchGridPointData(
+                        nwsStationsDomain.officeId,
+                        nwsStationsDomain.gridX,
+                        nwsStationsDomain.gridY
+                    )
+                }
+                val currentDeferred = async {
+                    currentObservation
+                        ?: api.fetchCurrentForecast(nwsStationsDomain.stationIdentifier!!).body()
+                }
+
+                // GET DAILY
+                val nwsForecastBody = forecastDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+                // GET CURRENT
+                val nwsCurrentForecastBody = currentDeferred.await()
+                    ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+                // GET HOURLY
+                val nwsHourlyForecastBody = hourlyDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+                val nwsGridPointDataBody = gridPointDataDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+
+                // PUT EVERYTHING TOGETHER IN A BUNDLE
+                val final = NwsWeatherJsonBundle(
+                    current = nwsCurrentForecastBody,
+                    forecast = nwsForecastBody,
+                    hourly = nwsHourlyForecastBody,
+                    gridPointsData = nwsGridPointDataBody,
+                )
+
+                val supplemental = supplementalDeferred.await()
+
+                val domain = final.toDomain(location, supplemental)
+
+                nwsDao.insertLocationGridPoints(nwsStationsDomain.toEntity(location))
+                weatherDao.insertWeather(
+                    domain.current.toCurrentWeatherEntity(location.id),
+                    domain.hourly.toHourlyWeatherEntity(location.id),
+                    domain.daily.toDailyWeatherEntity(location.id),
+                    location.id
+                )
+
+                WeatherResult.Success(domain)
             }
-
-            // GET DAILY
-            val nwsForecastResponse = api.fetchForecast(
-                nwsStationsDomain.officeId,
-                nwsStationsDomain.gridX,
-                nwsStationsDomain.gridY
-            )
-
-            val nwsForecastBody = nwsForecastResponse.body()
-                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-            // GET CURRENT
-            val nwsCurrentForecastBody = if (currentObservation.value != null) {
-                currentObservation.value
-            } else {
-                api.fetchCurrentForecast(nwsStationsDomain.stationIdentifier!!).body()
-            } ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-            // GET HOURLY
-            val nwsHourlyForecastResponse =
-                api.fetchHourlyForecast(
-                    nwsStationsDomain.officeId,
-                    nwsStationsDomain.gridX,
-                    nwsStationsDomain.gridY
-                )
-
-            // USING FOR QuantitativePrecipitation and Snowfall
-            val nwsGridPointDataResponse =
-                api.fetchGridPointData(
-                    nwsStationsDomain.officeId,
-                    nwsStationsDomain.gridX,
-                    nwsStationsDomain.gridY
-                )
-
-            val nwsHourlyForecastBody = nwsHourlyForecastResponse.body()
-                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-            val nwsGridPointDataBody = nwsGridPointDataResponse.body()
-                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-
-            // PUT EVERYTHING TOGETHER IN A BUNDLE
-            val final = NwsWeatherJsonBundle(
-                current = nwsCurrentForecastBody,
-                forecast = nwsForecastBody,
-                hourly = nwsHourlyForecastBody,
-                gridPointsData = nwsGridPointDataBody,
-            )
-
-            // NWS provides no ultraviolet and no daily/hourly pressure.  Backfill from
-            // Open Meteo best-effort.  Failure here must not fail whole NWS result.
-            val supplemental = runCatching {
-                openMeteoApi.fetchWeather(
-                    latitude = location.latitude,
-                    longitude = location.longitude,
-                    timezone = location.timezone,
-                ).body()
-            }.getOrNull()?.toNwsSupplemental(location.timezone)
-
-            val domain = final.toDomain(location, supplemental)
-
-            nwsDao.insertLocationGridPoints(nwsStationsDomain.toEntity(location))
-            weatherDao.insertWeather(
-                domain.current.toCurrentWeatherEntity(location.id),
-                domain.hourly.toHourlyWeatherEntity(location.id),
-                domain.daily.toDailyWeatherEntity(location.id),
-                location.id
-            )
-
-            return@withContext WeatherResult.Success(domain)
-
         } catch (e: Exception) {
             WeatherResult.Error(
                 cacheWeather = if (isWeatherCacheSafe(cache)) cache?.toDomain() else null,
