@@ -7,6 +7,7 @@ import com.heckofanapp.weather.core.model.weather.WeatherResultType
 import com.heckofanapp.weather.core.network.sources.weather.nws.json.NwsCurrentForecastJson
 import com.heckofanapp.weather.core.network.sources.weather.nws.json.NwsStationsListJson
 import com.heckofanapp.weather.core.network.sources.weather.nws.json.bundle.NwsWeatherJsonBundle
+import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoApi
 import com.heckofanapp.weather.core.utils.weather.cache.isWeatherCacheSafe
 import com.heckofanapp.weather.core.utils.weather.cache.shouldReturnWeatherCache
 import com.heckofanapp.weather.data.local.dao.location.LocationsDao
@@ -14,6 +15,7 @@ import com.heckofanapp.weather.data.local.dao.weather.WeatherDao
 import com.heckofanapp.weather.data.local.dao.weather.nws.NwsDao
 import com.heckofanapp.weather.data.local.mapper.weather.sources.nws.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.sources.nws.toEntity
+import com.heckofanapp.weather.data.local.mapper.weather.sources.nws.toNwsSupplemental
 import com.heckofanapp.weather.data.local.mapper.weather.toCurrentWeatherEntity
 import com.heckofanapp.weather.data.local.mapper.weather.toDailyWeatherEntity
 import com.heckofanapp.weather.data.local.mapper.weather.toDomain
@@ -29,6 +31,7 @@ class NwsRepository @Inject constructor(
     val weatherDao: WeatherDao,
     val nwsDao: NwsDao,
     val api: NwsApi,
+    val openMeteoApi: OpenMeteoApi,
 ) : WeatherRepository {
     override suspend fun getWeather(
         isForceRefresh: Boolean,
@@ -138,7 +141,17 @@ class NwsRepository @Inject constructor(
                 gridPointsData = nwsGridPointDataBody,
             )
 
-            val domain = final.toDomain(location)
+            // NWS provides no ultraviolet and no daily/hourly pressure.  Backfill from
+            // Open Meteo best-effort.  Failure here must not fail whole NWS result.
+            val supplemental = runCatching {
+                openMeteoApi.fetchWeather(
+                    latitude = location.latitude,
+                    longitude = location.longitude,
+                    timezone = location.timezone,
+                ).body()
+            }.getOrNull()?.toNwsSupplemental(location.timezone)
+
+            val domain = final.toDomain(location, supplemental)
 
             nwsDao.insertLocationGridPoints(nwsStationsDomain.toEntity(location))
             weatherDao.insertWeather(

@@ -17,6 +17,7 @@ import com.heckofanapp.weather.core.network.sources.weather.nws.json.NwsGridPoin
 import com.heckofanapp.weather.core.network.sources.weather.nws.json.NwsHourlyForecastPeriodsItemJson
 import com.heckofanapp.weather.core.network.sources.weather.nws.json.NwsHourlyForecastPeriodsJson
 import com.heckofanapp.weather.core.network.sources.weather.nws.json.bundle.NwsWeatherJsonBundle
+import com.heckofanapp.weather.core.network.sources.weather.openmeteo.json.OpenMeteoWeatherJson
 import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.iso8601TimestampToMilliseconds
 import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.normalizeToDay
 import com.heckofanapp.weather.core.utils.weather.astronomy.getMoonTimings
@@ -36,6 +37,49 @@ private data class NwsValidTime(
     val duration: Duration,
 )
 
+/**
+ * NWS provides no ultraviolet data and no daily/hourly pressure.  So, those are
+ * backfilled from supplemental Open Meteo call.  Maps are keyed to match how NWS
+ * mapper looks up hourly (hour, millis) and daily (start-of-day, millis) values.
+ */
+data class NwsSupplemental(
+    val currentUltraviolet: Double?,
+    val dailyPressure: Map<Long, Double>,           // dayStartMillis  -> hPa (mean)
+    val dailyUltravioletMaximum: Map<Long, Double>, // dayStartMillis  -> ultraviolet maximum
+    val hourlyPressure: Map<Long, Double>,          // hourStartMillis -> hPa
+    val hourlyUltraviolet: Map<Long, Double>,       // hourStartMillis -> ultraviolet
+)
+
+fun OpenMeteoWeatherJson.toNwsSupplemental(
+    zoneId: String,
+): NwsSupplemental {
+    // Open Meteo uses unixtime in SECONDS; NWS matching uses milliseconds.
+    val hourlyUltraviolet = hourly.time.indices
+        .mapNotNull { i -> hourly.uvIndex.getOrNull(i)?.let { (hourly.time[i] * 1000) to it } }
+        .toMap()
+    val hourlyPressure = hourly.time.indices
+        .mapNotNull { i -> hourly.pressureMsl.getOrNull(i)?.let { (hourly.time[i] * 1000) to it } }
+        .toMap()
+    val dailyUltravioletMaximum = daily.time.indices
+        .mapNotNull { i ->
+            daily.uvIndexMax.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it }
+        }
+        .toMap()
+    val dailyPressure = daily.time.indices
+        .mapNotNull { i ->
+            daily.pressureMsl.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it }
+        }
+        .toMap()
+
+    return NwsSupplemental(
+        currentUltraviolet = current.uvIndex,
+        dailyPressure = dailyPressure,
+        dailyUltravioletMaximum = dailyUltravioletMaximum,
+        hourlyPressure = hourlyPressure,
+        hourlyUltraviolet = hourlyUltraviolet,
+    )
+}
+
 fun NwsGridPointsJson.toDomain(
     location: Location,
     stationIdentifier: String?,
@@ -52,6 +96,7 @@ fun NwsGridPointsJson.toDomain(
 
 fun NwsWeatherJsonBundle.toDomain(
     location: Location,
+    supplemental: NwsSupplemental?,
 ): Weather {
     val current = this.current.properties
     val hourly = this.hourly.properties
@@ -130,7 +175,7 @@ fun NwsWeatherJsonBundle.toDomain(
             pressureMsl = current.seaLevelPressure.value?.pressurePaToHpa(),
             temperature = currentTemperature,
             time = current.timestamp.iso8601TimestampToMilliseconds(),
-            ultraviolet = null,
+            ultraviolet = supplemental?.currentUltraviolet,
             utcOffsetSeconds = null,
             visibility = current.visibility.value?.toInt(),
             weatherCondition = NwsWeatherConditionMap.getCondition(currentIcon),
@@ -169,6 +214,9 @@ fun NwsWeatherJsonBundle.toDomain(
                 data = visibilityMap,
                 time = time,
             )
+            // Backfilled from Open Meteo.  Days may not align exactly.  So, match nearest.
+            val pressure = supplemental?.dailyPressure.nearestByDay(time)
+            val ultravioletMaximum = supplemental?.dailyUltravioletMaximum.nearestByDay(time)
 
             WeatherDaily(
                 dawn = sunTimings[index].dawn ?: 0L,
@@ -179,7 +227,7 @@ fun NwsWeatherJsonBundle.toDomain(
                 moonrise = moonTimings[index].moonrise ?: -0L,
                 moonset = moonTimings[index].moonset ?: -0L,
                 precipitationProbabilityMax = precipitationProbabilityMax.roundToInt(), // item.probabilityOfPrecipitation.value from daily is wrong?
-                pressureMsl = null,
+                pressureMsl = pressure,
                 rainSum = rainSum,
                 snowfallSum = PrecipitationUnit.MM.convert(
                     from = snowfallSum,
@@ -190,7 +238,7 @@ fun NwsWeatherJsonBundle.toDomain(
                 temperatureMaximum = temperatureMaximum?.value ?: 0.0,
                 temperatureMinimum = temperatureMinimum?.value ?: 0.0,
                 time = time,
-                ultravioletMaximum = null,
+                ultravioletMaximum = ultravioletMaximum,
                 visibility = visibility?.roundToInt(),
                 weatherCondition = condition,
                 windDirection = WindDirection.toWindDirectionFromString(item.windDirection),
@@ -207,7 +255,7 @@ fun NwsWeatherJsonBundle.toDomain(
                 dewPoint = it.dewPoint.value,
                 humidity = it.relativeHumidity.value,
                 precipitationProbability = it.probabilityOfPrecipitation.value?.toInt(),
-                pressureMsl = null,
+                pressureMsl = supplemental?.hourlyPressure?.get(hourTime),
                 rain = rainAmount ?: 0.0,
                 snowfall = snowFall ?: 0.0,
                 temperature = TemperatureUnit.FAHRENHEIT.convert(
@@ -215,7 +263,7 @@ fun NwsWeatherJsonBundle.toDomain(
                     to = TemperatureUnit.CELSIUS,
                 ),
                 time = hourTime,
-                ultraviolet = null,
+                ultraviolet = supplemental?.hourlyUltraviolet?.get(hourTime),
                 visibility = visibility?.roundToInt(),
                 weatherCondition = NwsWeatherConditionMap.getCondition(it.icon),
                 windDirection = WindDirection.toWindDirectionFromString(it.windDirection),
@@ -224,6 +272,19 @@ fun NwsWeatherJsonBundle.toDomain(
         },
         location = location
     )
+}
+
+/**
+ * Look up a value keyed by start-of-day millis, tolerating slight day-boundary
+ * skew between NWS and Open Meteo day grids by falling back to nearest day.
+ */
+private fun Map<Long, Double>?.nearestByDay(
+    time: Long,
+): Double? {
+    if (this.isNullOrEmpty()) return null
+    this[time]?.let { return it }
+
+    return entries.minByOrNull { abs(it.key - time) }?.value
 }
 
 private fun fixHourlyNwsWindSpeedValue(
