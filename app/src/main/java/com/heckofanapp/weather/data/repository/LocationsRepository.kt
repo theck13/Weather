@@ -203,4 +203,15 @@ class LocationsRepository @Inject constructor(
         return dao.getAllLocationsCurrentWeather()
             .map { list -> list.map { it.toDomain() } }
     }
+
+    /**
+     * Observes single location's persisted weather.  Emits null until current row exists so
+     * main screen keeps its loading state rather than showing mapper's placeholder current.
+     */
+    fun observeWeatherForLocation(
+        locationId: String,
+    ): Flow<Weather?> {
+        return dao.getWeatherForLocationFlow(locationId)
+            .map { relations -> relations?.takeIf { it.current != null }?.toDomain() }
+    }
 }

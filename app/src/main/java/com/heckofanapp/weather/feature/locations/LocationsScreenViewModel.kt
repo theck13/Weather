@@ -123,9 +123,7 @@ class LocationsScreenViewModel @Inject constructor(
         }
     }
 
-    fun refreshAllLocations(
-        onComplete: () -> Unit = {},
-    ) {
+    fun refreshAllLocations() {
         if (_uiState.value.isRefreshing) return
         _uiState.value = _uiState.value.copy(
             isRefreshing = true,
@@ -149,7 +147,6 @@ class LocationsScreenViewModel @Inject constructor(
                         location = location,
                     )
                 }
-                onComplete()
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
             } finally {

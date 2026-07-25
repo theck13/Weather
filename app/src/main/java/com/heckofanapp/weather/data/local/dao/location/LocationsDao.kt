@@ -58,6 +58,10 @@ interface LocationsDao {
     @Query("SELECT * FROM weather_locations")
     fun getAllLocationsCurrentWeather(): Flow<List<WeatherWithRelations>>
 
+    @Transaction
+    @Query("SELECT * FROM weather_locations WHERE id = :locationId LIMIT 1")
+    fun getWeatherForLocationFlow(locationId: String): Flow<WeatherWithRelations?>
+
     @Query("UPDATE weather_locations SET source = :source WHERE id = :id")
     suspend fun updateSourceForLocation(id: String, source: WeatherSource)
 

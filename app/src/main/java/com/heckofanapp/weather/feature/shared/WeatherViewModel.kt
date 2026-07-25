@@ -28,11 +28,14 @@ import com.heckofanapp.weather.feature.main.MainScreenWeatherUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -50,12 +53,16 @@ class WeatherViewModel @Inject constructor(
     private val weatherDataReconcilerRepository: WeatherDataReconcilerRepository,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
+    private val activeLocationId = MutableStateFlow<String?>(null)
+
     private var _uiState = mutableStateOf(MainScreenWeatherUiState())
     private var weatherJob: Job? = null
 
     val uiState: State<MainScreenWeatherUiState> = _uiState
 
     init {
+        observeActiveLocationWeather()
+
         // Load default on start.
         viewModelScope.launch {
             if (_uiState.value.activeLocation == null && _uiState.value.weather == null && !_uiState.value.isInitialized) {
@@ -80,8 +87,8 @@ class WeatherViewModel @Inject constructor(
                 if (moved != null) {
                     if (_uiState.value.activeLocation?.id == moved.id) {
                         // On Screen: Refresh through main flow so title and weather update.
-                        _uiState.value = _uiState.value.copy(
-                            activeLocation = moved,
+                        updateActiveLocation(
+                            location = moved,
                         )
                         getWeather(
                             location = moved,
@@ -156,8 +163,8 @@ class WeatherViewModel @Inject constructor(
                 try {
                     handleDeviceLocation()?.let { moved ->
                         locationNow = moved
-                        _uiState.value = _uiState.value.copy(
-                            activeLocation = moved,
+                        updateActiveLocation(
+                            location = moved,
                         )
                     }
                 } catch (e: Exception) {
@@ -236,27 +243,6 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Reads active location's weather from cache (e.g. after a bulk refresh writes new data to database).
-     * Reuses [getWeather] with default flags to get newly-written cache rather than issuing another network request.
-     */
-    fun reloadActiveLocation() {
-        val active = _uiState.value.activeLocation ?: return
-        // Prefer freshest copy of active location (e.g. device pin whose coordinates were just
-        // moved) so reload weather for current position, not a stale snapshot.
-        val fresh = _uiState.value.locations.firstOrNull { it.id == active.id } ?: active
-
-        if (fresh != active) {
-            _uiState.value = _uiState.value.copy(
-                activeLocation = fresh,
-            )
-        }
-        getWeather(
-            location = fresh,
-            source = fresh.source,
-        )
-    }
-
     fun setLoading(
         isLoading: Boolean,
     ) {
@@ -268,8 +254,8 @@ class WeatherViewModel @Inject constructor(
     fun setActiveLocation(
         location: Location,
     ) {
-        _uiState.value = _uiState.value.copy(
-            activeLocation = location,
+        updateActiveLocation(
+            location = location,
         )
         PreferencesHelper.setString(SELECTED_LOCATION_ID_KEY, location.id)
         getWeather(
@@ -296,8 +282,8 @@ class WeatherViewModel @Inject constructor(
                     previousSource = location.source,
                 )
             }
-            _uiState.value = _uiState.value.copy(
-                activeLocation = updatedLocation,
+            updateActiveLocation(
+                location = updatedLocation,
             )
             getWeather(
                 isForceRefresh = allowForceRefresh,
@@ -339,6 +325,43 @@ class WeatherViewModel @Inject constructor(
         return locationsRepository.updateDeviceLocationPosition()
     }
 
+    /**
+     * Sets active location and keeps [activeLocationId] in sync so reactive weather flow
+     * switches to newly selected location.
+     */
+    private fun updateActiveLocation(
+        location: Location,
+    ) {
+        _uiState.value = _uiState.value.copy(
+            activeLocation = location,
+        )
+        activeLocationId.value = location.id
+    }
+
+    /**
+     * Observes active location's persisted weather and drives [MainScreenWeatherUiState.weather]
+     * from it, so main screen reflects every database write (manual, worker, or off-screen refresh)
+     * same way Locations list does.  Emissions are skipped while location has no persisted weather
+     * yet, leaving initial loading state intact.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeActiveLocationWeather() {
+        activeLocationId
+            .filterNotNull()
+            .distinctUntilChanged()
+            .flatMapLatest { locationId ->
+                locationsRepository.observeWeatherForLocation(locationId)
+            }
+            .onEach { weather ->
+                if (weather != null) {
+                    _uiState.value = _uiState.value.copy(
+                        weather = weather,
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     private suspend fun handleWeatherData(
         isForceRefresh: Boolean,
         isManualRefresh: Boolean,
@@ -361,9 +384,10 @@ class WeatherViewModel @Inject constructor(
                     message = appExpectation.toMessageRes(),
                 )
 
+                // Displayed weather is driven by the reactive database flow, which already reflects
+                // any cached row, so only the error flag needs setting here.
                 _uiState.value = _uiState.value.copy(
                     isError = true,
-                    weather = result.cacheWeather,
                 )
             }
 
@@ -377,17 +401,18 @@ class WeatherViewModel @Inject constructor(
             is WeatherResult.Success -> {
                 _uiState.value = _uiState.value.copy(
                     isInitialized = true,
-                    weather = result.weather,
                 )
-            }
-        }
 
-        if (location.isDefault && !_uiState.value.isError && _uiState.value.weather != null) {
-            WeatherUpdateScheduler.updateAllWidgets(
-                context = context,
-                data = _uiState.value.weather!!,
-                units = _uiState.value.weatherUnits,
-            )
+                // Push freshly fetched data to widgets directly; _uiState.weather is updated
+                // asynchronously by reactive flow and may not reflect this result yet.
+                if (location.isDefault) {
+                    WeatherUpdateScheduler.updateAllWidgets(
+                        context = context,
+                        data = result.weather,
+                        units = _uiState.value.weatherUnits,
+                    )
+                }
+            }
         }
     }
 

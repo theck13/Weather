@@ -151,11 +151,7 @@ fun LocationsScreen(
                     viewModel.stopReordering()
                 },
                 onRefresh = {
-                    viewModel.refreshAllLocations(
-                        onComplete = {
-                            weatherViewModel.reloadActiveLocation()
-                        },
-                    )
+                    viewModel.refreshAllLocations()
                 },
                 scrollBehavior = scrollBehavior,
             )
