@@ -61,6 +61,16 @@ interface NwsApi {
         fun create(): NwsApi {
 
             val client = OkHttpClient.Builder()
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                        .header(
+                            "User-Agent",
+                            "WeatherMaster (com.pranshulgg.weathermaster; pranshul.devmain@gmail.com)"
+                        )
+                        .build()
+
+                    chain.proceed(request)
+                }
                 .connectTimeout(
                     timeout = 30,
                     unit = TimeUnit.SECONDS,
