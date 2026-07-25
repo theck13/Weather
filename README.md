@@ -123,15 +123,9 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 
 <table>
     <tr>
-        <th width="11.1%">Air</th>
-        <th width="11.1%">Celestial</th>
-        <th width="11.1%">Humidity</th>
-        <th width="11.1%">Pressure</th>
-        <th width="11.1%">Rain</th>
-        <th width="11.1%">Snow</th>
-        <th width="11.1%">Ultraviolet</th>
-        <th width="11.1%">Visibility</th>
-        <th width="11.1%">Wind</th>
+        <th width="33.3%">Air</th>
+        <th width="33.3%">Celestial</th>
+        <th width="33.3%">Humidity</th>
     </tr>
     <tr>
         <td valign="top">
@@ -182,6 +176,16 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th width="33.3%">Pressure</th>
+        <th width="33.3%">Rain</th>
+        <th width="33.3%">Snow</th>
+    </tr>
+    <tr>
         <td valign="top">
             <picture>
                 <source
@@ -230,6 +234,16 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
                 />
             </picture>
         </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th width="33.3%">Ultraviolet</th>
+        <th width="33.3%">Visibility</th>
+        <th width="33.3%">Wind</th>
+    </tr>
+    <tr>
         <td valign="top">
             <picture>
                 <source
