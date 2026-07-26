@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
 import com.heckofanapp.weather.core.model.sources.WeatherSource
-import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -46,8 +45,34 @@ fun WeatherSourcesScreen(
                 )
                 .padding(
                     paddingValues = paddingValues,
+                )
+                .padding(
+                    bottom = 16.dp,
                 ),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 16.dp,
+            ),
         ) {
+            WeatherSource.entries.forEach {
+                SettingSection(
+                    title = it.displayName,
+                    tiles = listOf(
+                        SettingTile.ActionTile(
+                            description = it.displayLink,
+                            onClick = {
+                                uriHandler.openUri(it.displayLink)
+                            },
+                            title = it.fullName,
+                            trailing = {
+                                SettingsTileIcon(
+                                    icon = R.drawable.ic_open_in_new_24,
+                                )
+                            },
+                        ),
+                    ),
+                )
+            }
+
             Text(
                 modifier = Modifier.padding(
                     horizontal = 16.dp,
@@ -55,10 +80,6 @@ fun WeatherSourcesScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyLarge,
                 text = stringResource(R.string.setting_weather_sources_info),
-            )
-
-            Gap(
-                vertical = 10.dp,
             )
 
             Row(
@@ -89,38 +110,6 @@ fun WeatherSourcesScreen(
                     )
                 }
             }
-
-            Gap(
-                vertical = 10.dp,
-            )
-
-            WeatherSource.entries.forEach {
-                SettingSection(
-                    title = it.displayName,
-                    tiles = listOf(
-                        SettingTile.ActionTile(
-                            description = it.displayLink,
-                            onClick = {
-                                uriHandler.openUri(it.displayLink)
-                            },
-                            title = it.fullName,
-                            trailing = {
-                                SettingsTileIcon(
-                                    icon = R.drawable.ic_open_in_new_24,
-                                )
-                            },
-                        ),
-                    ),
-                )
-
-                Gap(
-                    vertical = 10.dp,
-                )
-            }
-
-            Gap(
-                vertical = 10.dp,
-            )
         }
     }
 }
