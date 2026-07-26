@@ -317,6 +317,7 @@
     <string name="show_list">Show List</string>
     <string name="refresh">Refresh</string>
     <string name="refresh_locations">Refresh Locations</string>
+    <string name="refreshing">Refreshing</string>
     <string name="setting_time_format">Time Format</string>
     <string name="setting_time_format_description">Show time as 12-Hour or 24-Hour.</string>
     <string name="setting_time_format_12">12-Hour</string>

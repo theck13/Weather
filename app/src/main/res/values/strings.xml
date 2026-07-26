@@ -30,6 +30,7 @@
     <string name="show_list">Show List</string>
     <string name="refresh">Refresh</string>
     <string name="refresh_locations">Refresh Locations</string>
+    <string name="refreshing">Refreshing</string>
     <string name="settings">Settings</string>
     <string name="search">Search</string>
     <string name="location_current">Current location</string>

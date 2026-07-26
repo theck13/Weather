@@ -179,6 +179,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.reorderable)
     implementation(libs.androidx.animation.core)
+    implementation(libs.androidx.animation.graphics)
     implementation(libs.core.splashscreen)
 
     implementation(libs.androidx.work.runtime)

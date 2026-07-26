@@ -2,6 +2,10 @@ package com.heckofanapp.weather.feature.locations
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +16,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +27,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -246,6 +253,7 @@ fun LocationsScreen(
 }
 
 @OptIn(
+    ExperimentalAnimationGraphicsApi::class,
     ExperimentalMaterial3Api::class,
 )
 @Composable
@@ -312,13 +320,23 @@ private fun TopBar(
                 Tooltip(
                     preferredPosition = TooltipAnchorPosition.Below,
                     spacing = 10.dp,
-                    tooltipText = stringResource(R.string.refresh),
+                    tooltipText = if (isRefreshing) stringResource(R.string.refreshing) else stringResource(R.string.refresh),
                 ) {
                     IconButton(
                         enabled = isRefreshing.not(),
                         onClick = onRefresh,
                         shapes = IconButtonDefaults.shapes(),
                     ) {
+                        // Detect refreshing change from true to false synchronously
+                        // during composition so icon animates only on refresh done,
+                        // not on initial load.
+                        val wasRefreshing = remember { mutableStateOf(isRefreshing) }
+                        val isRefreshed = wasRefreshing.value && isRefreshing.not()
+
+                        SideEffect {
+                            wasRefreshing.value = isRefreshing
+                        }
+
                         if (isRefreshing) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(
@@ -328,10 +346,26 @@ private fun TopBar(
                                 strokeWidth = 2.dp,
                             )
                         } else {
-                            Symbol(
-                                color = MaterialTheme.colorScheme.onSurface,
-                                description = stringResource(R.string.refresh_locations),
-                                icon = R.drawable.ic_refresh_24,
+                            val iconRefresh = AnimatedImageVector.animatedVectorResource(
+                                id = R.drawable.av_refresh_24,
+                            )
+
+                            // Start un-drawn only when just finished refreshing, then flip
+                            // to end state so painter animates once.
+                            var atEnd by remember { mutableStateOf(isRefreshed.not()) }
+                            LaunchedEffect(Unit) {
+                                if (isRefreshed) {
+                                    atEnd = true
+                                }
+                            }
+
+                            Icon(
+                                contentDescription = stringResource(R.string.refresh_locations),
+                                painter = rememberAnimatedVectorPainter(
+                                    animatedImageVector = iconRefresh,
+                                    atEnd = atEnd,
+                                ),
+                                tint = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                     }
