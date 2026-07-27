@@ -113,7 +113,7 @@ private fun getDailyIndexForToday(
         .toLocalDate()
 
     return dailyList.indexOfFirst { daily ->
-        Instant.ofEpochSecond(daily.time)
+        Instant.ofEpochMilli(daily.time)
             .atZone(zoneId)
             .toLocalDate() == targetDate
     }.coerceAtLeast(0)
