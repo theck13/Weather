@@ -140,12 +140,18 @@ class LocationsScreenViewModel @Inject constructor(
 
                 val locations = locationsRepository.getLocationsOnce()
                 locations.forEach { location ->
-                    val repo = weatherRepositoryProvider.getRepository(location.source)
-                    repo.getWeather(
-                        isForceRefresh = true,
-                        isManualRefresh = true,
-                        location = location,
-                    )
+                    // Isolate each location so one failure (timeout, source outage) can't
+                    // abort all.  Cancellation still propagates so refresh can be stopped.
+                    try {
+                        val repo = weatherRepositoryProvider.getRepository(location.source)
+                        repo.getWeather(
+                            isForceRefresh = true,
+                            isManualRefresh = true,
+                            location = location,
+                        )
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                    }
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
