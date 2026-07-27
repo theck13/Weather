@@ -11,15 +11,75 @@ import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.model.weather.wind.WindDirection
 import com.heckofanapp.weather.core.network.sources.weather.accu.AccuWeatherConditionMap
 import com.heckofanapp.weather.core.network.sources.weather.accu.json.bundle.AccuWeatherBundle
+import com.heckofanapp.weather.core.network.sources.weather.openmeteo.json.OpenMeteoWeatherJson
 import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.normalizeToDay
 import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.secondsToMilliseconds
 import com.heckofanapp.weather.core.utils.weather.astronomy.getMoonTimings
 import com.heckofanapp.weather.core.utils.weather.astronomy.getSunTimings
 import com.heckofanapp.weather.core.utils.weather.computing.computeDailyWeatherCondition
+import kotlin.math.abs
 import kotlin.math.roundToInt
+
+/**
+ * AccuWeather's daily and hourly endpoints provide no pressure, no daily dew point, and
+ * no daily visibility.  So, those are backfilled from a supplemental Open Meteo call.
+ * Maps are keyed to match how AccuWeather mapper looks up hourly (millis) and daily
+ * (start-of-day millis) values.
+ */
+data class AccuSupplemental(
+    val dailyDewPoint: Map<Long, Double>,   // dayStartMillis  -> °C (mean)
+    val dailyPressure: Map<Long, Double>,   // dayStartMillis  -> hPa (mean)
+    val dailyVisibility: Map<Long, Double>, // dayStartMillis  -> meters (minimum)
+    val hourlyPressure: Map<Long, Double>,  // hourStartMillis -> hPa
+)
+
+fun OpenMeteoWeatherJson.toAccuSupplemental(
+    zoneId: String,
+): AccuSupplemental {
+    // Open Meteo uses unixtime in SECONDS; ACCU matching uses milliseconds.
+    val hourlyPressure = hourly.time.indices
+        .mapNotNull { i -> hourly.pressureMsl.getOrNull(i)?.let { (hourly.time[i] * 1000) to it } }
+        .toMap()
+    val dailyDewPoint = daily.time.indices
+        .mapNotNull { i ->
+            daily.dewPoint.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it }
+        }
+        .toMap()
+    val dailyPressure = daily.time.indices
+        .mapNotNull { i ->
+            daily.pressureMsl.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it }
+        }
+        .toMap()
+    val dailyVisibility = daily.time.indices
+        .mapNotNull { i ->
+            daily.visibility.getOrNull(i)?.let { (daily.time[i] * 1000).normalizeToDay(zoneId) to it.toDouble() }
+        }
+        .toMap()
+
+    return AccuSupplemental(
+        dailyDewPoint = dailyDewPoint,
+        dailyPressure = dailyPressure,
+        dailyVisibility = dailyVisibility,
+        hourlyPressure = hourlyPressure,
+    )
+}
+
+/**
+ * Look up a value keyed by start-of-day millis, tolerating slight day-boundary
+ * skew between AccuWeather and Open Meteo day grids by falling back to nearest day.
+ */
+private fun Map<Long, Double>?.nearestByDay(
+    time: Long,
+): Double? {
+    if (this.isNullOrEmpty()) return null
+    this[time]?.let { return it }
+
+    return entries.minByOrNull { abs(it.key - time) }?.value
+}
 
 fun AccuWeatherBundle.toDomain(
     location: Location,
+    supplemental: AccuSupplemental?,
 ): Weather {
     val current = this.current
     val daily = this.daily.daily
@@ -90,40 +150,44 @@ fun AccuWeatherBundle.toDomain(
                 item.night.humidity.value?.toDouble() ?: 0.0,
             ).average()
 
+            val time = item.time.secondsToMilliseconds().normalizeToDay(location.timezone)
+
             WeatherDaily(
                 dawn = sunTimings[index].dawn ?: -0L,
-                dewPoint = null,
+                dewPoint = supplemental?.dailyDewPoint.nearestByDay(time),
                 dusk = sunTimings[index].dusk ?: -0L,
                 humidity = humidity,
                 moonPhase = moonTimings[index].phase,
                 moonrise = moonTimings[index].moonrise ?: -0L,
                 moonset = moonTimings[index].moonset ?: -0L,
                 precipitationProbabilityMax = precipitationProbabilityMax,
-                pressureMsl = null,
+                pressureMsl = supplemental?.dailyPressure.nearestByDay(time),
                 rainSum = rain,
                 snowfallSum = PrecipitationUnit.CM.convert(snow, PrecipitationUnit.MM),
                 sunrise = sunTimings[index].sunrise ?: -0L,
                 sunset = sunTimings[index].sunset ?: -0L,
                 temperatureMaximum = item.temperature.maximum.value,
                 temperatureMinimum = item.temperature.minimum.value,
-                time = item.time.secondsToMilliseconds().normalizeToDay(location.timezone),
+                time = time,
                 ultravioletMaximum = item.day.ultraviolet.value,
-                visibility = null,
+                visibility = supplemental?.dailyVisibility.nearestByDay(time)?.roundToInt(),
                 weatherCondition = condition,
                 windDirection = WindDirection.toWindDirectionFromDegrees(windDirection.roundToInt()),
                 windSpeed = windSpeed,
             )
         },
         hourly = hourly.map { hour ->
+            val time = hour.time.secondsToMilliseconds()
+
             WeatherHourly(
                 dewPoint = hour.dewPoint.value,
                 humidity = hour.humidity?.toDouble(),
                 precipitationProbability = hour.precipitation,
-                pressureMsl = null,
+                pressureMsl = supplemental?.hourlyPressure?.get(time),
                 rain = hour.rain.value ?: 0.0,
                 snowfall = PrecipitationUnit.CM.convert(hour.snowCm.value, PrecipitationUnit.MM),
                 temperature = hour.temperature.value,
-                time = hour.time.secondsToMilliseconds(),
+                time = time,
                 ultraviolet = hour.ultraviolet,
                 visibility = DistanceUnit.KM.convert(hour.visibility.value, DistanceUnit.M)?.roundToInt(),
                 weatherCondition = AccuWeatherConditionMap.getCondition(hour.icon),

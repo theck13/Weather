@@ -5,10 +5,12 @@ import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.weather.WeatherResult
 import com.heckofanapp.weather.core.model.weather.WeatherResultType
 import com.heckofanapp.weather.core.network.sources.weather.accu.json.bundle.AccuWeatherBundle
+import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoApi
 import com.heckofanapp.weather.core.utils.weather.cache.isWeatherCacheSafe
 import com.heckofanapp.weather.core.utils.weather.cache.shouldReturnWeatherCache
 import com.heckofanapp.weather.data.local.dao.location.LocationsDao
 import com.heckofanapp.weather.data.local.dao.weather.WeatherDao
+import com.heckofanapp.weather.data.local.mapper.weather.sources.accu.toAccuSupplemental
 import com.heckofanapp.weather.data.local.mapper.weather.sources.accu.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.toCurrentWeatherEntity
 import com.heckofanapp.weather.data.local.mapper.weather.toDailyWeatherEntity
@@ -25,6 +27,7 @@ class AccuRepository @Inject constructor(
     val dao: LocationsDao,
     val weatherDao: WeatherDao,
     val api: AccuApi,
+    val openMeteoApi: OpenMeteoApi,
 ) : WeatherRepository {
     override suspend fun getWeather(
         isForceRefresh: Boolean,
@@ -45,6 +48,20 @@ class AccuRepository @Inject constructor(
 
             return@withContext try {
                 coroutineScope {
+                    // AccuWeather provides no pressure, no daily dew point, and no daily
+                    // visibility.  Backfill from Open Meteo best-effort.  Failure here must
+                    // not fail the whole AccuWeather result.  Depends only on the location,
+                    // so start it immediately, overlapping the calls below.
+                    val supplementalDeferred = async {
+                        runCatching {
+                            openMeteoApi.fetchWeather(
+                                latitude = location.latitude,
+                                longitude = location.longitude,
+                                timezone = location.timezone,
+                            ).body()
+                        }.getOrNull()?.toAccuSupplemental(location.timezone)
+                    }
+
                     // Location key must be resolved first.  The current/hourly/daily
                     // calls all depend on it, but are independent of each other.  So,
                     // fan them out concurrently instead of awaiting each in turn.
@@ -68,7 +85,8 @@ class AccuRepository @Inject constructor(
                         hourly = bodyHourly,
                     )
 
-                    val domain = final.toDomain(location)
+                    val supplemental = supplementalDeferred.await()
+                    val domain = final.toDomain(location, supplemental)
 
                     weatherDao.insertWeather(
                         currentWeather = domain.current.toCurrentWeatherEntity(location.id),

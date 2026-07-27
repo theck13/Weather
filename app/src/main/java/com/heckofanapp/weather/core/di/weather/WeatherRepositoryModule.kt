@@ -47,7 +47,8 @@ object WeatherRepositoryModule {
         dao: LocationsDao,
         api: AccuApi,
         weatherDao: WeatherDao,
-    ): AccuRepository = AccuRepository(dao, weatherDao, api)
+        openMeteoApi: OpenMeteoApi,
+    ): AccuRepository = AccuRepository(dao, weatherDao, api, openMeteoApi)
 
     @Provides
     @Singleton
