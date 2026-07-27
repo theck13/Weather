@@ -15,6 +15,8 @@ import com.heckofanapp.weather.data.local.mapper.weather.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.toHourlyWeatherEntity
 import com.heckofanapp.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -39,26 +41,31 @@ class BmkgRepository @Inject constructor(
         }
 
         return@withContext try {
-            val response = api.fetchCurrent(location.latitude, location.longitude)
-            val body = response.body()
-                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
-            val forecastResponse = api.fetchForecast(location.latitude, location.longitude)
-            val forecastBody = forecastResponse.body()
-                ?: return@withContext WeatherResult.Error(exception = UnknownHostException())
+            coroutineScope {
+                // Current and forecast only need coordinates and are independent of
+                // each other.  Fan them out concurrently instead of awaiting each in turn.
+                val currentDeferred = async { api.fetchCurrent(location.latitude, location.longitude) }
+                val forecastDeferred = async { api.fetchForecast(location.latitude, location.longitude) }
 
-            val final = BmkgForecastBundle(
-                current = body,
-                forecast = forecastBody,
-            )
-            val domain = final.toDomain(location)
+                val body = currentDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
+                val forecastBody = forecastDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(exception = UnknownHostException())
 
-            weatherDao.insertWeather(
-                domain.current.toCurrentWeatherEntity(location.id),
-                domain.hourly.toHourlyWeatherEntity(location.id),
-                domain.daily.toDailyWeatherEntity(location.id),
-                location.id
-            )
-            WeatherResult.Success(domain)
+                val final = BmkgForecastBundle(
+                    current = body,
+                    forecast = forecastBody,
+                )
+                val domain = final.toDomain(location)
+
+                weatherDao.insertWeather(
+                    currentWeather = domain.current.toCurrentWeatherEntity(location.id),
+                    dailyWeather = domain.daily.toDailyWeatherEntity(location.id),
+                    hourlyWeather = domain.hourly.toHourlyWeatherEntity(location.id),
+                    id = location.id
+                )
+                WeatherResult.Success(domain)
+            }
 
         } catch (e: Exception) {
             WeatherResult.Error(

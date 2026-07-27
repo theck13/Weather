@@ -18,6 +18,8 @@ import com.heckofanapp.weather.data.local.mapper.weather.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.toHourlyWeatherEntity
 import com.heckofanapp.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
@@ -51,56 +53,69 @@ class FmiRepository @Inject constructor(
         }
 
         return@withContext try {
-            val stationResponse = api.fetchStations()
-            val stationBody =
-                stationResponse.body()?.byteStream()?.use { stream ->
-                    fmiStationXml(stream, location)
+            coroutineScope {
+                // Forecast only needs coordinates, but current observation depends on
+                // first resolving the nearest station.  Run independent forecast call
+                // concurrently with station to current chain instead of awaiting each
+                // in turn.
+                val forecastTimes = getStartEndTimeForecast(location)
+                val forecastDeferred = async {
+                    api.fetchForecast(
+                        coordinates = "${location.latitude},${location.longitude}",
+                        timeEnd = forecastTimes.second,
+                        timeStart = forecastTimes.first,
+                    )
                 }
-            val forecastTimes = getStartEndTimeForecast(location)
-            val response = api.fetchForecast(
-                latlon = "${location.latitude},${location.longitude}",
-                forecastTimes.second,
-                forecastTimes.first
-            )
+                val currentDeferred = async {
+                    val stationResponse = api.fetchStations()
+                    val stationBody =
+                        stationResponse.body()?.byteStream()?.use { stream ->
+                            fmiStationXml(stream, location)
+                        }
 
-            val times = getStartEndTime()
-            val currentResponse = if (stationBody != null) api.fetchCurrent(
-                stationBody,
-                times.first,
-                times.second
-            ) else {
-                null
-            }
+                    val times = getStartEndTime()
+                    val currentResponse = if (stationBody != null) api.fetchCurrent(
+                        id = stationBody,
+                        timeEnd = times.second,
+                        timeStart = times.first,
+                    ) else {
+                        null
+                    }
 
-            val currentBody = currentResponse?.body()?.byteStream()?.use { stream ->
-                fmiXml(stream)
-            }
+                    currentResponse?.body()?.byteStream()?.use { stream ->
+                        fmiXml(stream)
+                    }
+                }
 
-            if (!response.isSuccessful || response.body() == null) {
-                throw IllegalStateException("FMI request failed: ${response.code()}")
-            }
+                val response = forecastDeferred.await()
+                val currentBody = currentDeferred.await()
 
-            val body =
-                response.body()?.byteStream()?.use { stream ->
-                    fmiXml(stream)
-                } ?: return@withContext WeatherResult.Error(
-                    exception = UnknownHostException(),
+                if (response.isSuccessful.not() || response.body() == null) {
+                    throw IllegalStateException("FMI request failed: ${response.code()}")
+                }
+
+                val body =
+                    response.body()?.byteStream()?.use { stream ->
+                        fmiXml(stream)
+                    } ?: return@coroutineScope WeatherResult.Error(
+                        exception = UnknownHostException(),
+                    )
+
+                val final = FmiWeather(
+                    data = body,
+                    observation = currentBody,
                 )
 
-            val final = FmiWeather(
-                data = body,
-                observation = currentBody,
-            )
+                val domain = final.toDomain(location)
 
-            val domain = final.toDomain(location)
-
-            weatherDao.insertWeather(
-                domain.current.toCurrentWeatherEntity(location.id),
-                domain.hourly.toHourlyWeatherEntity(location.id),
-                domain.daily.toDailyWeatherEntity(location.id),
-                location.id
-            )
-            WeatherResult.Success(domain)
+                weatherDao.insertWeather(
+                    currentWeather = domain.current.toCurrentWeatherEntity(location.id),
+                    dailyWeather = domain.daily.toDailyWeatherEntity(location.id),
+                    hourlyWeather = domain.hourly.toHourlyWeatherEntity(location.id),
+                    id = location.id
+                )
+                WeatherResult.Success(domain)
+            }
 
         } catch (e: Exception) {
             WeatherResult.Error(

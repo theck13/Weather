@@ -15,6 +15,8 @@ import com.heckofanapp.weather.data.local.mapper.weather.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.toHourlyWeatherEntity
 import com.heckofanapp.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -40,29 +42,34 @@ class MeteoAmRepository @Inject constructor(
                 else -> {}
             }
 
-            val current = api.fetchCurrent(location.latitude, location.longitude)
-            val bodyCurrent = current.body()
-                ?: return@withContext WeatherResult.Error(
-                    exception = AppException.Unknown(),
-                )
-            val forecast = api.fetchForecast(location.latitude, location.longitude)
-            val bodyForecast = forecast.body()
-                ?: return@withContext WeatherResult.Error(
-                    exception = AppException.Unknown(),
-                )
-            val final = MeteoAmWeatherBundle(
-                current = bodyCurrent,
-                forecast = bodyForecast,
-            )
+            coroutineScope {
+                // Current and forecast only need the coordinates and are independent
+                // of each other.  Fan them out concurrently instead of awaiting each in turn.
+                val currentDeferred = async { api.fetchCurrent(location.latitude, location.longitude) }
+                val forecastDeferred = async { api.fetchForecast(location.latitude, location.longitude) }
 
-            val domain = final.toDomain(location)
+                val bodyCurrent = currentDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(
+                        exception = AppException.Unknown(),
+                    )
+                val bodyForecast = forecastDeferred.await().body()
+                    ?: return@coroutineScope WeatherResult.Error(
+                        exception = AppException.Unknown(),
+                    )
+                val final = MeteoAmWeatherBundle(
+                    current = bodyCurrent,
+                    forecast = bodyForecast,
+                )
 
-            weatherDao.insertWeather(
-                domain.current.toCurrentWeatherEntity(location.id),
-                domain.hourly.toHourlyWeatherEntity(location.id),
-                domain.daily.toDailyWeatherEntity(location.id),
-                location.id,
-            )
-            WeatherResult.Success(domain)
+                val domain = final.toDomain(location)
+
+                weatherDao.insertWeather(
+                    currentWeather = domain.current.toCurrentWeatherEntity(location.id),
+                    dailyWeather = domain.daily.toDailyWeatherEntity(location.id),
+                    hourlyWeather = domain.hourly.toHourlyWeatherEntity(location.id),
+                    id = location.id,
+                )
+                WeatherResult.Success(domain)
+            }
         }
 }

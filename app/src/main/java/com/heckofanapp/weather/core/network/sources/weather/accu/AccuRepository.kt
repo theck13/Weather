@@ -16,6 +16,8 @@ import com.heckofanapp.weather.data.local.mapper.weather.toDomain
 import com.heckofanapp.weather.data.local.mapper.weather.toHourlyWeatherEntity
 import com.heckofanapp.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -42,33 +44,40 @@ class AccuRepository @Inject constructor(
             }
 
             return@withContext try {
-                val locationKey = api.getLocationKey("${location.latitude},${location.longitude}")
-                val bodyLocation = locationKey.body()
-                    ?: return@withContext WeatherResult.Error(exception = AppException.Unknown())
-                val current = api.fetchCurrent(bodyLocation.key)
-                val bodyCurrent = current.body()
-                    ?: return@withContext WeatherResult.Error(exception = AppException.Unknown())
-                val hourly = api.fetchHourly(bodyLocation.key)
-                val bodyHourly = hourly.body()
-                    ?: return@withContext WeatherResult.Error(exception = AppException.Unknown())
-                val daily = api.fetchDaily(bodyLocation.key)
-                val bodyDaily = daily.body()
-                    ?: return@withContext WeatherResult.Error(exception = AppException.Unknown())
-                val final = AccuWeatherBundle(
-                    current = bodyCurrent[0],
-                    daily = bodyDaily,
-                    hourly = bodyHourly,
-                )
+                coroutineScope {
+                    // Location key must be resolved first.  The current/hourly/daily
+                    // calls all depend on it, but are independent of each other.  So,
+                    // fan them out concurrently instead of awaiting each in turn.
+                    val locationKey = api.getLocationKey("${location.latitude},${location.longitude}")
+                    val bodyLocation = locationKey.body()
+                        ?: return@coroutineScope WeatherResult.Error(exception = AppException.Unknown())
 
-                val domain = final.toDomain(location)
+                    val currentDeferred = async { api.fetchCurrent(bodyLocation.key) }
+                    val hourlyDeferred = async { api.fetchHourly(bodyLocation.key) }
+                    val dailyDeferred = async { api.fetchDaily(bodyLocation.key) }
 
-                weatherDao.insertWeather(
-                    currentWeather = domain.current.toCurrentWeatherEntity(location.id),
-                    dailyWeather = domain.daily.toDailyWeatherEntity(location.id),
-                    hourlyWeather = domain.hourly.toHourlyWeatherEntity(location.id),
-                    id = location.id,
-                )
-                WeatherResult.Success(domain)
+                    val bodyCurrent = currentDeferred.await().body()
+                        ?: return@coroutineScope WeatherResult.Error(exception = AppException.Unknown())
+                    val bodyHourly = hourlyDeferred.await().body()
+                        ?: return@coroutineScope WeatherResult.Error(exception = AppException.Unknown())
+                    val bodyDaily = dailyDeferred.await().body()
+                        ?: return@coroutineScope WeatherResult.Error(exception = AppException.Unknown())
+                    val final = AccuWeatherBundle(
+                        current = bodyCurrent[0],
+                        daily = bodyDaily,
+                        hourly = bodyHourly,
+                    )
+
+                    val domain = final.toDomain(location)
+
+                    weatherDao.insertWeather(
+                        currentWeather = domain.current.toCurrentWeatherEntity(location.id),
+                        dailyWeather = domain.daily.toDailyWeatherEntity(location.id),
+                        hourlyWeather = domain.hourly.toHourlyWeatherEntity(location.id),
+                        id = location.id,
+                    )
+                    WeatherResult.Success(domain)
+                }
             } catch (e: Exception) {
                 val isCacheSafe = isWeatherCacheSafe(cache)
 

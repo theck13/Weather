@@ -45,10 +45,10 @@ class MetNorwayRepository @Inject constructor(
             val domain = body.toDomain(location)
 
             weatherDao.insertWeather(
-                domain.current.toCurrentWeatherEntity(location.id),
-                domain.hourly.toHourlyWeatherEntity(location.id),
-                domain.daily.toDailyWeatherEntity(location.id),
-                location.id
+                currentWeather = domain.current.toCurrentWeatherEntity(location.id),
+                dailyWeather = domain.daily.toDailyWeatherEntity(location.id),
+                hourlyWeather = domain.hourly.toHourlyWeatherEntity(location.id),
+                id = location.id
             )
             WeatherResult.Success(domain)
 

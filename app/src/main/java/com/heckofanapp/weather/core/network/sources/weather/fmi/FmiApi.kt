@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit
 interface FmiApi {
     @GET("wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::simple")
     suspend fun fetchForecast(
-        @Query("latlon") latlon: String,
-        @Query("endtime") endtime: String,
-        @Query("starttime") starttime: String,
+        @Query("latlon") coordinates: String,
+        @Query("endtime") timeEnd: String,
+        @Query("starttime") timeStart: String,
     ): Response<ResponseBody>
 
     @GET("wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::ef::stations")
@@ -22,8 +22,8 @@ interface FmiApi {
     @GET("wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple")
     suspend fun fetchCurrent(
         @Query("fmisid") id: String,
-        @Query("starttime") starttime: String,
-        @Query("endtime") endtime: String,
+        @Query("endtime") timeEnd: String,
+        @Query("starttime") timeStart: String,
     ): Response<ResponseBody>
     companion object {
         const val BASE_URL = "https://opendata.fmi.fi/"
