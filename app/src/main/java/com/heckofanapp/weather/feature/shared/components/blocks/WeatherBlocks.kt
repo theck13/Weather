@@ -103,7 +103,7 @@ fun WeatherBlocks(
     val isHumidityValid = if (isDaily) weather.daily[dailyIndex].isHumidityValid() else true
     val isPrecipitation = weather.location.source.providesSnowFall().not() // Some sources do not provide rain/snow precipitation separately.
     val isPressureValid = if (isDaily) weather.daily[dailyIndex].isPressureValid() else weather.current.isPressureValid()
-    val isUvIndexValid = weather.daily[dailyIndex].isUltravioletMaxValid() && weather.current.isUltravioletValid()
+    val isUltravioletValid = if (isDaily) weather.daily[dailyIndex].isUltravioletMaxValid() else weather.current.isUltravioletValid()
     val isVisibilityValid = if (isDaily) weather.daily[dailyIndex].isVisibilityValid() else weather.current.isVisibilityValid()
     val isWindValid = if (isDaily) weather.daily[dailyIndex].isWindSpeedValid() else weather.current.isWindSpeedValid()
     val rainForTheDay = PrecipitationUnit.MM.convert(
@@ -121,7 +121,7 @@ fun WeatherBlocks(
         isHumidityValid,
         isPrecipitation,
         isPressureValid,
-        isUvIndexValid,
+        isUltravioletValid,
         isVisibilityValid,
         isWindValid,
         rainForTheDay,
