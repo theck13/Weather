@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
 
@@ -22,7 +21,6 @@ fun NavigateBackButton(
 ) {
     Tooltip(
         preferredPosition = TooltipAnchorPosition.Below,
-        spacing = 10.dp,
         tooltipText = stringResource(R.string.navigate_back),
     ) {
         IconButton(

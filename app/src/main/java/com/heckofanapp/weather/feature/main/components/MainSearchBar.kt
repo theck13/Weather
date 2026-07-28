@@ -160,7 +160,6 @@ fun MainSearchBar(
                 if (isTabletLike.not()) {
                     Tooltip(
                         preferredPosition = TooltipAnchorPosition.Below,
-                        spacing = 10.dp,
                         tooltipText = stringResource(R.string.show_list),
                     ) {
                         IconButton(
@@ -209,7 +208,6 @@ fun MainSearchBar(
                 if (isTabletLike) {
                     Tooltip(
                         preferredPosition = TooltipAnchorPosition.Below,
-                        spacing = 10.dp,
                         tooltipText = stringResource(R.string.search),
                     ) {
                         IconButton(
@@ -233,7 +231,6 @@ fun MainSearchBar(
 
                 Tooltip(
                     preferredPosition = TooltipAnchorPosition.Below,
-                    spacing = 10.dp,
                     tooltipText = "Settings",
                 ) {
                     IconButton(

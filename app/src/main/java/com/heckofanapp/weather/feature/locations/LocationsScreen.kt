@@ -278,7 +278,6 @@ private fun TopBar(
             if (isReordering) {
                 Tooltip(
                     preferredPosition = TooltipAnchorPosition.Below,
-                    spacing = 10.dp,
                     tooltipText = stringResource(R.string.action_done),
                 ) {
                     IconButton(
@@ -296,7 +295,6 @@ private fun TopBar(
                 if (isTabletLike.not()) {
                     Tooltip(
                         preferredPosition = TooltipAnchorPosition.Below,
-                        spacing = 10.dp,
                         tooltipText = stringResource(R.string.search),
                     ) {
                         IconButton(
@@ -319,7 +317,6 @@ private fun TopBar(
 
                 Tooltip(
                     preferredPosition = TooltipAnchorPosition.Below,
-                    spacing = 10.dp,
                     tooltipText = if (isRefreshing) stringResource(R.string.refreshing) else stringResource(R.string.refresh),
                 ) {
                     IconButton(
@@ -392,7 +389,6 @@ private fun TopBar(
             if (isReordering) {
                 Tooltip(
                     preferredPosition = TooltipAnchorPosition.Below,
-                    spacing = 10.dp,
                     tooltipText = stringResource(R.string.action_done),
                 ) {
                     IconButton(
@@ -409,7 +405,6 @@ private fun TopBar(
             } else if (isTabletLike.not()) {
                 Tooltip(
                     preferredPosition = TooltipAnchorPosition.Below,
-                    spacing = 10.dp,
                     tooltipText = stringResource(R.string.navigate_back),
                 ) {
                     IconButton(

@@ -19,17 +19,17 @@ import androidx.compose.ui.unit.dp
 fun Tooltip(
     modifier: Modifier = Modifier,
     preferredPosition: TooltipAnchorPosition = TooltipAnchorPosition.Above,
-    spacing: Dp = 26.dp,
+    spacing: Dp = 4.dp,
     tooltipText: String,
     content: @Composable () -> Unit,
 ) {
     TooltipBox(
         modifier = modifier,
-        state = rememberTooltipState(),
         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
             positioning = preferredPosition,
             spacingBetweenTooltipAndAnchor = spacing,
         ),
+        state = rememberTooltipState(),
         tooltip = {
             PlainTooltip {
                 Text(

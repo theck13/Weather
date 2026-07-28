@@ -104,7 +104,6 @@ fun SearchScreen(
                 actions = {
                     Tooltip(
                         preferredPosition = TooltipAnchorPosition.Below,
-                        spacing = 10.dp,
                         tooltipText = stringResource(R.string.search),
                     ) {
                         IconButton(
@@ -123,7 +122,6 @@ fun SearchScreen(
 
                     Tooltip(
                         preferredPosition = TooltipAnchorPosition.Below,
-                        spacing = 10.dp,
                         tooltipText = stringResource(R.string.source),
                     ) {
                         IconButton(
