@@ -58,7 +58,9 @@ data class WeatherDaily(
     val dewPoint: Double?, // (Average)
     val dusk: Long,
     val humidity: Double?, // (Average)
+    val moonIllumination: Double,
     val moonPhase: MoonPhase,
+    val moonPhaseDaysRemaining: Int,
     val moonrise: Long, // NOTE: ALWAYS MILLISECONDS
     val moonset: Long, // NOTE: ALWAYS MILLISECONDS
     val precipitationProbabilityMax: Int?,

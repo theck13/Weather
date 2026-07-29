@@ -2,21 +2,6 @@ package com.heckofanapp.weather.core.model.astro
 
 import com.heckofanapp.weather.R
 
-data class SunTimings(
-    val time: Long,
-    val sunrise: Long?,
-    val sunset: Long?,
-    val dawn: Long?,
-    val dusk: Long?
-)
-
-data class MoonTimings(
-    val time: Long,
-    val moonrise: Long?,
-    val moonset: Long?,
-    val phase: MoonPhase
-)
-
 enum class MoonPhase(
     val description: Int,
     val displayName: Int,
@@ -73,7 +58,26 @@ enum class MoonPhase(
     ),
 }
 
-fun getMoonPhase(phase: Double): MoonPhase {
+data class MoonTimings(
+    val time: Long,
+    val moonrise: Long?,
+    val moonset: Long?,
+    val phase: MoonPhase,
+    val daysRemaining: Int,
+    val illumination: Double,
+)
+
+data class SunTimings(
+    val time: Long,
+    val sunrise: Long?,
+    val sunset: Long?,
+    val dawn: Long?,
+    val dusk: Long?,
+)
+
+fun getMoonPhase(
+    phase: Double,
+): MoonPhase {
     return when {
         phase < -135 -> MoonPhase.NEW_MOON
         phase < -90 -> MoonPhase.WAXING_CRESCENT

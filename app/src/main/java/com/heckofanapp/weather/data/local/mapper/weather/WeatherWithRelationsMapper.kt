@@ -7,6 +7,7 @@ import com.heckofanapp.weather.core.model.domain.weather.WeatherDaily
 import com.heckofanapp.weather.core.model.domain.weather.WeatherHourly
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.utils.formatters.safeZoneId
+import com.heckofanapp.weather.core.utils.weather.astronomy.getMoonTimings
 import com.heckofanapp.weather.data.local.entity.weather.DailyWeatherEntity
 import com.heckofanapp.weather.data.local.entity.weather.WeatherWithRelations
 import java.time.Instant
@@ -15,6 +16,15 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalUuidApi::class)
 fun WeatherWithRelations.toDomain(): Weather {
     val timezone = location.timezone
+
+    // Moon illumination and phase duration are derived from date.
+    // They are recomputed here rather than stored.
+    val moonTimings = getMoonTimings(
+        latitude = location.lat,
+        longitude = location.lon,
+        timeMilli = daily.map { it.time },
+        zoneId = timezone,
+    )
 
     // DROP PAST DAYS
     val todayIndex = getDailyIndexForToday(
@@ -46,7 +56,9 @@ fun WeatherWithRelations.toDomain(): Weather {
                 dewPoint = daily[it].dewPoint,
                 dusk = daily[it].dusk,
                 humidity = daily[it].humidity,
+                moonIllumination = moonTimings[it].illumination,
                 moonPhase = daily[it].moonPhase,
+                moonPhaseDaysRemaining = moonTimings[it].daysRemaining,
                 moonrise = daily[it].moonrise,
                 moonset = daily[it].moonset,
                 precipitationProbabilityMax = daily[it].precipitationProbabilityMax,

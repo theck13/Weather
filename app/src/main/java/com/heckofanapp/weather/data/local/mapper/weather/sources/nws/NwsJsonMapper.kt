@@ -245,7 +245,9 @@ fun NwsWeatherJsonBundle.toDomain(
                 dewPoint = dewPoint,
                 dusk = sunTimings[index].dusk ?: 0L,
                 humidity = humidity,
+                moonIllumination = moonTimings[index].illumination,
                 moonPhase = moonTimings[index].phase,
+                moonPhaseDaysRemaining = moonTimings[index].daysRemaining,
                 moonrise = moonTimings[index].moonrise ?: -0L,
                 moonset = moonTimings[index].moonset ?: -0L,
                 precipitationProbabilityMax = precipitationProbabilityMax.roundToInt(), // item.probabilityOfPrecipitation.value from daily is wrong?

@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,9 +27,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
+import com.heckofanapp.weather.core.ui.theme.ShapeRadius
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.toDateString
@@ -54,6 +58,7 @@ import com.heckofanapp.weather.feature.blocks.components.AboutCardText
 import com.heckofanapp.weather.feature.shared.components.blocks.CelestialBlock
 import com.heckofanapp.weather.feature.shared.components.blocks.CelestialType
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 @Composable
 fun CelestialScreen(
@@ -112,6 +117,14 @@ fun CelestialScreen(
     val dayLength = daily[index].sunset.minus(daily[index].sunrise)
     val dayLengthHours = TimeUnit.MILLISECONDS.toHours(dayLength)
     val dayLengthMinutes = TimeUnit.MILLISECONDS.toMinutes(dayLength) % 60
+
+    val moonIlluminationPercent = daily[index].moonIllumination.roundToInt()
+    val moonPhaseDaysRemaining = daily[index].moonPhaseDaysRemaining
+    val moonPhaseDaysText = pluralStringResource(
+        R.plurals.phase_days,
+        moonPhaseDaysRemaining,
+        moonPhaseDaysRemaining,
+    )
 
     var showMoonPhaseDialog by remember { mutableStateOf(false) }
 
@@ -237,26 +250,20 @@ fun CelestialScreen(
                             ) {
                                 TextHeader(
                                     header = stringResource(R.string.moon_phase),
+                                    onClick = {
+                                        showMoonPhaseDialog = true
+                                    },
                                     text = stringResource(daily[index].moonPhase.displayName),
                                 )
 
-                                Gap(
-                                    vertical = SpaceDefault / 4,
+                                TextHeader(
+                                    header = stringResource(R.string.moon_phase_prevailing),
+                                    text = moonPhaseDaysText,
                                 )
 
-                                Image(
-                                    modifier = Modifier
-                                        .clip(
-                                            shape = CircleShape,
-                                        )
-                                        .clickable {
-                                            showMoonPhaseDialog = true
-                                        }
-                                        .size(
-                                            size = 96.dp,
-                                        ),
-                                    contentDescription = "",
-                                    painter = painterResource(daily[index].moonPhase.image),
+                                TextHeader(
+                                    header = stringResource(R.string.moon_phase_proportion),
+                                    text = stringResource(R.string.percentage, moonIlluminationPercent),
                                 )
                             }
 
@@ -360,26 +367,20 @@ fun CelestialScreen(
                         ) {
                             TextHeader(
                                 header = stringResource(R.string.moon_phase),
+                                onClick = {
+                                    showMoonPhaseDialog = true
+                                },
                                 text = stringResource(daily[index].moonPhase.displayName),
                             )
 
-                            Gap(
-                                vertical = SpaceDefault / 4,
+                            TextHeader(
+                                header = stringResource(R.string.moon_phase_prevailing),
+                                text = moonPhaseDaysText,
                             )
 
-                            Image(
-                                modifier = Modifier
-                                    .clip(
-                                        shape = CircleShape,
-                                    )
-                                    .clickable {
-                                        showMoonPhaseDialog = true
-                                    }
-                                    .size(
-                                        size = 96.dp,
-                                    ),
-                                contentDescription = "",
-                                painter = painterResource(daily[index].moonPhase.image),
+                            TextHeader(
+                                header = stringResource(R.string.moon_phase_proportion),
+                                text = stringResource(R.string.percentage, moonIlluminationPercent),
                             )
                         }
 
@@ -462,19 +463,46 @@ private fun MoonPhaseDialog(
                 MoonPhase.entries.forEach { phase ->
                     val isCurrent = phase == currentPhase
 
-                    Column {
-                        Text(
-                            color = if (isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                            fontWeight = if (isCurrent) FontWeight.W700 else FontWeight.W400,
-                            style = MaterialTheme.typography.titleMedium,
-                            text = stringResource(phase.displayName),
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(
+                            space = SpaceDefault / 2,
+                        ),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(
+                                    weight = 1.00f,
+                                )
+                        ) {
+                            Text(
+                                color = if (isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                                fontWeight = if (isCurrent) FontWeight.W700 else FontWeight.W400,
+                                style = MaterialTheme.typography.titleMedium,
+                                text = stringResource(phase.displayName),
+                            )
 
-                        Text(
-                            color = if (isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = if (isCurrent) FontWeight.W700 else FontWeight.W400,
-                            style = MaterialTheme.typography.bodyMedium,
-                            text = stringResource(phase.description),
+                            Text(
+                                color = if (isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = if (isCurrent) FontWeight.W700 else FontWeight.W400,
+                                style = MaterialTheme.typography.bodyMedium,
+                                text = stringResource(phase.description),
+                            )
+                        }
+
+                        Image(
+                            modifier = Modifier
+                                .size(
+                                    size = SpaceDefault * 4,
+                                ),
+                            colorFilter = ColorFilter.colorMatrix(
+                                ColorMatrix().apply {
+                                    setToSaturation(
+                                        sat = if (isCurrent) 1.00f else 0.00f,
+                                    )
+                                }
+                            ),
+                            contentDescription = "",
+                            painter = painterResource(phase.image),
                         )
                     }
                 }
@@ -508,9 +536,26 @@ private fun MoonPhaseDialog(
 @Composable
 private fun TextHeader(
     header: String,
+    onClick: (() -> Unit)? = null,
     text: String,
 ) {
-    Column {
+    val modifier = onClick?.let {
+        Modifier
+            .clip(
+                shape = RoundedCornerShape(
+                    size = ShapeRadius.ExtraSmall,
+                )
+            )
+            .clickable(
+                onClick = {
+                    onClick.invoke()
+                }
+            )
+    } ?: Modifier
+
+    Column(
+        modifier = modifier,
+    ) {
         Text(
             color = MaterialTheme.colorScheme.primary,
             fontSize = 16.sp,

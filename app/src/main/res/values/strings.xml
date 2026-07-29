@@ -36,6 +36,11 @@
     <string name="location_current">Current location</string>
     <string name="search_provider">Search provider</string>
 
+    <plurals name="phase_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
     <plurals name="time_minutes_ago">
         <item quantity="one">%d min ago</item>
         <item quantity="other">%d mins ago</item>
@@ -440,24 +445,28 @@
     <string name="text_day_length">Duration</string>
     <string name="weather_sun_moon">Sun &amp; Moon</string>
 
+    <string name="percentage">%1$d%%</string>
+
     <string name="moon_phase">Phase</string>
     <string name="moon_phases">Phases</string>
+    <string name="moon_phase_prevailing">Prevailing</string>
+    <string name="moon_phase_proportion">Proportion</string>
     <string name="moon_phase_new_moon">New Moon</string>
     <string name="moon_phase_new_moon_description">The side facing Earth is unilluminated and invisible.</string>
     <string name="moon_phase_waxing_crescent">Waxing Crescent</string>
     <string name="moon_phase_waxing_crescent_description">A thin sliver of light begins to appear and grow (wax).</string>
     <string name="moon_phase_first_quarter">First Quarter</string>
-    <string name="moon_phase_first_quarter_description">Moon is exactly half-illuminated on the right side.</string>
+    <string name="moon_phase_first_quarter_description">Moon is exactly half illuminated on right side.</string>
     <string name="moon_phase_waxing_gibbous">Waxing Gibbous</string>
-    <string name="moon_phase_waxing_gibbous_description">The illuminated portion continues to grow toward full.</string>
+    <string name="moon_phase_waxing_gibbous_description">The illuminated portion grows towards Full.</string>
     <string name="moon_phase_full_moon">Full Moon</string>
     <string name="moon_phase_full_moon_description">The entire face of the Moon is fully illuminated.</string>
     <string name="moon_phase_waning_gibbous">Waning Gibbous</string>
-    <string name="moon_phase_waning_gibbous_description">The illumination begins to shrink (wane) after the full moon.</string>
+    <string name="moon_phase_waning_gibbous_description">The illumination begins to shrink (wane) after Full.</string>
     <string name="moon_phase_last_quarter">Last Quarter</string>
-    <string name="moon_phase_last_quarter_description">Moon is exactly half-illuminated on the left side.</string>
+    <string name="moon_phase_last_quarter_description">Moon is exactly half illuminated on left side.</string>
     <string name="moon_phase_waning_crescent">Waning Crescent</string>
-    <string name="moon_phase_waning_crescent_description">A shrinking sliver of light remains before the next New Moon.</string>
+    <string name="moon_phase_waning_crescent_description">A shrinking sliver of light remains before next New.</string>
     <string name="weather_about_sun_moon_rise_set">The rise time is when the sun or moon first appears above the horizon.  The set time is when the sun or moon fully disappears below the horizon.</string>
     <string name="weather_about_dawn_dusk">Dawn is the period of light in the sky just before sunrise.  Dusk is the period of fading light in the sky just after sunset.</string>
     <string name="weather_about_pressure">Mean sea level pressure, a measure of how much the atmosphere is pressing down, adjusted to sea level.  Watching how it changes can provide an early indication of weather changes.  Pressure falling usually means unsettled weather is approaching, while pressure rising often means conditions are becoming more stable.</string>
