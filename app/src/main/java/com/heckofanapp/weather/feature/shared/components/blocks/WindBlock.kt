@@ -89,10 +89,10 @@ fun WindBlock(
                         .rotate(
                             degrees = WindDirection.toDegrees(windDirection)?.toFloat() ?: 0f,
                         ),
-                    contentDescription = "",
                     colorFilter = ColorFilter.tint(
                         color = MaterialTheme.colorScheme.tertiaryContainer,
                     ),
+                    contentDescription = "",
                     painter = painterResource(R.drawable.il_wind_arrow),
                 )
             }
