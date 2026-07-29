@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.TemperatureUnit
@@ -66,7 +67,7 @@ fun HourlyCard(
         Column(
             modifier = Modifier
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 )
                 .fillMaxWidth(),
         ) {
@@ -78,6 +79,10 @@ fun HourlyCard(
             if (filteredHourly.isEmpty()) {
                 NoHourlyDataAvailable()
                 return@Column
+            } else {
+                Gap(
+                    vertical = SpaceDefault / 2,
+                )
             }
 
             LazyRow(
@@ -108,7 +113,7 @@ fun HourlyCard(
 
                     if (index == 0) {
                         Gap(
-                            horizontal = 8.dp,
+                            horizontal = SpaceDefault / 2,
                         )
                     }
 
@@ -125,7 +130,7 @@ fun HourlyCard(
 
                     if (index == filteredHourly.size - 1) {
                         Gap(
-                            horizontal = 8.dp,
+                            horizontal = SpaceDefault / 2,
                         )
                     }
                 }
@@ -148,13 +153,13 @@ private fun HourlyItem(
                 height = 120.dp,
             )
             .padding(
-                horizontal = 4.dp,
+                horizontal = SpaceDefault / 4,
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
     ) {
         Gap(
-            vertical = 4.dp,
+            vertical = SpaceDefault / 4,
         )
 
         TemperatureWithShape(
@@ -163,7 +168,7 @@ private fun HourlyItem(
         )
 
         Gap(
-            vertical = 4.dp,
+            vertical = SpaceDefault / 4,
         )
 
         WeatherIconBox(
@@ -172,7 +177,7 @@ private fun HourlyItem(
         )
 
         Gap(
-            vertical = 4.dp,
+            vertical = SpaceDefault / 4,
         )
 
         Text(
@@ -181,7 +186,7 @@ private fun HourlyItem(
                     alpha = if (precipitationProbability > 0) 1.00f else 0.00f,
                 )
                 .padding(
-                    bottom = 4.dp,
+                    bottom = SpaceDefault / 4,
                 ),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelMedium,
@@ -189,7 +194,7 @@ private fun HourlyItem(
         )
 
         Gap(
-            vertical = 4.dp,
+            vertical = SpaceDefault / 4,
         )
 
         Text(

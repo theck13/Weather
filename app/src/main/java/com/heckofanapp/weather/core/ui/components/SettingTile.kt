@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.tiles.ActionTile
 import com.heckofanapp.weather.core.ui.components.tiles.CategoryTile
 import com.heckofanapp.weather.core.ui.components.tiles.DialogOption
@@ -140,7 +141,7 @@ fun SettingSection(
                 if (noPadding) {
                     0.dp
                 } else {
-                    16.dp
+                    SpaceDefault
                 },
         ),
         verticalArrangement = Arrangement.spacedBy(

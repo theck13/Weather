@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.TemperatureUnit
@@ -50,7 +51,7 @@ fun DailyCard(
         Column(
             modifier = Modifier
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 )
                 .fillMaxWidth(),
         ) {
@@ -60,12 +61,12 @@ fun DailyCard(
             )
 
             Gap(
-                vertical = 14.dp,
+                vertical = SpaceDefault,
             )
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(
-                    space = 6.dp,
+                    space = SpaceDefault / 2,
                 ),
             ) {
                 items(
@@ -80,7 +81,7 @@ fun DailyCard(
 
                     if (index == 0) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
 
@@ -105,7 +106,7 @@ fun DailyCard(
 
                     if (index == daily.size - 1) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
                 }
@@ -176,7 +177,7 @@ private fun DailyItem(
                 )
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 Text(
@@ -189,7 +190,7 @@ private fun DailyItem(
                 )
 
                 Gap(
-                    vertical = 4.dp,
+                    vertical = SpaceDefault / 4,
                 )
 
                 Text(

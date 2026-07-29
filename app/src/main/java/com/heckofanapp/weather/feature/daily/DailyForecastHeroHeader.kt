@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.domain.weather.WeatherDaily
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
@@ -49,8 +50,8 @@ fun DailyForecastHeroHeader(
 
     Column(
         modifier = Modifier.padding(
-            end = 16.dp,
-            start = 16.dp,
+            end = SpaceDefault,
+            start = SpaceDefault,
             top = 24.dp,
         ),
     ) {
@@ -83,7 +84,7 @@ fun DailyForecastHeroHeader(
         }
 
         Gap(
-            vertical = 5.dp,
+            vertical = SpaceDefault / 2,
         )
 
         Row(
@@ -114,14 +115,14 @@ fun DailyForecastHeroHeader(
             }
 
             Gap(
-                horizontal = 16.dp,
+                horizontal = SpaceDefault,
             )
 
             WeatherIconBox(
                 icons = daily.weatherCondition.toIconPair(
                     targetTimeMilli = System.currentTimeMillis(),
                 ),
-                size = 64.dp,
+                size = SpaceDefault * 4,
             )
         }
     }

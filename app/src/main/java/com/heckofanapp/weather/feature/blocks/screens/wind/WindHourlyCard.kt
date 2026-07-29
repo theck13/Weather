@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.WeatherHourly
 import com.heckofanapp.weather.core.model.weather.WindUnit
 import com.heckofanapp.weather.core.model.weather.toName
@@ -67,7 +68,7 @@ fun WindHourlyCard(
     }
     Surface(
         modifier = Modifier.padding(
-            horizontal = 16.dp,
+            horizontal = SpaceDefault,
         ),
         color = MaterialTheme.colorScheme.surfaceBright,
         shape = MaterialTheme.shapes.extraLarge,
@@ -77,7 +78,7 @@ fun WindHourlyCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 ),
         ) {
             Header(
@@ -90,12 +91,16 @@ fun WindHourlyCard(
                 })",
             )
 
+            Gap(
+                vertical = SpaceDefault / 2,
+            )
+
             LazyRow(
                 modifier = Modifier.height(
                     height = 200.dp,
                 ),
                 horizontalArrangement = Arrangement.spacedBy(
-                    space = 6.dp,
+                    space = SpaceDefault / 2,
                 ),
                 verticalAlignment = Alignment.Bottom,
             ) {
@@ -115,7 +120,7 @@ fun WindHourlyCard(
 
                     if (index == 0) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
 
@@ -152,7 +157,7 @@ fun WindHourlyCard(
                                     Modifier
                                         .fillMaxSize()
                                         .padding(
-                                            top = 6.dp,
+                                            top = SpaceDefault / 2,
                                         ),
                                     contentAlignment = Alignment.TopCenter,
                                 ) {
@@ -177,7 +182,7 @@ fun WindHourlyCard(
                         }
 
                         Gap(
-                            vertical = 5.dp,
+                            vertical = SpaceDefault / 2,
                         )
 
                         Text(
@@ -196,7 +201,7 @@ fun WindHourlyCard(
 
                     if (index == data.size - 1) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
                 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.airquality.AirQuality
 import com.heckofanapp.weather.core.model.domain.airquality.AirQualityHourly
 import com.heckofanapp.weather.core.model.weather.air.AirQualityIndexStandard
@@ -60,7 +61,7 @@ fun AirHourlyCard(
 
     Surface(
         modifier = Modifier.padding(
-            horizontal = 16.dp,
+            horizontal = SpaceDefault,
         ),
         color = MaterialTheme.colorScheme.surfaceBright,
         shape = MaterialTheme.shapes.extraLarge,
@@ -70,7 +71,7 @@ fun AirHourlyCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 ),
         ) {
             Header(
@@ -78,12 +79,16 @@ fun AirHourlyCard(
                 text = stringResource(R.string.weather_hourly_forecast),
             )
 
+            Gap(
+                vertical = SpaceDefault / 2,
+            )
+
             LazyRow(
                 modifier = Modifier.height(
                     height = 200.dp,
                 ),
                 horizontalArrangement = Arrangement.spacedBy(
-                    space = 6.dp,
+                    space = SpaceDefault / 2,
                 ),
                 verticalAlignment = Alignment.Bottom,
             ) {
@@ -107,7 +112,7 @@ fun AirHourlyCard(
 
                     if (index == 0) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
 
@@ -143,7 +148,7 @@ fun AirHourlyCard(
                         }
 
                         Gap(
-                            vertical = 5.dp,
+                            vertical = SpaceDefault / 2,
                         )
 
                         Text(
@@ -166,7 +171,7 @@ fun AirHourlyCard(
 
                     if (index == data.size - 1) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
                 }

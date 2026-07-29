@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.astro.MoonPhase
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
 import com.heckofanapp.weather.core.ui.components.DialogBasic
@@ -118,7 +119,7 @@ fun CelestialScreen(
         actions = {
             Text(
                 modifier = Modifier.padding(
-                    end = 16.dp,
+                    end = SpaceDefault,
                 ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.titleMedium,
@@ -142,7 +143,7 @@ fun CelestialScreen(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                     top = 2.dp,
                 ),
         ) {
@@ -151,10 +152,10 @@ fun CelestialScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         ),
                     horizontalArrangement = Arrangement.spacedBy(
-                        space = 14.dp,
+                        space = SpaceDefault,
                     ),
                 ) {
                     Surface(
@@ -169,13 +170,13 @@ fun CelestialScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                     .padding(
-                                    all = 16.dp,
+                                    all = SpaceDefault,
                                 ),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(
-                                    space = 6.dp,
+                                    space = SpaceDefault / 2,
                                 ),
                             ) {
                                 TextHeader(
@@ -222,7 +223,7 @@ fun CelestialScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    all = 16.dp,
+                                    all = SpaceDefault,
                                 ),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
@@ -231,7 +232,7 @@ fun CelestialScreen(
                                     weight = 1.00f,
                                 ),
                                 verticalArrangement = Arrangement.spacedBy(
-                                    space = 6.dp,
+                                    space = SpaceDefault / 2,
                                 ),
                             ) {
                                 TextHeader(
@@ -240,7 +241,7 @@ fun CelestialScreen(
                                 )
 
                                 Gap(
-                                    vertical = 4.dp,
+                                    vertical = SpaceDefault / 4,
                                 )
 
                                 Image(
@@ -278,7 +279,7 @@ fun CelestialScreen(
             } else {
                 Surface(
                     modifier = Modifier.padding(
-                        horizontal = 16.dp,
+                        horizontal = SpaceDefault,
                     ),
                     color = MaterialTheme.colorScheme.surfaceBright,
                     shape = MaterialTheme.shapes.extraLarge,
@@ -288,13 +289,13 @@ fun CelestialScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                all = 16.dp,
+                                all = SpaceDefault,
                             ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(
-                                space = 6.dp,
+                                space = SpaceDefault / 2,
                             ),
                         ) {
                             TextHeader(
@@ -330,12 +331,12 @@ fun CelestialScreen(
                 }
 
                 Gap(
-                    vertical = 14.dp,
+                    vertical = SpaceDefault,
                 )
 
                 Surface(
                     modifier = Modifier.padding(
-                        horizontal = 16.dp,
+                        horizontal = SpaceDefault,
                     ),
                     color = MaterialTheme.colorScheme.surfaceBright,
                     shape = MaterialTheme.shapes.extraLarge,
@@ -345,7 +346,7 @@ fun CelestialScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                all = 16.dp,
+                                all = SpaceDefault,
                             ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
@@ -354,7 +355,7 @@ fun CelestialScreen(
                                 weight = 1.00f,
                             ),
                             verticalArrangement = Arrangement.spacedBy(
-                                space = 6.dp,
+                                space = SpaceDefault / 2,
                             ),
                         ) {
                             TextHeader(
@@ -363,7 +364,7 @@ fun CelestialScreen(
                             )
 
                             Gap(
-                                vertical = 4.dp,
+                                vertical = SpaceDefault / 4,
                             )
 
                             Image(
@@ -400,7 +401,7 @@ fun CelestialScreen(
             }
 
             Gap(
-                vertical = 14.dp,
+                vertical = SpaceDefault,
             )
 
             AboutCard {
@@ -414,7 +415,7 @@ fun CelestialScreen(
             }
 
             Gap(
-                vertical = 10.dp,
+                vertical = SpaceDefault,
             )
         }
 
@@ -486,7 +487,7 @@ private fun MoonPhaseDialog(
                         bottom = 24.dp,
                         end = 24.dp,
                         start = 24.dp,
-                        top = 16.dp,
+                        top = SpaceDefault,
                     ),
                 horizontalArrangement = Arrangement.End,
             ) {

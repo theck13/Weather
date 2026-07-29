@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.utils.formatters.toDateString
@@ -66,7 +67,7 @@ fun HumidityScreen(
         actions = {
             Text(
                 modifier = Modifier.padding(
-                    end = 16.dp,
+                    end = SpaceDefault,
                 ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.titleMedium,
@@ -95,11 +96,11 @@ fun HumidityScreen(
                         paddingValues = paddingValues,
                     )
                     .padding(
-                        bottom = 16.dp,
+                        bottom = SpaceDefault,
                         top = 2.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 16.dp,
+                    space = SpaceDefault,
                 ),
             ) {
                 if (!humidityData.contains(null)) {

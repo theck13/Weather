@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.TemperatureUnit
@@ -38,9 +39,9 @@ fun CurrentWeatherCard(
     if (isFroggyLayout) {
         Column(
             modifier = Modifier.padding(
-                end = 16.dp,
-                start = 16.dp,
-                top = 6.dp,
+                end = SpaceDefault,
+                start = SpaceDefault,
+                top = SpaceDefault / 2,
             ),
         ) {
             Row(
@@ -148,15 +149,15 @@ fun CurrentWeatherPixel(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                end = 16.dp,
-                start = 16.dp,
-                top = 16.dp,
+                end = SpaceDefault,
+                start = SpaceDefault,
+                top = SpaceDefault,
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(
-                space = 8.dp,
+                space = SpaceDefault / 2,
             ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -227,7 +228,7 @@ private fun FeelsMaxMinLayout(
     } else {
         Row(
             horizontalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
+                space = SpaceDefault,
             ),
         ) {
             FeelsMaxMinTemps(

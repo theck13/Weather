@@ -17,12 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
-import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -81,9 +80,12 @@ fun BackgroundUpdatesScreen(
                     )
                     .padding(
                         paddingValues = paddingValues,
+                    )
+                    .padding(
+                        bottom = SpaceDefault,
                     ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 10.dp,
+                space = SpaceDefault,
             ),
         ) {
             AnimatedVisibility(
@@ -171,10 +173,6 @@ fun BackgroundUpdatesScreen(
                         },
                     ),
                 )
-            )
-
-            Gap(
-                vertical = 10.dp,
             )
         }
     }

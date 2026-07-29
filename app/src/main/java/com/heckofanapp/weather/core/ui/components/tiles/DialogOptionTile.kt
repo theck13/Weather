@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
 
 data class DialogOption<T>(
@@ -154,7 +155,7 @@ fun <T> DialogOptionTile(
 
                     Spacer(
                         modifier = Modifier.height(
-                            height = 16.dp,
+                            height = SpaceDefault,
                         )
                     )
 
@@ -184,7 +185,7 @@ fun <T> DialogOptionTile(
                                 ) {
                                     Spacer(
                                         modifier = Modifier.width(
-                                            width = 16.dp,
+                                            width = SpaceDefault,
                                         ),
                                     )
 
@@ -198,7 +199,7 @@ fun <T> DialogOptionTile(
 
                                     Spacer(
                                         modifier = Modifier.width(
-                                            width = 8.dp,
+                                            width = SpaceDefault / 2,
                                         ),
                                     )
 
@@ -210,7 +211,7 @@ fun <T> DialogOptionTile(
 
                                     Spacer(
                                         modifier = Modifier.width(
-                                            width = 16.dp,
+                                            width = SpaceDefault,
                                         ),
                                     )
                                 }
@@ -242,7 +243,7 @@ fun <T> DialogOptionTile(
 
                     Spacer(
                         modifier = Modifier.height(
-                            height = 16.dp,
+                            height = SpaceDefault,
                         ),
                     )
 
@@ -270,7 +271,7 @@ fun <T> DialogOptionTile(
 
                         Spacer(
                             modifier = Modifier.width(
-                                width = 8.dp,
+                                width = SpaceDefault / 2,
                             ),
                         )
 

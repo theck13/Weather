@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.TouchMinimum
 import com.heckofanapp.weather.core.ui.components.AvatarIcon
 import com.heckofanapp.weather.core.ui.components.Gap
@@ -29,7 +29,7 @@ fun ScaleCard(
 ) {
     Surface(
         modifier = modifier.padding(
-            horizontal = 16.dp,
+            horizontal = SpaceDefault,
         ),
         color = MaterialTheme.colorScheme.surfaceBright,
         shape = MaterialTheme.shapes.extraLarge,
@@ -39,7 +39,7 @@ fun ScaleCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 ),
         ) {
             Header(
@@ -48,7 +48,7 @@ fun ScaleCard(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             items()

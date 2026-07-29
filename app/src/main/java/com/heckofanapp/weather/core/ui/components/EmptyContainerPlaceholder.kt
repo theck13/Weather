@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.heckofanapp.weather.SpaceDefault
 
 @OptIn(
     ExperimentalMaterial3ExpressiveApi::class,
@@ -102,7 +103,7 @@ fun EmptyContainerPlaceholder(
 
             Text(
                 modifier = Modifier.padding(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = descSize,

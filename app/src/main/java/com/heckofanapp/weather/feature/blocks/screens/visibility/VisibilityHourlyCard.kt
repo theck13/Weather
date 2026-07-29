@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.WeatherHourly
 import com.heckofanapp.weather.core.model.weather.DistanceUnit
 import com.heckofanapp.weather.core.model.weather.toName
@@ -58,7 +59,7 @@ fun VisibilityHourlyCard(
 
     Surface(
         modifier = Modifier.padding(
-            horizontal = 16.dp,
+            horizontal = SpaceDefault,
         ),
         color = MaterialTheme.colorScheme.surfaceBright,
         shape = MaterialTheme.shapes.extraLarge,
@@ -68,7 +69,7 @@ fun VisibilityHourlyCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 ),
         ) {
             Header(
@@ -81,12 +82,16 @@ fun VisibilityHourlyCard(
                 })",
             )
 
+            Gap(
+                vertical = SpaceDefault / 2,
+            )
+
             LazyRow(
                 modifier = Modifier.height(
                     height = 200.dp,
                 ),
                 horizontalArrangement = Arrangement.spacedBy(
-                    space = 6.dp,
+                    space = SpaceDefault / 2,
                 ),
                 verticalAlignment = Alignment.Bottom,
             ) {
@@ -107,7 +112,7 @@ fun VisibilityHourlyCard(
 
                     if (index == 0) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
 
@@ -143,7 +148,7 @@ fun VisibilityHourlyCard(
                         }
 
                         Gap(
-                            vertical = 5.dp,
+                            vertical = SpaceDefault / 2,
                         )
 
                         Text(
@@ -162,7 +167,7 @@ fun VisibilityHourlyCard(
 
                     if (index == data.size - 1) {
                         Gap(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         )
                     }
                 }

@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.min
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.sources.WeatherSource
 import com.heckofanapp.weather.core.ui.components.Gap
@@ -152,7 +153,7 @@ fun IntroScreen(
                         paddingValues = paddingValues,
                     )
                     .padding(
-                        all = 16.dp,
+                        all = SpaceDefault,
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -170,7 +171,7 @@ fun IntroScreen(
                 )
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 Text(
@@ -190,7 +191,7 @@ fun IntroScreen(
                             fraction = 0.70f,
                         ),
                         horizontalArrangement = Arrangement.spacedBy(
-                            space = 16.dp,
+                            space = SpaceDefault,
                         ),
                     ) {
                         ButtonEnableLocation(
@@ -227,7 +228,7 @@ fun IntroScreen(
                     )
 
                     Gap(
-                        vertical = 16.dp,
+                        vertical = SpaceDefault,
                     )
 
                     ButtonSearchLocations(

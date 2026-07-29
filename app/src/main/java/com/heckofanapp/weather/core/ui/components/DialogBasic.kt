@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
 
 @OptIn(
@@ -70,14 +71,14 @@ fun DialogBasic(
                 )
 
                 Gap(
-                    vertical = 16.dp,
+                    vertical = SpaceDefault,
                 )
 
                 content()
 
                 if (isDefaultActions) {
                     Gap(
-                        vertical = 16.dp,
+                        vertical = SpaceDefault,
                     )
 
                     Row(
@@ -104,7 +105,7 @@ fun DialogBasic(
 
                         if (isDismissActionOnly.not()) {
                             Gap(
-                                horizontal = 8.dp,
+                                horizontal = SpaceDefault / 2,
                             )
 
                             TextButton(

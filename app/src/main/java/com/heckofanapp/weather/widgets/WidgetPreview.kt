@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
 import com.heckofanapp.weather.widgets.card.ui.WidgetCardPreview
 import com.heckofanapp.weather.widgets.daily.ui.WidgetDailyPreview
@@ -42,7 +43,7 @@ import com.heckofanapp.weather.widgets.ui.colors.WidgetThemeText
 fun PreviewWidgetCard() {
     Column(
         modifier = Modifier.padding(
-            all = 16.dp,
+            all = SpaceDefault,
         ),
     ) {
         WidgetCardPreview(
@@ -58,7 +59,7 @@ fun PreviewWidgetCard() {
 fun PreviewWidgetDaily() {
     Column(
         modifier = Modifier.padding(
-            all = 16.dp,
+            all = SpaceDefault,
         ),
     ) {
         WidgetDailyPreview(
@@ -77,7 +78,7 @@ fun PreviewWidgetDaily() {
 fun PreviewWidgetHourly() {
     Column(
         modifier = Modifier.padding(
-            all = 16.dp,
+            all = SpaceDefault,
         ),
     ) {
         WidgetHourlyPreview(
@@ -95,10 +96,10 @@ fun PreviewWidgetPill() {
     Column(
         modifier = Modifier
             .padding(
-                all = 16.dp,
+                all = SpaceDefault,
             )
             .size(
-                size = 192.dp,
+                size = SpaceDefault * 12,
             ),
     ) {
         Box(
@@ -141,14 +142,14 @@ fun PreviewWidgetPill() {
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(
-                        start = 16.dp,
-                        top = 64.dp,
+                        start = SpaceDefault,
+                        top = SpaceDefault * 4,
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     modifier = Modifier.size(
-                        size = 96.dp,
+                        size = SpaceDefault * 6,
                     ),
                     contentDescription = null,
                     painter = painterResource(R.drawable.il_weather_clear_day),
@@ -156,7 +157,7 @@ fun PreviewWidgetPill() {
 
                 Spacer(
                     modifier = Modifier.width(
-                        60.dp,
+                        SpaceDefault * 4,
                     ),
                 )
             }
@@ -176,7 +177,7 @@ fun PreviewWidgetSummary() {
                 ),
             )
             .padding(
-                all = 16.dp,
+                all = SpaceDefault,
             ),
     ) {
         Row {
@@ -190,7 +191,7 @@ fun PreviewWidgetSummary() {
 
             Spacer(
                 modifier = Modifier.width(
-                    width = 5.dp,
+                    width = SpaceDefault / 2,
                 ),
             )
 
@@ -206,7 +207,7 @@ fun PreviewWidgetSummary() {
 
         Spacer(
             modifier = Modifier.height(
-                height = 5.dp,
+                height = SpaceDefault / 2,
             ),
         )
 
@@ -226,7 +227,7 @@ fun PreviewWidgetSummary() {
 fun PreviewWidgetTransparent() {
     Column(
         modifier = Modifier.padding(
-            all = 16.dp,
+            all = SpaceDefault,
         ),
     ) {
         WidgetTransparentPreview(

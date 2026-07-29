@@ -17,10 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.airquality.AirQuality
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherBlock
@@ -104,18 +104,18 @@ fun DailyScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Column(
                 modifier = Modifier.padding(
-                    bottom = 8.dp,
-                    end = 16.dp,
-                    start = 16.dp,
-                    top = 16.dp,
+                    bottom = SpaceDefault / 2,
+                    end = SpaceDefault,
+                    start = SpaceDefault,
+                    top = SpaceDefault,
                 ),
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 8.dp,
+                    space = SpaceDefault / 2,
                 ),
             ) {
                 if (isShowSummary) {
@@ -127,7 +127,7 @@ fun DailyScreen(
                     )
 
                     Gap (
-                        vertical = 16.dp,
+                        vertical = SpaceDefault,
                     )
                 }
 

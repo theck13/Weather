@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.heckofanapp.weather.SpaceDefault
 
 @Composable
 fun AboutScaleLayout(
@@ -35,11 +36,11 @@ fun AboutScaleLayout(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                     top = 2.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
+                space = SpaceDefault,
             ),
         ) {
             hourlyContent()
@@ -47,7 +48,7 @@ fun AboutScaleLayout(
             if (isLandscape) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(
-                        space = (-16).dp,  // About and Scale have 16dp built in, -16dp removes one.
+                        space = -SpaceDefault,  // About and Scale have SpaceDefault built in, -SpaceDefault removes one.
                     ),
                 ) {
                     AboutCard(

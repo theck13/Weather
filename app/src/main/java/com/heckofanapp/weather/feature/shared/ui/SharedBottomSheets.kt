@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.sources.WeatherSource
 import com.heckofanapp.weather.core.model.sources.getWeatherSourcesForCountry
 import com.heckofanapp.weather.core.model.sources.getWeatherSourcesGlobal
@@ -80,7 +80,7 @@ object SharedBottomSheet {
                 }
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 SettingSection(

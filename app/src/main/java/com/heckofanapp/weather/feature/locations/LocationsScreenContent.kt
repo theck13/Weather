@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.TouchMinimum
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.domain.weather.Weather
@@ -93,8 +94,8 @@ fun LocationsScreenContent(
     LazyColumn(
         contentPadding = PaddingValues(
             bottom = bottomPadding,
-            end = 16.dp,
-            start = 16.dp,
+            end = SpaceDefault,
+            start = SpaceDefault,
         ),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(
@@ -198,7 +199,7 @@ fun LocationsScreenContent(
 
             if (index == ordered.size - 1) {
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
             }
         }
@@ -225,7 +226,7 @@ fun LocationsScreenContent(
                     )
 
                     Gap(
-                        vertical = 8.dp,
+                        vertical = SpaceDefault / 2,
                     )
                 }
             }
@@ -248,7 +249,7 @@ fun LocationsScreenContent(
                     )
 
                     Gap(
-                        vertical = 8.dp,
+                        vertical = SpaceDefault / 2,
                     )
                 }
             }

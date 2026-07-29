@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
 import com.heckofanapp.weather.core.ui.components.SettingsTileIcon
@@ -21,8 +22,8 @@ fun LocationScreenSheetContent(
 ) {
     Column(
         modifier = Modifier.padding(
-            bottom = 16.dp,
-            top = 8.dp,
+            bottom = SpaceDefault,
+            top = SpaceDefault / 2,
         ),
         verticalArrangement = Arrangement.spacedBy(
             space = 12.dp,

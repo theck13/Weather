@@ -17,9 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
@@ -45,7 +45,7 @@ fun LegalLicenseScreen(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 ),
         ) {
 
@@ -56,7 +56,7 @@ fun LegalLicenseScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -70,7 +70,7 @@ fun LegalLicenseScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -81,7 +81,7 @@ fun LegalLicenseScreen(
             )
 
             Gap(
-                vertical = 6.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -95,7 +95,7 @@ fun LegalLicenseScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -106,7 +106,7 @@ fun LegalLicenseScreen(
             )
 
             Gap(
-                vertical = 6.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -120,7 +120,7 @@ fun LegalLicenseScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -131,7 +131,7 @@ fun LegalLicenseScreen(
             )
 
             Gap(
-                vertical = 6.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -156,7 +156,7 @@ fun LegalLicenseScreen(
             )
 
             Gap(
-                vertical = 10.dp,
+                vertical = SpaceDefault,
             )
         }
     }

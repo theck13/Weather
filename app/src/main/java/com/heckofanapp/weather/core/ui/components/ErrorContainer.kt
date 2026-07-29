@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 
 @OptIn(
     ExperimentalMaterial3ExpressiveApi::class,
@@ -37,7 +38,7 @@ fun ErrorContainer(
             )
             .fillMaxSize()
             .padding(
-                all = 16.dp,
+                all = SpaceDefault,
             )
             .zIndex(
                 zIndex = 100000.00f,
@@ -64,7 +65,7 @@ fun ErrorContainer(
         )
 
         Gap(
-            vertical = 8.dp,
+            vertical = SpaceDefault / 2,
         )
 
         Text(

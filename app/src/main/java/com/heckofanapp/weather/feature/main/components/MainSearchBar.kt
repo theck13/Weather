@@ -43,9 +43,9 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.Symbol
@@ -138,7 +138,7 @@ fun MainSearchBar(
                 )
                 .drawWithContent {
                     clipRect(
-                        bottom = size.height + 16.dp.toPx(),
+                        bottom = size.height + SpaceDefault.toPx(),
                     ) {
                         this@drawWithContent.drawContent()
                     }
@@ -150,10 +150,10 @@ fun MainSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(
-                        height = 64.dp,
+                        height = SpaceDefault * 4,
                     )
                     .padding(
-                        horizontal = 4.dp,
+                        horizontal = SpaceDefault / 4,
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -177,7 +177,7 @@ fun MainSearchBar(
                 }
 
                 Gap(
-                    horizontal = 4.dp,
+                    horizontal = SpaceDefault / 4,
                 )
 
                 Text(
@@ -188,7 +188,7 @@ fun MainSearchBar(
                         .then(
                             if (isTabletLike) {
                                 Modifier.padding(
-                                    start = 10.dp,
+                                    start = SpaceDefault,
                                 )
                             } else {
                                 Modifier
@@ -202,7 +202,7 @@ fun MainSearchBar(
                 )
 
                 Gap(
-                    horizontal = 4.dp,
+                    horizontal = SpaceDefault / 4,
                 )
 
                 if (isTabletLike) {

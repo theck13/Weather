@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Symbol
 
 @Composable
@@ -21,9 +21,9 @@ fun Header(
     color: Color = MaterialTheme.colorScheme.secondary,
     icon: Int,
     padding: PaddingValues = PaddingValues(
-        end = 16.dp,
-        start = 16.dp,
-        top = 16.dp,
+        end = SpaceDefault,
+        start = SpaceDefault,
+        top = SpaceDefault,
     ),
     text: String,
 ) {
@@ -33,7 +33,7 @@ fun Header(
         ),
         horizontalArrangement = Arrangement.spacedBy(
             alignment = Alignment.CenterHorizontally,
-            space = 5.dp,
+            space = SpaceDefault / 2,
         ),
         verticalAlignment = Alignment.CenterVertically,
     ) {

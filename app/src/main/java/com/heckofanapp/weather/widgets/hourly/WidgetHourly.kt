@@ -3,7 +3,6 @@ package com.heckofanapp.weather.widgets.hourly
 import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -20,6 +19,7 @@ import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import com.heckofanapp.weather.Activity
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.WeatherWidgetStateDefinition
 import com.heckofanapp.weather.widgets.WeatherWidgetStateJson
 import com.heckofanapp.weather.widgets.hourly.ui.variants.WidgetHourlyLarge
@@ -86,7 +86,7 @@ private fun GlanceModifier.appWidgetBackgroundShape(): GlanceModifier {
                 colorProvider = GlanceTheme.colors.widgetBackground,
             )
             .cornerRadius(
-                radius = 16.dp,
+                radius = SpaceDefault,
             )
     } else {
         this

@@ -20,6 +20,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.model.WidgetWeather
 import com.heckofanapp.weather.widgets.ui.ReloadButton
 
@@ -87,7 +88,7 @@ fun WidgetHourlyMedium(
 
                 Spacer(
                     modifier = GlanceModifier.width(
-                        width = 8.dp,
+                        width = SpaceDefault / 2,
                     ),
                 )
 

@@ -11,11 +11,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.weather.DistanceUnit
 import com.heckofanapp.weather.core.model.weather.PrecipitationUnit
 import com.heckofanapp.weather.core.model.weather.PressureUnit
@@ -56,7 +56,7 @@ fun UnitsScreen(
                         paddingValues = paddingValues,
                     ),
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 10.dp,
+                    space = SpaceDefault,
                 ),
             ) {
                 SettingSection(

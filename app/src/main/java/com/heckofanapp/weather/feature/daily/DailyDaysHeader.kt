@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.unit.dp
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.TemperatureUnit
@@ -35,7 +35,7 @@ fun DailyDaysHeader(
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(
-            space = 6.dp,
+            space = SpaceDefault / 2,
         ),
         state = scrollState,
     ) {
@@ -61,7 +61,7 @@ fun DailyDaysHeader(
 
             if (index == 0) {
                 Gap(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 )
             }
 
@@ -79,7 +79,7 @@ fun DailyDaysHeader(
 
             if (index == weatherDaily.size - 1) {
                 Gap(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 )
             }
         }

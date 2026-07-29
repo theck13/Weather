@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.DialogBasic
 
 /**
@@ -38,7 +39,7 @@ fun ScaleDialog(
                     horizontal = 24.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 8.dp,
+                space = SpaceDefault / 2,
             ),
         ) {
             Text(

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.TouchMinimum
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.SettingSection
@@ -79,10 +80,14 @@ fun WidgetCardConfig(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        bottom = 16.dp,
-                        end = paddingValues.calculateEndPadding(layoutDirection = layoutDirection) + 16.dp,
-                        start = paddingValues.calculateStartPadding(layoutDirection = layoutDirection) + 16.dp,
-                        top = 16.dp,
+                        bottom = SpaceDefault,
+                        end = paddingValues.calculateEndPadding(
+                            layoutDirection = layoutDirection,
+                        ) + SpaceDefault,
+                        start = paddingValues.calculateStartPadding(
+                            layoutDirection = layoutDirection,
+                        ) + SpaceDefault,
+                        top = SpaceDefault,
                     ),
                 color = Color.Transparent,
             ) {
@@ -124,17 +129,17 @@ fun WidgetCardConfig(
                     ),
             ) {
                 Gap(
-                    vertical = 16.dp,
+                    vertical = SpaceDefault,
                 )
 
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         ),
                     horizontalArrangement = Arrangement.spacedBy(
-                        space = 6.dp,
+                        space = SpaceDefault / 2,
                     ),
                 ) {
                     WidgetVariant.entries.forEach { item ->
@@ -161,7 +166,7 @@ fun WidgetCardConfig(
                 }
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 SettingSection(
@@ -220,7 +225,7 @@ fun WidgetCardConfig(
                         )
                         .fillMaxWidth()
                         .padding(
-                            all = 16.dp,
+                            all = SpaceDefault,
                         ),
                     contentPadding = ButtonDefaults.contentPaddingFor(
                         buttonHeight = buttonSize,
@@ -314,7 +319,7 @@ fun WidgetCardPreviewMedium(
             )
 
             Gap(
-                horizontal = 6.dp,
+                horizontal = SpaceDefault / 2,
             )
 
             Column {
@@ -371,7 +376,7 @@ fun WidgetCardPreviewLarge(
             )
 
             Gap(
-                horizontal = 6.dp,
+                horizontal = SpaceDefault / 2,
             )
 
             Column {
@@ -407,7 +412,7 @@ fun WidgetCardPreviewLarge(
                 )
 
                 Gap(
-                    horizontal = 6.dp,
+                    horizontal = SpaceDefault / 2,
                 )
 
                 Column {
@@ -419,7 +424,7 @@ fun WidgetCardPreviewLarge(
                     )
 
                     Gap(
-                        horizontal = 6.dp,
+                        horizontal = SpaceDefault / 2,
                     )
 
                     Text(
@@ -472,7 +477,7 @@ fun WidgetCardPreviewSmall(
             )
 
             Gap(
-                horizontal = 6.dp,
+                horizontal = SpaceDefault / 2,
             )
 
             Text(

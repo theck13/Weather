@@ -45,6 +45,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.ui.components.Symbol
@@ -337,7 +338,7 @@ private fun TopBar(
                         if (isRefreshing) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(
-                                    size = 16.dp,
+                                    size = SpaceDefault,
                                 ),
                                 color = MaterialTheme.colorScheme.onSurface,
                                 strokeWidth = 2.dp,
@@ -376,7 +377,7 @@ private fun TopBar(
         modifier = Modifier
             .drawWithContent {
                 clipRect(
-                    bottom = size.height + 16.dp.toPx(),
+                    bottom = size.height + SpaceDefault.toPx(),
                 ) {
                     this@drawWithContent.drawContent()
                 }

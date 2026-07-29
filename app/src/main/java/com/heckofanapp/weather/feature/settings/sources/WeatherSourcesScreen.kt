@@ -16,9 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.sources.WeatherSource
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.SettingSection
@@ -47,10 +47,10 @@ fun WeatherSourcesScreen(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    bottom = 16.dp,
+                    bottom = SpaceDefault,
                 ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
+                space = SpaceDefault,
             ),
         ) {
             WeatherSource.entries.forEach {
@@ -75,7 +75,7 @@ fun WeatherSourcesScreen(
 
             Text(
                 modifier = Modifier.padding(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyLarge,
@@ -89,7 +89,7 @@ fun WeatherSourcesScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(
-                        horizontal = 16.dp,
+                        horizontal = SpaceDefault,
                     ),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyLarge,
@@ -98,7 +98,7 @@ fun WeatherSourcesScreen(
 
                 Button(
                     modifier = Modifier.padding(
-                        horizontal = 16.dp,
+                        horizontal = SpaceDefault,
                     ),
                     onClick = {
                         uriHandler.openUri("https://github.com/theck13/Weather/issues/new?template=new_source.yaml")

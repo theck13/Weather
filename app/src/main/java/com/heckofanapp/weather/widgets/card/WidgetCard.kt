@@ -3,7 +3,6 @@ package com.heckofanapp.weather.widgets.card
 import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -21,6 +20,7 @@ import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import com.heckofanapp.weather.Activity
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.WeatherWidgetStateDefinition
 import com.heckofanapp.weather.widgets.WeatherWidgetStateJson
 import com.heckofanapp.weather.widgets.card.ui.variants.WidgetCardLarge
@@ -109,7 +109,7 @@ private fun GlanceModifier.appWidgetBackgroundShape(
                 colorProvider = color,
             )
             .cornerRadius(
-                radius = 16.dp,
+                radius = SpaceDefault,
             )
     } else {
         this.background(

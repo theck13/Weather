@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.ui.components.DialogBasic
 import com.heckofanapp.weather.core.ui.components.TextAlertDialog
@@ -147,7 +148,7 @@ fun LocationScreenChooseDefaultDialog(
 
             Spacer(
                 modifier = Modifier.width(
-                    width = 16.dp,
+                    width = SpaceDefault,
                 ),
             )
 

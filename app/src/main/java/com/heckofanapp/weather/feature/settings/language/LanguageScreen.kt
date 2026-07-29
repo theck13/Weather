@@ -14,10 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.prefs.PreferencesHelper
 import com.heckofanapp.weather.core.ui.components.AvatarCheck
 import com.heckofanapp.weather.core.ui.components.AvatarMonogram
@@ -61,10 +61,10 @@ fun LanguageScreen(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    bottom = 10.dp,
+                    bottom = SpaceDefault,
                 ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 10.dp,
+                space = SpaceDefault,
             ),
         ) {
             SettingSection(

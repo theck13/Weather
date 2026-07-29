@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -105,14 +106,14 @@ fun WidgetDailyConfig(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        bottom = 16.dp,
+                        bottom = SpaceDefault,
                         end = paddingValues.calculateEndPadding(
                             layoutDirection = layoutDirection,
-                        ) + 16.dp,
+                        ) + SpaceDefault,
                         start = paddingValues.calculateStartPadding(
                             layoutDirection = layoutDirection,
-                        ) + 16.dp,
-                        top = 16.dp,
+                        ) + SpaceDefault,
+                        top = SpaceDefault,
                     ),
                 color = Color.Transparent,
             ) {
@@ -157,7 +158,7 @@ fun WidgetDailyConfig(
                     ),
             ) {
                 Gap(
-                    vertical = 16.dp,
+                    vertical = SpaceDefault,
                 )
 
                 SettingSection(
@@ -305,7 +306,7 @@ fun WidgetDailyConfig(
                             min = buttonSize,
                         )
                         .padding(
-                            all = 16.dp,
+                            all = SpaceDefault,
                         ),
                     contentPadding = ButtonDefaults.contentPaddingFor(
                         buttonHeight = buttonSize,
@@ -481,7 +482,7 @@ fun WidgetDailyPreview(
                     Column(
                         modifier = Modifier
                             .padding(
-                                vertical = 5.dp,
+                                vertical = SpaceDefault / 2,
                             )
                             .weight(
                                 weight = 1.00f,

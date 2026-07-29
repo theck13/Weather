@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Symbol
 
 @Composable
@@ -112,11 +113,11 @@ fun SingleSwitchTile(
                             onCheckedChange(checked.not())
                         }
                         .padding(
-                            start = 10.dp,
+                            start = SpaceDefault,
                         )
                 } else {
                     Modifier.padding(
-                        start = 10.dp,
+                        start = SpaceDefault,
                     )
                 },
             leadingContent = leading,

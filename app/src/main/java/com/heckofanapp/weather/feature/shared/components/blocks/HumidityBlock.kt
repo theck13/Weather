@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.TemperatureUnit
@@ -134,7 +135,7 @@ fun HumidityBlock(
                     padding = PaddingValues(
                         end = 12.dp,
                         start = 12.dp,
-                        top = 16.dp,
+                        top = SpaceDefault,
                     ),
                     text = stringResource(R.string.weather_humidity),
                 )
@@ -202,7 +203,7 @@ private fun DewPointRow(
         }
 
         Gap(
-            horizontal = 8.dp,
+            horizontal = SpaceDefault / 2,
         )
 
         Text(

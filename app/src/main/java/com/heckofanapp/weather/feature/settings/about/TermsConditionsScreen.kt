@@ -17,10 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.BuildConfig
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
@@ -49,7 +49,7 @@ fun TermsConditionsScreen(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 ),
         ) {
             Text(
@@ -88,7 +88,7 @@ fun TermsConditionsScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -99,7 +99,7 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -116,28 +116,9 @@ fun TermsConditionsScreen(
                         append("as-is")
                     }
 
-                    append(" ,free of charge, and without any guarantees of reliability, availability, or accuracy.")
-                },
-            )
+                    append(", free of charge, and without any guarantees of reliability, availability, or accuracy.\n" +
+                            "• You may use, modify, and distribute the Application in accordance with its open-source license.\n")
 
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = "• You may use, modify, and distribute the Application in accordance with its open-source license",
-            )
-
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = buildAnnotatedString {
                     append("• You may ")
 
                     withStyle(
@@ -154,7 +135,7 @@ fun TermsConditionsScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -165,7 +146,7 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -182,19 +163,8 @@ fun TermsConditionsScreen(
                         append("not collect, store, or share")
                     }
 
-                    append(" any personal information.")
-                },
-            )
-
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = buildAnnotatedString {
-                    append("• The only permission requested is ")
+                    append(" any personal information.\n" +
+                            "• The only permission requested is ")
 
                     withStyle(
                         style = SpanStyle(
@@ -204,23 +174,14 @@ fun TermsConditionsScreen(
                         append("location access")
                     }
 
-                    append(" ,which is optional and used solely within the Application to provide weather information.  This data never leaves your device.")
+                    append(", which is optional and used solely within the Application to provide weather information.  This data never leaves your device.\n")
+                    append("• For more details, please see the Privacy Policy.")
                 },
-            )
-
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = "• For more details, please see the Privacy Policy.",
             )
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -231,7 +192,7 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -248,23 +209,14 @@ fun TermsConditionsScreen(
                         append("not liable")
                     }
 
-                    append(" for any direct or indirect damages, losses, or issues that may arise from using the Application.")
+                    append(" for any direct or indirect damages, losses, or issues that may arise from using the Application.\n" +
+                            "• You are responsible for ensuring your device is compatible and has sufficient internet and battery to use the Application.")
                 },
-            )
-
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = "• You are responsible for ensuring your device is compatible and has sufficient internet and battery to use the Application.",
             )
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -275,38 +227,20 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyLarge,
-                text = "• The Application may be updated from time to time.",
-            )
-
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = "• There is no guarantee that the Application will always remain available, functional, or supported on all operating system versions.",
-            )
-
-            Gap(
-                vertical = 6.dp,
-            )
-
-            Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
-                text = "• The Service Provider may discontinue the Application at any time without prior notice.",
+                text = "• The Application may be updated from time to time.\n" +
+                        "• There is no guarantee that the Application will always remain available, functional, or supported on all operating system versions.\n" +
+                        "• The Service Provider may discontinue the Application at any time without prior notice.",
             )
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -317,7 +251,7 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -328,7 +262,7 @@ fun TermsConditionsScreen(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -339,7 +273,7 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(
@@ -371,7 +305,7 @@ fun TermsConditionsScreen(
             )
 
             Gap(
-                vertical = 10.dp,
+                vertical = SpaceDefault,
             )
         }
     }

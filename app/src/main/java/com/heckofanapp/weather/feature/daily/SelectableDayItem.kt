@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.model.weather.toIconPair
 import com.heckofanapp.weather.core.ui.components.Gap
@@ -59,7 +60,7 @@ fun SelectableDayItem(
                     vertical = 24.dp,
                 )
                 .width(
-                    64.dp,
+                    SpaceDefault * 4,
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
@@ -80,7 +81,7 @@ fun SelectableDayItem(
             }
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Column(
@@ -94,7 +95,7 @@ fun SelectableDayItem(
                 )
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 Text(

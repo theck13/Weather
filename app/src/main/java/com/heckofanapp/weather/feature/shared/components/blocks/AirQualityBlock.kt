@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.airquality.AirQuality
 import com.heckofanapp.weather.core.model.weather.air.AirQualityIndexStandard
 import com.heckofanapp.weather.core.ui.barColorsAirQuality
@@ -59,9 +60,9 @@ fun AirQualityBlock(
                         alignment = Alignment.BottomEnd,
                     )
                     .padding(
-                        bottom = 16.dp,
-                        end = 16.dp,
-                        start = 16.dp,
+                        bottom = SpaceDefault,
+                        end = SpaceDefault,
+                        start = SpaceDefault,
                     ),
             ) {
                 Header(
@@ -71,7 +72,7 @@ fun AirQualityBlock(
                     padding = PaddingValues(
                         end = 12.dp,
                         start = 12.dp,
-                        top = 16.dp,
+                        top = SpaceDefault,
                     ),
                     text = stringResource(R.string.weather_air),
                 )
@@ -102,12 +103,12 @@ fun AirQualityBlock(
                 )
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 LinearProgressIndicator(
                     modifier = Modifier.height(
-                        height = 8.dp,
+                        height = SpaceDefault / 2,
                     ),
                     color = barColorsAirQuality(
                         category = category,

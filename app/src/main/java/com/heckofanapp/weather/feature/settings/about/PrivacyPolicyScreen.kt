@@ -17,10 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.BuildConfig
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
@@ -48,18 +48,27 @@ fun PrivacyPolicyScreen(
                     paddingValues = paddingValues,
                 )
                 .padding(
-                    horizontal = 16.dp,
+                    horizontal = SpaceDefault,
                 ),
         ) {
             Text(
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyLarge,
-                text = "Weather is an open-source application.\n\n" +
-                        "We respect your privacy.  The application itself does not:",
+                text = "Weather is an open-source application.",
+            )
+
+            Gap(
+                vertical = SpaceDefault,
             )
             
+            Text(
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyLarge,
+                text = "We respect your privacy.  The application itself does not:",
+            )
+
             Gap(
-                vertical = 6.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -72,7 +81,7 @@ fun PrivacyPolicyScreen(
             
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -83,7 +92,7 @@ fun PrivacyPolicyScreen(
             )
             
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -93,7 +102,7 @@ fun PrivacyPolicyScreen(
             )
             
             Gap(
-                vertical = 6.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -101,13 +110,22 @@ fun PrivacyPolicyScreen(
                 style = MaterialTheme.typography.bodyLarge,
                 text = "• IP address\n" +
                         "• Approximate/Precise location data\n" +
-                        "• Device or network-related information required for API requests\n\n" +
-                        "This data processing is handled by the respective service providers under their own privacy policies.  Weather itself does not control or store this data.",
+                        "• Device or network-related information required for API requests",
+            )
+
+            Gap(
+                vertical = SpaceDefault,
+            )
+
+            Text(
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyLarge,
+                text = "This data processing is handled by the respective service providers under their own privacy policies.  Weather itself does not control or store this data.",
             )
             
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -118,7 +136,7 @@ fun PrivacyPolicyScreen(
             )
             
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -131,7 +149,7 @@ fun PrivacyPolicyScreen(
             
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -142,7 +160,7 @@ fun PrivacyPolicyScreen(
             )
             
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -153,7 +171,7 @@ fun PrivacyPolicyScreen(
             
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -164,7 +182,7 @@ fun PrivacyPolicyScreen(
             )
             
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -175,7 +193,7 @@ fun PrivacyPolicyScreen(
             
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = 12.dp,
+                    vertical = SpaceDefault,
                 ),
             )
 
@@ -186,7 +204,7 @@ fun PrivacyPolicyScreen(
             )
             
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
             
             Text(
@@ -214,7 +232,7 @@ fun PrivacyPolicyScreen(
             )
 
             Gap(
-                vertical = 10.dp,
+                vertical = SpaceDefault,
             )
         }
     }

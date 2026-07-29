@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -81,14 +82,14 @@ fun WidgetHourlyConfig(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        bottom = 16.dp,
+                        bottom = SpaceDefault,
                         end = paddingValues.calculateEndPadding(
                             layoutDirection = layoutDirection,
-                        ) + 16.dp,
+                        ) + SpaceDefault,
                         start = paddingValues.calculateStartPadding(
                             layoutDirection = layoutDirection,
-                        ) + 16.dp,
-                        top = 16.dp,
+                        ) + SpaceDefault,
+                        top = SpaceDefault,
                     ),
                 color = Color.Transparent,
             ) {
@@ -131,17 +132,17 @@ fun WidgetHourlyConfig(
                     ),
             ) {
                 Gap(
-                    vertical = 16.dp,
+                    vertical = SpaceDefault,
                 )
 
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         ),
                     horizontalArrangement = Arrangement.spacedBy(
-                        space = 6.dp,
+                        space = SpaceDefault / 2,
                     ),
                 ) {
                     WidgetVariant.entries.forEach { item ->
@@ -168,7 +169,7 @@ fun WidgetHourlyConfig(
                 }
 
                 Gap(
-                    vertical = 8.dp,
+                    vertical = SpaceDefault / 2,
                 )
 
                 SettingSection(
@@ -265,7 +266,7 @@ fun WidgetHourlyConfig(
                         )
                         .fillMaxWidth()
                         .padding(
-                            all = 16.dp,
+                            all = SpaceDefault,
                         ),
                     contentPadding = ButtonDefaults.contentPaddingFor(
                         buttonHeight = buttonSize,
@@ -383,8 +384,7 @@ fun WidgetHourlyPreviewLarge(
     val hourlyItem: @Composable (String, Int, Int) -> Unit = { time, temp, icon ->
         Column(
             modifier = Modifier.padding(
-                horizontal = 5.dp,
-                vertical = 5.dp,
+                all = 5.dp,
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
@@ -449,7 +449,7 @@ fun WidgetHourlyPreviewLarge(
                         )
 
                         Gap(
-                            horizontal = 8.dp,
+                            horizontal = SpaceDefault / 2,
                         )
 
                         Text(
@@ -461,7 +461,7 @@ fun WidgetHourlyPreviewLarge(
                     }
 
                     Gap(
-                        vertical = 6.dp,
+                        vertical = SpaceDefault / 2,
                     )
 
                     Row(
@@ -517,7 +517,7 @@ fun WidgetHourlyPreviewLarge(
             Surface(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(
-                    size = 16.dp,
+                    size = SpaceDefault,
                 ),
             ) {
                 Row(
@@ -608,7 +608,7 @@ fun WidgetHourlyPreviewMedium(
             )
 
             Gap(
-                horizontal = 6.dp,
+                horizontal = SpaceDefault / 2,
             )
 
             Row {
@@ -620,7 +620,7 @@ fun WidgetHourlyPreviewMedium(
                 )
 
                 Gap(
-                    horizontal = 6.dp,
+                    horizontal = SpaceDefault / 2,
                 )
 
                 Text(
@@ -673,7 +673,7 @@ fun WidgetHourlyPreviewSmall(
             )
 
             Gap(
-                vertical = 8.dp,
+                vertical = SpaceDefault / 2,
             )
 
             Text(

@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(
@@ -243,8 +244,7 @@ fun LabeledSlider(
                 ) {
                     Text(
                         modifier = Modifier.padding(
-                            horizontal = 14.dp,
-                            vertical = 10.dp,
+                            all = SpaceDefault,
                         ),
                         color = MaterialTheme.colorScheme.inverseOnSurface,
                         fontSize = 14.sp,

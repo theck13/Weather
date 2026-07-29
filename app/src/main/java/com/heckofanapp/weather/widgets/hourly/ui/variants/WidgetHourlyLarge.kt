@@ -21,6 +21,7 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.WidgetConfig
 import com.heckofanapp.weather.widgets.hourly.components.WidgetHourlyItem
 import com.heckofanapp.weather.widgets.model.WidgetWeather
@@ -71,7 +72,7 @@ fun WidgetHourlyLarge(
 
                         Spacer(
                             modifier = GlanceModifier.width(
-                                width = 6.dp,
+                                width = SpaceDefault / 2,
                             ),
                         )
 
@@ -89,7 +90,7 @@ fun WidgetHourlyLarge(
 
                     Spacer(
                         modifier = GlanceModifier.width(
-                            width = 6.dp,
+                            width = SpaceDefault / 2,
                         ),
                     )
 
@@ -105,7 +106,7 @@ fun WidgetHourlyLarge(
 
                         Spacer(
                             modifier = GlanceModifier.width(
-                                width = 8.dp,
+                                width = SpaceDefault / 2,
                             ),
                         )
 
@@ -160,7 +161,7 @@ fun WidgetHourlyLarge(
                         colorProvider = GlanceTheme.colors.background,
                     )
                     .cornerRadius(
-                        radius = 16.dp,
+                        radius = SpaceDefault,
                     )
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,

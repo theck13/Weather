@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.PrecipitationUnit
 import com.heckofanapp.weather.core.model.weather.toName
@@ -126,7 +127,7 @@ fun SnowBlock(
                         alignment = Alignment.BottomEnd,
                     )
                     .padding(
-                        bottom = 16.dp,
+                        bottom = SpaceDefault,
                     ),
             ) {
                 Header(
@@ -136,7 +137,7 @@ fun SnowBlock(
                     padding = PaddingValues(
                         end = 12.dp,
                         start = 12.dp,
-                        top = 16.dp,
+                        top = SpaceDefault,
                     ),
                     text = stringResource(R.string.weather_snow_block),
                 )
@@ -185,7 +186,7 @@ fun SnowBlock(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 16.sp,

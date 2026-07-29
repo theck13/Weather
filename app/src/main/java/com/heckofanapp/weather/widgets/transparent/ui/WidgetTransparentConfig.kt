@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -75,14 +76,14 @@ fun WidgetTransparentConfig(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        bottom = 16.dp,
+                        bottom = SpaceDefault,
                         end = paddingValues.calculateEndPadding(
                             layoutDirection = layoutDirection,
-                        ) + 16.dp,
+                        ) + SpaceDefault,
                         start = paddingValues.calculateStartPadding(
                             layoutDirection = layoutDirection,
-                        ) + 16.dp,
-                        top = 16.dp,
+                        ) + SpaceDefault,
+                        top = SpaceDefault,
                     ),
                 color = Color.Transparent,
                 shape = RoundedCornerShape(
@@ -127,7 +128,7 @@ fun WidgetTransparentConfig(
                     ),
             ) {
                 Gap(
-                    vertical = 16.dp,
+                    vertical = SpaceDefault,
                 )
 
                 SettingSection(
@@ -207,7 +208,7 @@ fun WidgetTransparentConfig(
                             min = buttonSize,
                         )
                         .padding(
-                            all = 16.dp,
+                            all = SpaceDefault,
                         ),
                     contentPadding = ButtonDefaults.contentPaddingFor(
                         buttonHeight = buttonSize,
@@ -253,7 +254,7 @@ fun WidgetTransparentPreview(
 
     Column(
         modifier = Modifier.padding(
-            all = 16.dp,
+            all = SpaceDefault,
         ),
     ) {
         FlowRow(
@@ -270,7 +271,7 @@ fun WidgetTransparentPreview(
             }
 
             Gap(
-                horizontal = 10.dp,
+                horizontal = SpaceDefault,
             )
 
             Text(

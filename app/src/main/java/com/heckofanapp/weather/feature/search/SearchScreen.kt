@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.sources.SearchSource
 import com.heckofanapp.weather.core.model.sources.WeatherSource
@@ -231,7 +232,7 @@ fun SearchScreen(
                 ) {
                     Text(
                         modifier = Modifier.padding(
-                            horizontal = 16.dp,
+                            horizontal = SpaceDefault,
                         ),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium,
@@ -241,7 +242,7 @@ fun SearchScreen(
                         ),
                     )
                     Gap(
-                        vertical = 8.dp,
+                        vertical = SpaceDefault / 2,
                     )
 
                     SettingSection(
@@ -269,7 +270,7 @@ fun SearchScreen(
                     )
 
                     Gap(
-                        vertical = 10.dp,
+                        vertical = SpaceDefault,
                     )
                 }
             }

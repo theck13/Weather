@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.heckofanapp.weather.SpaceDefault
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -118,9 +119,9 @@ fun ActionBottomSheet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            bottom = 10.dp,
-                            end = 16.dp,
-                            start = 16.dp,
+                            bottom = SpaceDefault,
+                            end = SpaceDefault,
+                            start = SpaceDefault,
                         ),
                     horizontalArrangement = if (hideConfirmBtn) Arrangement.End else Arrangement.SpaceBetween,
                 ) {
@@ -149,7 +150,7 @@ fun ActionBottomSheet(
                     if (!hideConfirmBtn) {
                         if (confirmBtnMaxWidth) {
                             Gap(
-                                horizontal = 8.dp,
+                                horizontal = SpaceDefault / 2,
                             )
                         }
 

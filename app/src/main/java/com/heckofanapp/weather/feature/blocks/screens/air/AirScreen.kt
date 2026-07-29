@@ -12,10 +12,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.airquality.AirQualityHourly
 import com.heckofanapp.weather.core.model.weather.air.AirQualityIndexCategory
 import com.heckofanapp.weather.core.model.weather.air.AirQualityIndexStandard
@@ -71,7 +71,7 @@ fun AirScreen(
         actions = {
             Text(
                 modifier = Modifier.padding(
-                    end = 16.dp,
+                    end = SpaceDefault,
                 ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.titleMedium,

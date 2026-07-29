@@ -10,7 +10,7 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.heckofanapp.weather.SpaceDefault
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 fun Tooltip(
     modifier: Modifier = Modifier,
     preferredPosition: TooltipAnchorPosition = TooltipAnchorPosition.Above,
-    spacing: Dp = 4.dp,
+    spacing: Dp = SpaceDefault / 4,
     tooltipText: String,
     content: @Composable () -> Unit,
 ) {

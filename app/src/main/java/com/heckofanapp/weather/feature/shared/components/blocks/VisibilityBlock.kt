@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherUnits
 import com.heckofanapp.weather.core.model.weather.DistanceUnit
@@ -98,7 +99,7 @@ fun VisibilityBlock(
                     color = MaterialTheme.colorScheme.onSurfaceDim,
                     icon = R.drawable.ic_visibility_24,
                     padding = PaddingValues(
-                        horizontal = 16.dp,
+                        horizontal = SpaceDefault,
                     ),
                     text = stringResource(R.string.weather_visibility),
                 )

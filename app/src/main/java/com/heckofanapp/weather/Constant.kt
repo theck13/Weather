@@ -44,4 +44,5 @@ const val SYSTEM_BAR_ALPHA = 0.75f
 val DEFAULT_SEARCH_SOURCE = SearchSource.OPEN_METEO
 val DEFAULT_THEME_VARIANT = ThemeVariant.EXPRESSIVE
 
+val SpaceDefault = 16.dp
 val TouchMinimum = 48.dp

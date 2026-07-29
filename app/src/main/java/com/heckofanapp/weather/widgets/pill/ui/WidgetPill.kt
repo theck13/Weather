@@ -24,6 +24,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.model.WidgetWeather
 import com.heckofanapp.weather.widgets.ui.ReloadButton
 
@@ -81,7 +82,7 @@ fun WidgetPill(
             ) {
                 Image(
                     modifier = GlanceModifier.size(
-                        size = 64.dp,
+                        size = SpaceDefault * 4,
                     ),
                     contentDescription = null,
                     provider = ImageProvider(state.currentIcon),

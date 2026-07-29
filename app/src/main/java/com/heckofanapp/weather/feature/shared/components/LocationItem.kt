@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Symbol
 import com.heckofanapp.weather.core.ui.components.WeatherIconBox
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
@@ -205,7 +206,7 @@ private fun LocationTitle(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(
-            space = 4.dp,
+            space = SpaceDefault / 4,
         ),
         verticalAlignment = Alignment.CenterVertically,
     ) {

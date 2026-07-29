@@ -33,8 +33,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.TouchMinimum
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
 import com.heckofanapp.weather.core.ui.theme.ThemeVariant
@@ -103,17 +103,17 @@ fun ColorPicker(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                all = 16.dp,
+                all = SpaceDefault,
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         FlowRow(
             maxItemsInEachRow = 6,
             horizontalArrangement = Arrangement.spacedBy(
-                space = 8.dp,
+                space = SpaceDefault / 2,
             ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 8.dp,
+                space = SpaceDefault / 2,
             ),
         ) {
             scheme.forEach { hex ->
@@ -163,7 +163,7 @@ fun ColorPicker(
 
         Box(
             modifier = Modifier.height(
-                height = 16.dp,
+                height = SpaceDefault,
             ),
         )
 

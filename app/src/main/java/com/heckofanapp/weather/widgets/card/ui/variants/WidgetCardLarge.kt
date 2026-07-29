@@ -22,6 +22,7 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.TouchMinimum
 import com.heckofanapp.weather.widgets.WidgetConfig
 import com.heckofanapp.weather.widgets.model.WidgetWeather
@@ -101,7 +102,7 @@ fun WidgetCardLarge(
 
             Spacer(
                 modifier = GlanceModifier.width(
-                    width = 16.dp,
+                    width = SpaceDefault,
                 ),
             )
 
@@ -116,7 +117,7 @@ fun WidgetCardLarge(
 
             Spacer(
                 modifier = GlanceModifier.width(
-                    width = 8.dp,
+                    width = SpaceDefault / 2,
                 ),
             )
 

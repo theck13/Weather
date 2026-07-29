@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.prefs.AppPrefsState
 import com.heckofanapp.weather.core.ui.components.Gap
@@ -226,11 +227,11 @@ internal fun CelestialHeader(
             .padding(
                 end = 12.dp,
                 start = 12.dp,
-                top = 16.dp,
+                top = SpaceDefault,
             ),
         horizontalArrangement = Arrangement.spacedBy(
             alignment = Alignment.CenterHorizontally,
-            space = 5.dp,
+            space = SpaceDefault / 2,
         ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -259,11 +260,11 @@ internal fun CelestialTime(
         Symbol(
             color = MaterialTheme.colorScheme.onSurface,
             icon = icon,
-            size = 18.dp,
+            size = SpaceDefault,
         )
 
         Gap(
-            horizontal = 5.dp,
+            horizontal = SpaceDefault / 2,
         )
 
         Text(

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
 
 @OptIn(
@@ -60,7 +61,7 @@ fun TextAlertDialog(
                     all = 24.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 16.dp,
+                    space = SpaceDefault,
                 )
             ) {
                 Text(
@@ -93,7 +94,7 @@ fun TextAlertDialog(
 
                     Spacer(
                         modifier = Modifier.width(
-                            width = 8.dp,
+                            width = SpaceDefault / 2,
                         ),
                     )
 

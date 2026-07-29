@@ -27,8 +27,7 @@ fun WidgetHourlyItem(
 ) {
     Column(
         modifier = GlanceModifier.padding(
-            horizontal = 5.dp,
-            vertical = 5.dp,
+            all = 5.dp,
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

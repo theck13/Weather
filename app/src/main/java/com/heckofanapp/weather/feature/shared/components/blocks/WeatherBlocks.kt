@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.domain.airquality.AirQuality
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.domain.weather.WeatherBlock
@@ -165,15 +166,15 @@ fun WeatherBlocks(
             minSize = 140.dp,
         ),
         contentPadding = PaddingValues(
-            vertical = 8.dp,
+            vertical = SpaceDefault / 2,
         ),
         horizontalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
+            space = SpaceDefault,
         ),
         state = lazyGridState,
         userScrollEnabled = false,
         verticalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
+            space = SpaceDefault,
         ),
     ) {
         items(

@@ -31,6 +31,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.heckofanapp.weather.Activity
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.WeatherWidgetStateDefinition
 import com.heckofanapp.weather.widgets.WeatherWidgetStateJson
 import com.heckofanapp.weather.widgets.model.WidgetWeather
@@ -64,7 +65,7 @@ class WidgetSummary : GlanceAppWidget() {
                         modifier = GlanceModifier
                             .fillMaxSize()
                             .padding(
-                                all = 16.dp,
+                                all = SpaceDefault,
                             ),
                     ) {
                         Row {
@@ -123,7 +124,7 @@ private fun GlanceModifier.appWidgetBackgroundShape(): GlanceModifier {
                 colorProvider = GlanceTheme.colors.widgetBackground
             )
             .cornerRadius(
-                radius = 16.dp,
+                radius = SpaceDefault,
             )
     } else {
         this

@@ -45,10 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.heckofanapp.weather.SYSTEM_BAR_ALPHA
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.theme.isThemeDark
@@ -165,7 +165,7 @@ fun MainScreenScaffold(
                                 alignment = Alignment.TopCenter,
                             )
                             .padding(
-                                top = paddingValues.calculateTopPadding() + 64.dp,
+                                top = paddingValues.calculateTopPadding() + SpaceDefault * 4,
                             )
                             .zIndex(
                                 zIndex = 99999.00f,
@@ -215,7 +215,7 @@ fun MainScreenScaffold(
                             } else {
                                 Spacer(
                                     modifier = Modifier.height(
-                                        height = paddingValues.calculateTopPadding() + 64.dp,
+                                        height = paddingValues.calculateTopPadding() + SpaceDefault * 4,
                                     ),
                                 )
                             }
@@ -235,13 +235,13 @@ fun MainScreenScaffold(
                                 }
 
                                 Gap(
-                                    vertical = 8.dp,
+                                    vertical = SpaceDefault / 2,
                                 )
 
                                 Column(
                                     modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp,
+                                        horizontal = SpaceDefault,
+                                        vertical = SpaceDefault / 2,
                                     ),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
@@ -253,7 +253,7 @@ fun MainScreenScaffold(
                                         )
 
                                         Gap (
-                                            vertical = 16.dp,
+                                            vertical = SpaceDefault,
                                         )
                                     }
 
@@ -263,7 +263,7 @@ fun MainScreenScaffold(
                                     )
 
                                     Gap (
-                                        vertical = 16.dp,
+                                        vertical = SpaceDefault,
                                     )
 
                                     DailyCard(
@@ -273,7 +273,7 @@ fun MainScreenScaffold(
                                     )
 
                                     Gap (
-                                        vertical = 8.dp,
+                                        vertical = SpaceDefault / 2,
                                     )
 
                                     WeatherBlocks(

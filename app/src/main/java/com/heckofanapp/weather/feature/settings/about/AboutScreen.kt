@@ -34,8 +34,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.BuildConfig
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
-import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -75,9 +75,12 @@ fun AboutScreen(
                     )
                     .padding(
                         paddingValues = paddingValues,
+                    )
+                    .padding(
+                        bottom = SpaceDefault,
                     ),
             verticalArrangement = Arrangement.spacedBy(
-                space = 10.dp,
+                space = SpaceDefault,
             ),
         ) {
             val resources = context.resources
@@ -208,10 +211,6 @@ fun AboutScreen(
                     ),
                 )
             )
-
-            Gap(
-                vertical = 10.dp,
-            )
         }
     }
 }
@@ -227,7 +226,7 @@ private fun AboutVersion(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 16.dp,
+                horizontal = SpaceDefault,
             ),
         shape = RoundedCornerShape(
             size = ShapeRadius.Large,
@@ -281,7 +280,7 @@ private fun AboutVersion(
                     if (isRefreshing) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(
-                                size = 16.dp,
+                                size = SpaceDefault,
                             ),
                             color = MaterialTheme.colorScheme.onTertiary,
                             strokeWidth = 2.dp,

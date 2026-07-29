@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.TouchMinimum
 import com.heckofanapp.weather.core.model.domain.weather.Weather
 import com.heckofanapp.weather.core.model.sources.WeatherSource
@@ -35,14 +35,14 @@ fun CreditsBottomSection(
     val source = weather?.location?.source?.displayName ?: WeatherSource.OPEN.displayName
 
     Gap(
-        vertical = 8.dp,
+        vertical = SpaceDefault / 2,
     )
 
     Text(
         modifier = Modifier
             .clip(
                 shape = RoundedCornerShape(
-                    size = 8.dp,
+                    size = SpaceDefault / 2,
                 ),
             )
             .clickable(
@@ -53,7 +53,7 @@ fun CreditsBottomSection(
                 minWidth = TouchMinimum,
             )
             .padding(
-                all = 16.dp,
+                all = SpaceDefault,
             )
             .wrapContentHeight(
                 align = Alignment.CenterVertically,

@@ -30,6 +30,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.heckofanapp.weather.Activity
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.widgets.WeatherWidgetStateDefinition
 import com.heckofanapp.weather.widgets.WeatherWidgetStateJson
 import com.heckofanapp.weather.widgets.model.WidgetWeather
@@ -74,7 +75,7 @@ class WidgetTransparent : GlanceAppWidget() {
                         modifier = GlanceModifier
                             .fillMaxWidth()
                             .padding(
-                                all = 16.dp,
+                                all = SpaceDefault,
                             ),
                     ) {
                         if (config.showClock) {

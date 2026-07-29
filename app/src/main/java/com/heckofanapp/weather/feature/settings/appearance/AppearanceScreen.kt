@@ -10,11 +10,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.prefs.LocalAppPrefs
-import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
@@ -78,9 +77,18 @@ fun AppearanceScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .verticalScroll(
+                        state = rememberScrollState(),
+                    )
+                    .padding(
+                        paddingValues = paddingValues,
+                    )
+                    .padding(
+                        bottom = SpaceDefault,
+                    ),
+            verticalArrangement = Arrangement.spacedBy(
+                space = SpaceDefault,
+            ),
         ) {
             SettingSection(
                 title = stringResource(R.string.setting_app_looks),
@@ -242,10 +250,6 @@ fun AppearanceScreen(
                         title = stringResource(R.string.setting_day_summary),
                     ),
                 ),
-            )
-
-            Gap(
-                vertical = 10.dp,
             )
         }
     }
