@@ -107,6 +107,16 @@ class LocationsRepository @Inject constructor(
         return dao.getDefaultLocation().map { it?.toDomain() }
     }
 
+    /**
+     * Observes single location's row so callers react to in-place changes (rename, moved device
+     * pin, source switch) that keep same id.  Emits null when location no longer exists.
+     */
+    fun observeLocation(
+        locationId: String,
+    ): Flow<Location?> {
+        return dao.getLocationByIdFlow(locationId).map { it?.toDomain() }
+    }
+
     suspend fun getWeatherForLocation(locationId: String): Weather {
         return dao.getWeatherForLocation(locationId).toDomain()
     }

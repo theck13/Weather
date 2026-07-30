@@ -61,6 +61,7 @@ class WeatherViewModel @Inject constructor(
     val uiState: State<MainScreenWeatherUiState> = _uiState
 
     init {
+        observeActiveLocation()
         observeActiveLocationWeather()
 
         // Load default on start.
@@ -336,6 +337,31 @@ class WeatherViewModel @Inject constructor(
             activeLocation = location,
         )
         activeLocationId.value = location.id
+    }
+
+    /**
+     * Observes active location's row and drives [MainScreenWeatherUiState.activeLocation] from it
+     * so main title reflects in-place changes (rename, moved device pin) that keep the same id.
+     * Emissions are skipped while location no longer exists, leaving last known value intact.
+     */
+    @OptIn(
+        ExperimentalCoroutinesApi::class,
+    )
+    private fun observeActiveLocation() {
+        activeLocationId
+            .filterNotNull()
+            .distinctUntilChanged()
+            .flatMapLatest { locationId ->
+                locationsRepository.observeLocation(locationId)
+            }
+            .onEach { location ->
+                if (location != null) {
+                    _uiState.value = _uiState.value.copy(
+                        activeLocation = location,
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     /**
