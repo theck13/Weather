@@ -445,7 +445,7 @@
     <string name="text_day_length">Duration</string>
     <string name="weather_sun_moon">Sun &amp; Moon</string>
 
-    <string name="percentage">%1$d%%</string>
+    <string name="percentage">%1$s%%</string>
 
     <string name="moon_phase">Phase</string>
     <string name="moon_phases">Phases</string>

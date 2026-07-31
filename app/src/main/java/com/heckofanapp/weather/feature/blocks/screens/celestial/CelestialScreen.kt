@@ -1,5 +1,6 @@
 package com.heckofanapp.weather.feature.blocks.screens.celestial
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,17 +50,19 @@ import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
+import com.heckofanapp.weather.core.utils.formatters.formatLocalizedNumber
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.toDateString
+import com.heckofanapp.weather.core.utils.locale.getCurrentAppLocale
 import com.heckofanapp.weather.feature.blocks.BlocksScreenViewModel
 import com.heckofanapp.weather.feature.blocks.components.AboutCard
 import com.heckofanapp.weather.feature.blocks.components.AboutCardText
 import com.heckofanapp.weather.feature.shared.components.blocks.CelestialBlock
 import com.heckofanapp.weather.feature.shared.components.blocks.CelestialType
 import java.util.concurrent.TimeUnit
-import kotlin.math.roundToInt
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun CelestialScreen(
     index: Int,
@@ -118,7 +121,11 @@ fun CelestialScreen(
     val dayLengthHours = TimeUnit.MILLISECONDS.toHours(dayLength)
     val dayLengthMinutes = TimeUnit.MILLISECONDS.toMinutes(dayLength) % 60
 
-    val moonIlluminationPercent = daily[index].moonIllumination.roundToInt()
+    val moonIlluminationPercent = formatLocalizedNumber(
+        decimalPlaces = 1,
+        locale = getCurrentAppLocale(),
+        number = daily[index].moonIllumination,
+    )
     val moonPhaseDaysRemaining = daily[index].moonPhaseDaysRemaining
     val moonPhaseDaysText = pluralStringResource(
         R.plurals.phase_days,

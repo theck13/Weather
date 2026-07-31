@@ -82,8 +82,8 @@ internal fun CelestialBlock(
         }
 
     val progress = ((timeNow - timeRise).toFloat() / (timeSet - timeRise)).coerceIn(
-        minimumValue = 0.00f,
         maximumValue = 1.00f,
+        minimumValue = 0.00f,
     )
 
     Surface(
