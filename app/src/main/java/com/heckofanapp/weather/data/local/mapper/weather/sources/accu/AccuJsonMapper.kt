@@ -129,6 +129,7 @@ fun AccuWeatherBundle.toDomain(
             ).average()
 
             val rain = listOf(item.day.rain.value ?: 0.0, item.night.rain.value ?: 0.0).sum()
+            // Metric endpoints already report snow in CM.  No conversion needed.
             val snow = listOf(item.day.snowCm.value ?: 0.0, item.night.snowCm.value ?: 0.0).sum()
 
             val condition =

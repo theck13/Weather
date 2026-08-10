@@ -45,8 +45,9 @@ fun SnowHourlyCard(
 ) {
     val max = data.maxOf { it.snowfall ?: 0.0 }
     val min = data.minOf { it.snowfall ?: 0.0 }
+    // Snowfall is CM.  Rain in MM.  So, base differs from RainHourlyCard.
     val formatter: (Double) -> Double? = {
-        PrecipitationUnit.MM.convert(
+        PrecipitationUnit.CM.convert(
             from = it,
             to = unit,
         )

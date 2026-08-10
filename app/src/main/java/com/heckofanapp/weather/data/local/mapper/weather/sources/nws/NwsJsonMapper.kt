@@ -126,6 +126,7 @@ fun NwsWeatherJsonBundle.toDomain(
 
     val rainMap = expandedHourly(precipitationData.values.map { it.validTime to it.value })
 
+    // NWS reports snowfall depth in MM.  So, daily and hourly below both convert it to CM.
     val snowMap = expandedHourly(snowData.values.map { it.validTime to it.value })
     val visibilityMap = expandedHourly(visibilityData.values.map { it.validTime to it.value })
 
@@ -281,7 +282,10 @@ fun NwsWeatherJsonBundle.toDomain(
                 precipitationProbability = it.probabilityOfPrecipitation.value?.toInt(),
                 pressureMsl = supplemental?.hourlyPressure?.get(hourTime),
                 rain = rainAmount ?: 0.0,
-                snowfall = snowFall ?: 0.0,
+                snowfall = PrecipitationUnit.MM.convert(
+                    from = snowFall ?: 0.0,
+                    to = PrecipitationUnit.CM,
+                ),
                 temperature = TemperatureUnit.FAHRENHEIT.convert(
                     from = it.temperature,
                     to = TemperatureUnit.CELSIUS,

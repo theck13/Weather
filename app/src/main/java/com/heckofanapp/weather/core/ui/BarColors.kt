@@ -81,21 +81,21 @@ fun barColorsRain(
 )
 
 // Snow intensity colors so hourly bars, scale legend, and home-tile fill share one scale.  Bounds
-// are in mm (hourly bar's value); finite bands fill 0 → 24 in (SnowBlock fill maximum) and anything
+// are in CM (hourly bar's value); finite bands fill 0 → 24 IN (SnowBlock fill maximum) and anything
 // above maximum is "Extreme" fallback.
 fun barColorsSnow(
-    amountMm: Double,
+    amountCm: Double,
 ): Color = barColor(
     fallback = RedAlt700,
     thresholds = listOf(
-        25.4 to BlueLight100,   //  1.00 in
-        76.2 to BlueLight300,   //  3.00 in
-        152.4 to Blue600,       //  6.00 in
-        304.8 to Blue800,       // 12.00 in
-        609.6 to Purple800,     // 24.00 in (fill maximum)
+        2.54 to BlueLight100,   //  1.00 in
+        7.62 to BlueLight300,   //  3.00 in
+        15.24 to Blue600,       //  6.00 in
+        30.48 to Blue800,       // 12.00 in
+        60.96 to Purple800,     // 24.00 in (fill maximum)
         // ≥ 24 in fill maximum → RedAlt700 (Extreme)
     ),
-    value = amountMm,
+    value = amountCm,
 )
 
 fun barColorsPressure(

@@ -20,16 +20,17 @@ internal data class PrecipitationLevel(
 )
 
 /**
- * Bounds are expressed in base unit hourly bars use (millimetres) and top band closes at matching
- * home-tile fill maximum (4 in for rain, 24 in for snow), so bars, this legend, and block fill all
- * share one scale.  [colorFor] resolves each band to same color bars use for a value inside it.
+ * Bounds are expressed in base unit hourly bars use; millimetres for rain, centimetres for snow.
+ * Top band closes at matching home-tile fill maximum (4 in for rain, 24 in for snow); bars, this
+ * legend, and block fill all share one scale.  [colorFor] resolves each band to same color bars use
+ * for a value inside it.
  */
 private data class PrecipitationBand(
     val descriptionRes: Int,
     val headlineRes: Int,
-    val lowerMm: Double,
-    val representativeMm: Double,
-    val upperMm: Double?,
+    val lower: Double,
+    val representative: Double,
+    val upper: Double?,
 )
 
 // Rain: finite bands fill 0 → 101.6 mm (4 in, RainBlock fill maximum); Extreme is above maximum.
@@ -42,14 +43,14 @@ private val rainBands = listOf(
     PrecipitationBand(R.string.rain_scale_description_6, R.string.precipitation_scale_6, 101.6, 120.0, null),
 )
 
-// Snow: finite bands fill 0 → 609.6 mm (24 in, SnowBlock fill maximum); Extreme is above maximum.
+// Snow: finite bands fill 0 → 60.96 cm (24 in, SnowBlock fill maximum); Extreme is above maximum.
 private val snowBands = listOf(
-    PrecipitationBand(R.string.snow_scale_description_1, R.string.precipitation_scale_1, 0.0, 12.0, 25.4),
-    PrecipitationBand(R.string.snow_scale_description_2, R.string.precipitation_scale_2, 25.4, 50.0, 76.2),
-    PrecipitationBand(R.string.snow_scale_description_3, R.string.precipitation_scale_3, 76.2, 110.0, 152.4),
-    PrecipitationBand(R.string.snow_scale_description_4, R.string.precipitation_scale_4, 152.4, 220.0, 304.8),
-    PrecipitationBand(R.string.snow_scale_description_5, R.string.precipitation_scale_5, 304.8, 450.0, 609.6),
-    PrecipitationBand(R.string.snow_scale_description_6, R.string.precipitation_scale_6, 609.6, 700.0, null),
+    PrecipitationBand(R.string.snow_scale_description_1, R.string.precipitation_scale_1, 0.0, 1.2, 2.54),
+    PrecipitationBand(R.string.snow_scale_description_2, R.string.precipitation_scale_2, 2.54, 5.0, 7.62),
+    PrecipitationBand(R.string.snow_scale_description_3, R.string.precipitation_scale_3, 7.62, 11.0, 15.24),
+    PrecipitationBand(R.string.snow_scale_description_4, R.string.precipitation_scale_4, 15.24, 22.0, 30.48),
+    PrecipitationBand(R.string.snow_scale_description_5, R.string.precipitation_scale_5, 30.48, 45.0, 60.96),
+    PrecipitationBand(R.string.snow_scale_description_6, R.string.precipitation_scale_6, 60.96, 70.0, null),
 )
 
 @Composable
@@ -59,6 +60,7 @@ internal fun getRainScale(
     bands = rainBands,
     colorFor = ::barColorsRain,
     unit = unit,
+    unitBase = PrecipitationUnit.MM,
 )
 
 @Composable
@@ -68,6 +70,7 @@ internal fun getSnowScale(
     bands = snowBands,
     colorFor = ::barColorsSnow,
     unit = unit,
+    unitBase = PrecipitationUnit.CM,
 )
 
 @Composable
@@ -75,6 +78,7 @@ private fun getPrecipitationScale(
     bands: List<PrecipitationBand>,
     colorFor: (Double) -> Color,
     unit: PrecipitationUnit,
+    unitBase: PrecipitationUnit,
 ): List<PrecipitationLevel> {
     val context = LocalContext.current
     val locale = getCurrentAppLocale()
@@ -88,16 +92,16 @@ private fun getPrecipitationScale(
         val lower = formatLocalizedNumber(
             decimalPlaces = decimalPlaces,
             locale = locale,
-            number = PrecipitationUnit.MM.convert(
-                from = band.lowerMm,
+            number = unitBase.convert(
+                from = band.lower,
                 to = unit,
             ) ?: 0.0,
         )
-        val upper = band.upperMm?.let {
+        val upper = band.upper?.let {
             formatLocalizedNumber(
                 decimalPlaces = decimalPlaces,
                 locale = locale,
-                number = PrecipitationUnit.MM.convert(
+                number = unitBase.convert(
                     from = it,
                     to = unit,
                 ) ?: 0.0,
@@ -105,7 +109,7 @@ private fun getPrecipitationScale(
         }
 
         PrecipitationLevel(
-            color = colorFor(band.representativeMm),
+            color = colorFor(band.representative),
             description = stringResource(band.descriptionRes),
             headline = stringResource(band.headlineRes),
             scale = if (upper == null) "≥ $lower $suffix" else "$lower - $upper $suffix",

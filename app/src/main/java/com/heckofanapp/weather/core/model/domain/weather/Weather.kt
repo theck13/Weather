@@ -66,7 +66,7 @@ data class WeatherDaily(
     val precipitationProbabilityMax: Int?,
     val pressureMsl: Double?, // NOTE: ALWAYS HPA (Average)
     val rainSum: Double,  // NOTE: ALWAYS MM
-    val snowfallSum: Double?, // NOTE: ALWAYS CM
+    val snowfallSum: Double?, // NOTE: ALWAYS CM (not MM; Open Meteo convention sources convert to)
     val sunrise: Long, // NOTE: ALWAYS MILLISECONDS
     val sunset: Long, // NOTE: ALWAYS MILLISECONDS
     val temperatureMaximum: Double?, // NOTE: ALWAYS C
@@ -113,7 +113,7 @@ data class WeatherHourly(
     val windSpeed: Double?, // NOTE: ALWAYS KMH
     val windDirection: WindDirection?, // NOTE: ALWAYS DOMINANT
     val rain: Double,  // NOTE: ALWAYS MM
-    val snowfall: Double?, // NOTE: ALWAYS CM
+    val snowfall: Double?, // NOTE: ALWAYS CM (not MM; Open Meteo convention sources convert to)
     val ultraviolet: Double?,
     val pressureMsl: Double?, // NOTE: ALWAYS HPA
     val visibility: Int?,  // NOTE: ALWAYS METERS
