@@ -6,7 +6,6 @@ import com.heckofanapp.weather.core.model.domain.weather.WeatherCurrently
 import com.heckofanapp.weather.core.model.domain.weather.WeatherDaily
 import com.heckofanapp.weather.core.model.domain.weather.WeatherHourly
 import com.heckofanapp.weather.core.model.weather.DistanceUnit
-import com.heckofanapp.weather.core.model.weather.PrecipitationUnit
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.model.weather.wind.WindDirection
 import com.heckofanapp.weather.core.network.sources.weather.accu.AccuWeatherConditionMap
@@ -165,7 +164,7 @@ fun AccuWeatherBundle.toDomain(
                 precipitationProbabilityMax = precipitationProbabilityMax,
                 pressureMsl = supplemental?.dailyPressure.nearestByDay(time),
                 rainSum = rain,
-                snowfallSum = PrecipitationUnit.CM.convert(snow, PrecipitationUnit.MM),
+                snowfallSum = snow,
                 sunrise = sunTimings[index].sunrise ?: -0L,
                 sunset = sunTimings[index].sunset ?: -0L,
                 temperatureMaximum = item.temperature.maximum.value,
@@ -187,7 +186,7 @@ fun AccuWeatherBundle.toDomain(
                 precipitationProbability = hour.precipitation,
                 pressureMsl = supplemental?.hourlyPressure?.get(time),
                 rain = hour.rain.value ?: 0.0,
-                snowfall = PrecipitationUnit.CM.convert(hour.snowCm.value, PrecipitationUnit.MM),
+                snowfall = hour.snowCm.value,
                 temperature = hour.temperature.value,
                 time = time,
                 ultraviolet = hour.ultraviolet,
