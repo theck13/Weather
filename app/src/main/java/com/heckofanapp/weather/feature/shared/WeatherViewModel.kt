@@ -87,11 +87,14 @@ class WeatherViewModel @Inject constructor(
                 val moved = locationsRepository.updateDeviceLocationPosition()
                 if (moved != null) {
                     if (_uiState.value.activeLocation?.id == moved.id) {
-                        // On Screen: Refresh through main flow so title and weather update.
+                        // On Screen: Refresh through main flow so title and weather update.  Cache
+                        // is keyed by location, which pin keeps as it moves.  So, fetch is forced
+                        // rather than serving previous position's weather under new title.
                         updateActiveLocation(
                             location = moved,
                         )
                         getWeather(
+                            isForceRefresh = true,
                             location = moved,
                             source = moved.source,
                         )
