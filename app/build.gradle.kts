@@ -14,8 +14,7 @@ val localProps = Properties().apply {
     if (f.exists()) f.inputStream().use { load(it) }
 }
 
-val keystoreFile = file("../keystore/release.jks")
-val hasKeystore = keystoreFile.exists()
+val keystore = file(localProps.getProperty("KEYSTORE_LOCATION") ?: System.getenv("KEYSTORE_LOCATION") ?: "../keystore/release.jks")
 
 val developer_domain = localProps.getProperty("DEVELOPER_DOMAIN") ?: System.getenv("DEVELOPER_DOMAIN") ?: "com.developer"
 val developer_email = localProps.getProperty("DEVELOPER_EMAIL") ?: System.getenv("DEVELOPER_EMAIL") ?: "developer@email.com"
@@ -82,9 +81,9 @@ android {
     }
 
     signingConfigs {
-        if (hasKeystore) {
+        if (keystore.exists()) {
             create("release") {
-                storeFile = keystoreFile
+                storeFile = keystore
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
@@ -101,7 +100,7 @@ android {
         release {
             isMinifyEnabled = false
 
-            if (hasKeystore) {
+            if (keystore.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
 
