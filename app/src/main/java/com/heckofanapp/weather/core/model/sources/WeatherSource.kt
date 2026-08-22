@@ -36,6 +36,11 @@ enum class WeatherSource(
         displayName = "FMI (Finland)",
         fullName = "Finnish Meteorological Institute"
     ),
+    GOOGLE(
+        displayLink = "https://developers.google.com/maps/documentation/weather",
+        displayName = "Google (Global)",
+        fullName = "Google Weather"
+    ),
     NWS(
         displayLink = "https://www.weather.gov/documentation/services-web-api",
         displayName = "NWS (United States)",
@@ -105,6 +110,7 @@ fun getWeatherSourcesForCountry(
 // Global Source
 private val weatherSourcesGlobal = listOf(
     WeatherSource.ACCU,
+    WeatherSource.GOOGLE,
     WeatherSource.MET,
     WeatherSource.METEO,
     WeatherSource.OPEN,

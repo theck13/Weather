@@ -1,5 +1,6 @@
 package com.heckofanapp.weather.core.di.network
 
+import android.content.Context
 import com.heckofanapp.weather.core.network.github.GithubApi
 import com.heckofanapp.weather.core.network.sources.address.nominatim.NominatimApi
 import com.heckofanapp.weather.core.network.sources.airquality.openmeteo.OpenMeteoAqiApi
@@ -12,6 +13,7 @@ import com.heckofanapp.weather.core.network.sources.weather.china.ChinaApi
 import com.heckofanapp.weather.core.network.sources.weather.dwd.DwdApi
 import com.heckofanapp.weather.core.network.sources.weather.eccc.EcccApi
 import com.heckofanapp.weather.core.network.sources.weather.fmi.FmiApi
+import com.heckofanapp.weather.core.network.sources.weather.google.GoogleApi
 import com.heckofanapp.weather.core.network.sources.weather.meteoam.MeteoAmApi
 import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFranceApi
 import com.heckofanapp.weather.core.network.sources.weather.metnorway.MetNorwayApi
@@ -21,6 +23,7 @@ import com.heckofanapp.weather.core.network.sources.weather.smhi.SmhiApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -58,6 +61,12 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideGeoNamesTimezoneApi(): GeoNamesTimezoneApi = GeoNamesTimezoneApi.create()
+
+    @Provides
+    @Singleton
+    fun provideGoogleApi(
+        @ApplicationContext context: Context,
+    ): GoogleApi = GoogleApi.create(context)
 
     @Provides
     @Singleton

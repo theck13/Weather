@@ -14,6 +14,8 @@ import com.heckofanapp.weather.core.network.sources.weather.eccc.EcccApi
 import com.heckofanapp.weather.core.network.sources.weather.eccc.EcccRepository
 import com.heckofanapp.weather.core.network.sources.weather.fmi.FmiApi
 import com.heckofanapp.weather.core.network.sources.weather.fmi.FmiRepository
+import com.heckofanapp.weather.core.network.sources.weather.google.GoogleApi
+import com.heckofanapp.weather.core.network.sources.weather.google.GoogleRepository
 import com.heckofanapp.weather.core.network.sources.weather.meteoam.MeteoAmApi
 import com.heckofanapp.weather.core.network.sources.weather.meteoam.MeteoAmRepository
 import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFranceApi
@@ -89,6 +91,14 @@ object WeatherRepositoryModule {
         api: FmiApi,
         weatherDao: WeatherDao,
     ): FmiRepository = FmiRepository(dao, weatherDao, api)
+
+    @Provides
+    @Singleton
+    fun provideGoogleRepository(
+        dao: LocationsDao,
+        api: GoogleApi,
+        weatherDao: WeatherDao,
+    ): GoogleRepository = GoogleRepository(dao, weatherDao, api)
 
     @Provides
     @Singleton

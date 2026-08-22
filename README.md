@@ -457,6 +457,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 - **DWD (Germany)**
 - **ECCC (Canada)**
 - **FMI (Finland)**
+- **Google (Global)**
 - **NWS (United States)**
 - **Met (Norway)**
 - **Meteo (France)**

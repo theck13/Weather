@@ -22,6 +22,7 @@ val developer_name = localProps.getProperty("DEVELOPER_NAME") ?: System.getenv("
 
 val source_accu_weather = localProps.getProperty("SOURCE_ACCU_WEATHER") ?: System.getenv("SOURCE_ACCU_WEATHER") ?: ""
 val source_geo_username = localProps.getProperty("SOURCE_GEO_USERNAME") ?: System.getenv("SOURCE_GEO_USERNAME") ?: ""
+val source_google_pixel = localProps.getProperty("SOURCE_GOOGLE_PIXEL") ?: System.getenv("SOURCE_GOOGLE_PIXEL") ?: ""
 val source_meteo_france = localProps.getProperty("SOURCE_METEO_FRANCE") ?: System.getenv("SOURCE_METEO_FRANCE") ?: ""
 
 val package_name = "${developer_domain}.weather"
@@ -71,6 +72,12 @@ android {
             "String",
             "SOURCE_GEO_USERNAME",
             "\"$source_geo_username\""
+        )
+
+        buildConfigField(
+            "String",
+            "SOURCE_GOOGLE_PIXEL",
+            "\"$source_google_pixel\""
         )
 
         buildConfigField(
