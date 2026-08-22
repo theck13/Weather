@@ -180,6 +180,7 @@ class WeatherViewModel @Inject constructor(
             if (_uiState.value.isError.not()) {
                 launch {
                     handleAirQuality(
+                        isForceRefresh = isForceRefresh,
                         isManualRefresh = isManualRefresh,
                         location = locationNow,
                     )
@@ -446,10 +447,12 @@ class WeatherViewModel @Inject constructor(
     }
 
     private suspend fun handleAirQuality(
+        isForceRefresh: Boolean,
         isManualRefresh: Boolean,
         location: Location,
     ) {
         when (val result = openMeteoAqiRepository.getAirQuality(
+            isForceRefresh = isForceRefresh,
             isManualRefresh = isManualRefresh,
             location = location,
         )) {

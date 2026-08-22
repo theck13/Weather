@@ -24,9 +24,10 @@ fun isCurrentAirQualitySafe(airQuality: AirQuality?): Boolean {
 
 fun shouldReturnAirQualityCache(
     cache: AirQualityWithRelations?,
-    isManualRefresh: Boolean
+    isForceRefresh: Boolean,
+    isManualRefresh: Boolean,
 ): AirQualityResultType {
-    if (cache == null || cache.current == null) {
+    if (cache == null || cache.current == null || isForceRefresh) {
         return AirQualityResultType.ERROR
     }
 

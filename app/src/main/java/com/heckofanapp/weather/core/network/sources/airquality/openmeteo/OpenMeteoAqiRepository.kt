@@ -20,11 +20,16 @@ class OpenMeteoAqiRepository @Inject constructor(
 ) {
 
     suspend fun getAirQuality(
+        isForceRefresh: Boolean,
+        isManualRefresh: Boolean,
         location: Location,
-        isManualRefresh: Boolean
     ): AirQualityResult = withContext(Dispatchers.IO) {
         val cache = dao.getAirQualityForLocation(location.id)
-        val shouldReturnCache = shouldReturnAirQualityCache(cache, isManualRefresh)
+        val shouldReturnCache = shouldReturnAirQualityCache(
+            cache = cache,
+            isForceRefresh = isForceRefresh,
+            isManualRefresh = isManualRefresh,
+        )
 
         when (shouldReturnCache) {
             AirQualityResultType.RETURN_CACHE -> return@withContext AirQualityResult.Success(cache!!.toDomain())
