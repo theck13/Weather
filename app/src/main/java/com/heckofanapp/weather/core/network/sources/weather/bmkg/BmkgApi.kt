@@ -28,6 +28,19 @@ interface BmkgApi {
 
         fun create(): BmkgApi {
             val client = OkHttpClient.Builder()
+                .addInterceptor { chain ->
+                    // BMKG's Cloudflare WAF rejects api/df/v1/forecast/coord with 403 unless
+                    // request carries same-origin Referer, matching their own frontend's request
+                    // pattern - confirmed live, doesn't affect other endpoint either way.
+                    val request = chain.request().newBuilder()
+                        .header(
+                            name = "Referer",
+                            value = BASE_URL,
+                        )
+                        .build()
+
+                    chain.proceed(request)
+                }
                 .connectTimeout(
                     timeout = 30,
                     unit = TimeUnit.SECONDS,
