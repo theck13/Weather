@@ -32,6 +32,7 @@ class LocationsRepository @Inject constructor(
     private val airQualityDao: AirQualityDao,
     @param:ApplicationContext private val context: Context,
     private val nominatimRepository: NominatimRepository,
+    private val weatherDataReconcilerRepository: WeatherDataReconcilerRepository,
 ) {
     private val LOCATION_UPDATE_THRESHOLD_METERS = 1000f // 1000m
 
@@ -124,9 +125,10 @@ class LocationsRepository @Inject constructor(
     val getDeviceLocation = GetDeviceLocation()
 
     /**
-     * Moves device-location pin to device's current position.  Returns updated location when it
-     * moved more than [LOCATION_UPDATE_THRESHOLD_METERS], or null when there is no device location,
-     * no GPS fix, or device hasn't moved far enough.
+     * Moves device-location pin to device's current position, clearing position-specific
+     * cached data it leaves behind.  Returns updated location when it moved more than
+     * [LOCATION_UPDATE_THRESHOLD_METERS], or null when there is no device location, no
+     * GPS fix, or device hasn't moved far enough.
      */
     suspend fun updateDeviceLocationPosition(): Location? {
         // Nothing to move if user hasn't added a device location.
@@ -161,6 +163,12 @@ class LocationsRepository @Inject constructor(
         if (distanceInMeters < LOCATION_UPDATE_THRESHOLD_METERS) {
             return null
         }
+
+        // NWS grid points are keyed by location, which pin keeps as it moves.  So, they are cleared
+        // ahead of move rather than forecasting new position off previous position's grid.
+        weatherDataReconcilerRepository.cleanNws(
+            locationId = currentLocation.id,
+        )
 
         val address = nominatimRepository.getAddress(location.latitude, location.longitude)
 

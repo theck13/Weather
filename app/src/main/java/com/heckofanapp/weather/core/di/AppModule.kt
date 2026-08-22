@@ -26,13 +26,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     fun provideDatabase(
-        @ApplicationContext context: Context
-    ): WeatherMasterDatabase =
-        WeatherMasterDatabase.getInstance(context)
+        @ApplicationContext context: Context,
+    ): WeatherMasterDatabase = WeatherMasterDatabase.getInstance(context)
 
     @Provides
     @Singleton
@@ -40,37 +38,46 @@ object AppModule {
         dao: LocationsDao,
         airQualityDao: AirQualityDao,
         nominatimRepository: NominatimRepository,
-        @ApplicationContext context: Context
-    ): LocationsRepository = LocationsRepository(dao, airQualityDao, context, nominatimRepository)
+        weatherDataReconcilerRepository: WeatherDataReconcilerRepository,
+        @ApplicationContext context: Context,
+    ): LocationsRepository =
+        LocationsRepository(
+            airQualityDao = airQualityDao,
+            context = context,
+            dao = dao,
+            nominatimRepository = nominatimRepository,
+            weatherDataReconcilerRepository = weatherDataReconcilerRepository,
+        )
 
     @Provides
     @Singleton
-    fun provideWeatherUnitsRepository(dao: WeatherUnitsDao): WeatherUnitsRepository =
-        WeatherUnitsRepository(dao)
+    fun provideWeatherUnitsRepository(
+        dao: WeatherUnitsDao,
+    ): WeatherUnitsRepository = WeatherUnitsRepository(dao)
 
     @Provides
     @Singleton
     fun provideWeatherBlocksRepository(
-        weatherBlocksDao: WeatherBlocksDao
-    ): WeatherBlocksRepository =
-        WeatherBlocksRepository(weatherBlocksDao)
+        weatherBlocksDao: WeatherBlocksDao,
+    ): WeatherBlocksRepository = WeatherBlocksRepository(weatherBlocksDao)
 
     @Provides
     @Singleton
     fun provideWeatherDataReconcilerRepository(
         nwsDao: NwsDao,
-        locationsDao: LocationsDao
+        locationsDao: LocationsDao,
     ): WeatherDataReconcilerRepository = WeatherDataReconcilerRepository(nwsDao, locationsDao)
 
     @Provides
     @Singleton
     fun provideGithubRepository(
         api: GithubApi,
-        dao: GithubDao
+        dao: GithubDao,
     ): GithubRepository = GithubRepository(api, dao)
 
     @Provides
     @Singleton
-    fun provideNominatimRepository(api: NominatimApi): NominatimRepository =
-        NominatimRepository(api)
+    fun provideNominatimRepository(
+        api: NominatimApi,
+    ): NominatimRepository = NominatimRepository(api)
 }
