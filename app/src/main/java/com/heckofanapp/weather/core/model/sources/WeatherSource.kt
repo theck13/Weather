@@ -9,22 +9,22 @@ enum class WeatherSource(
     ACCU(
         displayLink = "https://www.accuweather.com/",
         displayName = "AccuWeather (Global)",
-        fullName = "AccuWeather"
+        fullName = "AccuWeather",
     ),
     BMKG(
         displayLink = "https://www.bmkg.go.id/",
         displayName = "BMKG (Indonesia)",
-        fullName = "Badan Meteorologi, Klimatologi, dan Geofisika"
+        fullName = "Badan Meteorologi, Klimatologi, dan Geofisika",
     ),
     CNEMC(
         displayLink = "https://www.cnemc.cn/",
         displayName = "CNEMC (China)",
-        fullName = "China National Environmental Monitoring Centre"
+        fullName = "China National Environmental Monitoring Centre",
     ),
     DWD(
         displayLink = "https://brightsky.dev",
         displayName = "DWD (Germany)",
-        fullName = "Bright Sky DWD"
+        fullName = "Bright Sky DWD",
     ),
     ECCC(
         displayLink = "https://app.weather.gc.ca/",
@@ -34,42 +34,47 @@ enum class WeatherSource(
     FMI(
         displayLink = "https://en.ilmatieteenlaitos.fi/",
         displayName = "FMI (Finland)",
-        fullName = "Finnish Meteorological Institute"
+        fullName = "Finnish Meteorological Institute",
     ),
     GOOGLE(
         displayLink = "https://developers.google.com/maps/documentation/weather",
         displayName = "Google (Global)",
-        fullName = "Google Weather"
+        fullName = "Google Weather",
     ),
     NWS(
         displayLink = "https://www.weather.gov/documentation/services-web-api",
         displayName = "NWS (United States)",
-        fullName = "National Weather Service"
+        fullName = "National Weather Service",
     ),
     MET(
         displayLink = "https://api.met.no/",
         displayName = "Met (Norway)",
-        fullName = "Met Norway"
+        fullName = "Met Norway",
     ),
     METEO(
         displayLink = "https://meteofrance.com/",
         displayName = "Météo (France)",
-        fullName = "Météo-France"
+        fullName = "Météo-France",
     ),
     METEOAM(
         displayLink = "https://www.meteoam.it/",
         displayName = "Meteo AM (Italy)",
-        fullName = "Meteorologia Aeronautica Militare"
+        fullName = "Meteorologia Aeronautica Militare",
     ),
     OPEN(
         displayLink = "https://open-meteo.com/",
         displayName = "Open Meteo (Global)",
-        fullName = "Open Meteo"
+        fullName = "Open Meteo",
+    ),
+    PIRATE(
+        displayLink = "https://pirateweather.net/",
+        displayName = "Pirate (Global)",
+        fullName = "Pirate Weather",
     ),
     SMHI(
         displayLink = "https://opendata.smhi.se",
         displayName = "SMHI (Sweden)",
-        fullName = "Swedish Meteorological and Hydrological Institute"
+        fullName = "Swedish Meteorological and Hydrological Institute",
     );
 
     // Sources that provide snow/rain as precipitation.
@@ -114,6 +119,7 @@ private val weatherSourcesGlobal = listOf(
     WeatherSource.MET,
     WeatherSource.METEO,
     WeatherSource.OPEN,
+    WeatherSource.PIRATE,
 )
 
 fun getWeatherSourcesGlobal(): List<WeatherSource> {
