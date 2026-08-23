@@ -236,6 +236,9 @@ fun CelestialScreen(
                             weight = 1.00f,
                         ),
                         color = MaterialTheme.colorScheme.surfaceBright,
+                        onClick = {
+                            showMoonPhaseDialog = true
+                        },
                         shape = MaterialTheme.shapes.extraLarge,
                         shadowElevation = ShadowElevation.level2,
                     ) {
@@ -257,9 +260,6 @@ fun CelestialScreen(
                             ) {
                                 TextHeader(
                                     header = stringResource(R.string.moon_phase),
-                                    onClick = {
-                                        showMoonPhaseDialog = true
-                                    },
                                     text = stringResource(daily[index].moonPhase.displayName),
                                 )
 
@@ -353,6 +353,9 @@ fun CelestialScreen(
                         horizontal = SpaceDefault,
                     ),
                     color = MaterialTheme.colorScheme.surfaceBright,
+                    onClick = {
+                        showMoonPhaseDialog = true
+                    },
                     shape = MaterialTheme.shapes.extraLarge,
                     shadowElevation = ShadowElevation.level2,
                 ) {
@@ -374,9 +377,6 @@ fun CelestialScreen(
                         ) {
                             TextHeader(
                                 header = stringResource(R.string.moon_phase),
-                                onClick = {
-                                    showMoonPhaseDialog = true
-                                },
                                 text = stringResource(daily[index].moonPhase.displayName),
                             )
 
