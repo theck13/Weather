@@ -302,6 +302,7 @@
     <string name="moon_phase">Faza</string>
     <string name="weather_about_sun_moon_rise_set">Czas wschodu to moment, w którym słońce lub księżyc po raz pierwszy pojawia się nad horyzontem. Czas zachodu to moment, w którym słońce lub księżyc całkowicie znika za horyzontem.</string>
     <string name="weather_about_dawn_dusk">Świt to pora, w której na niebie pojawia się światło tuż przed wschodem słońca. Zmierzch to pora, w której światło na niebie słabnie tuż po zachodzie słońca.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">Średnie ciśnienie na poziomie morza, czyli miara siły nacisku atmosfery, skorygowana do poziomu morza. Obserwowanie zmian tego wskaźnika może stanowić wczesną zapowiedź zmian pogodowych. Spadek ciśnienia zazwyczaj oznacza zbliżającą się niestabilną pogodę, natomiast wzrost ciśnienia często oznacza, że warunki pogodowe stają się bardziej stabilne.</string>
     <string name="weather_about_windspeed">Prędkość wiatru to prędkość, z jaką powietrze przemieszcza się w płaszczyźnie poziomej w stosunku do określonego punktu, napędzane różnicami ciśnienia atmosferycznego i temperatury.</string>
     <string name="unit_wind_kt">Węzły</string>

@@ -302,6 +302,7 @@
     <string name="moon_phase">Fáze</string>
     <string name="weather_about_sun_moon_rise_set">The rise time is when the sun or moon first appears above the horizon. The set time is when the sun or moon fully disappears below the horizon</string>
     <string name="weather_about_dawn_dusk">Dawn is the period of light in the sky just before sunrise. Dusk is the period of fading light in the sky just after sunset</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">Mean sea level pressure, a measure of how much the atmosphere is pressing down, adjusted to sea level. Watching how it changes can provide an early indication of weather changes. Pressure falling usually means unsettled weather is approaching, while pressure rising often means conditions are becoming more stable</string>
     <string name="weather_about_windspeed">Wind speed is the rate at which air moves horizontally past a specific point, driven by differences in atmospheric pressure and temperature</string>
     <string name="unit_wind_kt">Uzly</string>

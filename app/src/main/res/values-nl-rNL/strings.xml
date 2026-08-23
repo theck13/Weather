@@ -296,6 +296,7 @@
     <string name="moon_phase">Fase</string>
     <string name="weather_about_sun_moon_rise_set">De opkomst is het moment waarop de zon of de maan voor het eerst boven de horizon verschijnt. De ondergang is het moment waarop de zon of de maan volledig achter de horizon verdwijnt.</string>
     <string name="weather_about_dawn_dusk">De dageraad is de periode waarin het aan de hemel licht wordt, vlak voor zonsopgang. De schemering is de periode waarin het aan de hemel donkerder wordt, vlak na zonsondergang.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">De zeeniveaudruk, een maatstaf voor de druk die de atmosfeer uitoefent, gecorrigeerd naar zeeniveau. Door te kijken hoe deze waarde verandert, kan al vroeg een indicatie krijgen van weersveranderingen. Een dalende luchtdruk duidt meestal op naderend onstabiel weer, terwijl een stijgende luchtdruk vaak betekent dat de weersomstandigheden stabieler worden</string>
     <string name="weather_about_windspeed">Wind snelheid is de snelheid waarbij de lucht horizontaal langs een bepaald punt beweegt, aangedreven door verschillen in de atmosferische druk en temperaturen</string>
     <string name="unit_wind_kt">Knopen</string>

@@ -299,6 +299,7 @@
     <string name="moon_phase">Faza</string>
     <string name="weather_about_sun_moon_rise_set">Ora de răsărit reprezintă momentul în care soarele sau luna apare pentru prima dată deasupra orizontului. Ora de apus este momentul în care soarele sau luna dispare complet sub orizont.</string>
     <string name="weather_about_dawn_dusk">Zorile reprezintă perioada de lumină de pe cer chiar înainte de răsăritul soarelui. Amurgul este perioada în care lumina de pe cer scade în intensitate, imediat după apusul soarelui.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_windspeed">Wind speed is the rate at which air moves horizontally past a specific point, driven by differences in atmospheric pressure and temperature</string>
     <string name="unit_wind_kt">Knots</string>
     <string name="unit_wind_bft">Beaufort</string>

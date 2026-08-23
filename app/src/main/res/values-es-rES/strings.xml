@@ -296,6 +296,7 @@
     <string name="moon_phase">Fase</string>
     <string name="weather_about_sun_moon_rise_set">La hora de salida es cuando el sol o la luna aparecen por primera vez sobre el horizonte. La hora de puesta es cuando el sol o la luna desaparecen completamente bajo el horizonte.</string>
     <string name="weather_about_dawn_dusk">El amanecer es el período de luz en el cielo justo antes de la salida del sol. El anochecer es el período de luz que disminuye en el cielo justo después de la puesta del sol.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">La presión media a nivel del mar, una medida de la presión atmosférica, ajustada al nivel del mar. Observar sus cambios puede proporcionar una indicación temprana de cambios meteorológicos. Una disminución de la presión generalmente significa que se acerca un tiempo inestable, mientras que un aumento de la presión suele significar que las condiciones se están volviendo más estables.</string>
     <string name="weather_about_windspeed">La velocidad del viento es la tasa a la que el aire se mueve horizontalmente pasando por un punto específico, impulsada por las diferencias de presión y temperatura atmosféricas.</string>
     <string name="unit_wind_kt">Nudos</string>

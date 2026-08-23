@@ -296,6 +296,7 @@
     <string name="moon_phase">Fase</string>
     <string name="weather_about_sun_moon_rise_set">Il momento dell\'alba è quando il sole o la luna compaiono per la prima volta sopra l\'orizzonte. Il momento del tramonto è quando il sole o la luna scompaiono completamente sotto l\'orizzonte</string>
     <string name="weather_about_dawn_dusk">L\'alba è il momento in cui il cielo si illumina poco prima del sorgere del sole. Il tramonto è il momento in cui la luce del cielo si affievolisce poco dopo il calare del sole</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">La pressione media a livello del mare, un indicatore della forza con cui l\'atmosfera esercita una pressione verso il basso, rapportata al livello del mare. Osservarne l\'andamento può fornire un\'indicazione precoce dei cambiamenti meteorologici. Un calo della pressione indica solitamente l\'avvicinarsi di condizioni meteorologiche instabili, mentre un aumento della pressione spesso significa che le condizioni stanno diventando più stabili</string>
     <string name="weather_about_windspeed">La velocità del vento è il ritmo a cui l\'aria si muove orizzontalmente attraverso un punto specifico, determinata da differenze di pressione e temperatura atmosferiche</string>
     <string name="unit_wind_kt">Nodi</string>

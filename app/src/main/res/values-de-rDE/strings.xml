@@ -296,6 +296,7 @@
     <string name="moon_phase">Phase</string>
     <string name="weather_about_sun_moon_rise_set">Der Sonnenaufgang ist der Zeitpunkt, zu dem die Sonne oder der Mond zum ersten Mal über dem Horizont erscheint. Der Sonnenuntergang ist der Zeitpunkt, zu dem die Sonne oder der Mond vollständig hinter dem Horizont verschwindet.</string>
     <string name="weather_about_dawn_dusk">Die Morgendämmerung ist die Zeit, in der es am Himmel kurz vor Sonnenaufgang hell wird. Die Abenddämmerung ist die Zeit, in der es am Himmel kurz nach Sonnenuntergang dunkel wird.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">Der mittlere Luftdruck auf Meereshöhe, ein Maß dafür, wie stark die Atmosphäre nach unten drückt, auf Meereshöhe normiert. Die Beobachtung seiner Veränderungen kann einen frühen Hinweis auf Wetteränderungen geben. Sinkender Luftdruck deutet in der Regel auf herannahendes unbeständiges Wetter hin, während steigender Luftdruck oft bedeutet, dass sich die Wetterlage stabilisiert</string>
     <string name="weather_about_windspeed">Die Windgeschwindigkeit ist ein Messwert der Luftbewegung an einem spezifischen Punkt. Diese wird durch Differenzen im atmosphärischen Druck und der Temperatur beeinflusst. </string>
     <string name="unit_wind_kt">Knoten</string>

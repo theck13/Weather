@@ -302,6 +302,7 @@
     <string name="moon_phase">Fazė</string>
     <string name="weather_about_sun_moon_rise_set">Saulėtekis – tai akimirka, kai saulė arba mėnulis pirmą kartą pasirodo virš horizonto. Saulėlydis – tai akimirka, kai saulė arba mėnulis visiškai pasislėpia už horizonto.</string>
     <string name="weather_about_dawn_dusk">Aušra – tai laikas, kai danguje, likus nedaug laiko iki saulėtekio, pradeda švisti. Sutemos – tai laikas, kai danguje, praėjus nedaug laiko po saulėlydžio, pradeda temti.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">Vidutinis oro slėgis jūros lygyje – rodiklis, parodantis, kokia jėga atmosfera daro spaudimą žemyn, normalizuotas pagal jūros lygį. Stebint jo pokyčius galima anksti numatyti oro sąlygų pasikeitimus. Įprastai mažėjantis oro slėgis rodo, kad artėja nepastovus oras, o didėjantis – kad oro sąlygos stabilizuojasi.</string>
     <string name="weather_about_windspeed">Vėjo greitis – tai oro judėjimo matavimo rodiklis tam tikrame taške. Jam įtaką daro atmosferos slėgio ir temperatūros skirtumai. </string>
     <string name="unit_wind_kt">Mazgai</string>

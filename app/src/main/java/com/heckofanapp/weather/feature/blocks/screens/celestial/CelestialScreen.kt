@@ -420,6 +420,10 @@ fun CelestialScreen(
                 AboutCardText(
                     text = stringResource(R.string.weather_about_dawn_dusk),
                 )
+
+                AboutCardText(
+                    text = stringResource(R.string.weather_about_moon_phases),
+                )
             }
 
             Gap(

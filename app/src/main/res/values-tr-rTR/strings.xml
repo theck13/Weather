@@ -296,6 +296,7 @@
     <string name="moon_phase">Ay\'ın evresi</string>
     <string name="weather_about_sun_moon_rise_set">Doğuş saati, Güneş veya Ay\'ın ufuk çizgisinin üzerinde ilk göründüğü andır. Batış saati ise Güneş veya Ay\'ın ufuk çizgisinin altında tamamen kaybolduğu andır.</string>
     <string name="weather_about_dawn_dusk">Şafak vakti, gün doğumundan hemen önce gökyüzünün aydınlanmaya başladığı dönemdir. Gün batımı sonrası (alacakaranlık) ise gün batımından hemen sonra gökyüzündeki ışığın yavaş yavaş kaybolduğu dönemdir.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">Deniz seviyesi basıncı, atmosferin uyguladığı kuvvetin ölçülüp deniz seviyesine uyarlanmış halidir. Bu basıncın değişimini takip etmek, hava durumundaki değişikliklerin erkenden fark edilmesini sağlar. Basıncın düşmesi genellikle dengesiz ve yağışlı havaların yaklaştığı anlamına gelirken, basıncın yükselmesi çoğunlukla hava koşullarının daha kararlı hale geleceğini gösterir.</string>
     <string name="weather_about_windspeed">Rüzgar hızı, atmosferik basınç ve sıcaklık farklarının etkisiyle, havanın belirli bir noktadan yatay olarak geçme hızıdır</string>
     <string name="unit_wind_kt">Knot</string>

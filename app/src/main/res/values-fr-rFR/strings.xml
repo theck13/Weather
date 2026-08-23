@@ -296,6 +296,7 @@
     <string name="moon_phase">Phase</string>
     <string name="weather_about_sun_moon_rise_set">Le lever indique quand le soleil ou la lune commence à apparaître à l\'horizon. Le coucher indique quand le soleil ou la lune a complètement disparu sous l\'horizon.</string>
     <string name="weather_about_dawn_dusk">L\'aube est la période où le ciel s\'éclaircit juste avant le lever du soleil. Le crépuscule est la période où la lumière s\'estompe juste après le coucher du soleil.</string>
+    <string name="weather_about_moon_phases">Phases are the changing shapes of the lit part of the Moon as seen from Earth in eight stages over a 29.5-day period.</string>
     <string name="weather_about_pressure">La pression atmosphérique au niveau de la mer est une mesure de la force avec laquelle l\'atmosphère exerce une pression vers le bas, ajustée au niveau de la mer. L\'observation de son évolution peut donner un signe précurseur des changements météorologiques. Une baisse de la pression annonce généralement l\'arrivée d\'un temps instable, alors qu\'une hausse de la pression indique que les conditions deviennent plus stables.</string>
     <string name="weather_about_windspeed">La vitesse du vent correspond à la vitesse à laquelle l\'air se déplace horizontalement par rapport à un point donné, sous l\'effet des différences de pression atmosphérique et de température</string>
     <string name="unit_wind_kt">kt</string>
