@@ -425,10 +425,6 @@ fun CelestialScreen(
                     text = stringResource(R.string.weather_about_moon_phases),
                 )
             }
-
-            Gap(
-                vertical = SpaceDefault,
-            )
         }
 
         MoonPhaseDialog(
