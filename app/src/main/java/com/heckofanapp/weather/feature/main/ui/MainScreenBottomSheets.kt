@@ -63,7 +63,7 @@ object MainScreenBottomSheets {
                     tiles = listOf(
                         SettingTile.ActionTile(
                             description = airQualityUrl,
-                            title = WeatherSource.OPEN.displayName,
+                            title = WeatherSource.OPENMETEO.displayName,
                             onClick = {
                                 uriHandler.openUri(airQualityUrl)
                             },

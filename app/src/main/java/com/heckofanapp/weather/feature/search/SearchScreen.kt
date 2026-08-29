@@ -303,7 +303,7 @@ fun SearchScreen(
             )
             selectedLocationId = selectedLocation?.id ?: ""
         },
-        selectedSource = selectedLocation?.source ?: WeatherSource.OPEN,
+        selectedSource = selectedLocation?.source ?: WeatherSource.OPENMETEO,
         show = uiState.isWeatherSourcesForLocationSheetOpen,
         sheetState = sheetState,
     )

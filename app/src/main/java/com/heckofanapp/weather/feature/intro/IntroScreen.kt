@@ -458,7 +458,7 @@ fun DeviceLocation.toDomain(
         timezone = ZoneId.systemDefault().id,
         countryCode = "",
         state = "",
-        source = WeatherSource.OPEN,
+        source = WeatherSource.OPENMETEO,
         isFavorite = false,
         isPinned = false,
         isDefault = false, // Repository can handle it

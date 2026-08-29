@@ -30,7 +30,7 @@ object SharedBottomSheet {
         isEditing: Boolean = false,
         onDismiss: () -> Unit,
         onSave: (WeatherSource) -> Unit,
-        selectedSource: WeatherSource = WeatherSource.OPEN,
+        selectedSource: WeatherSource = WeatherSource.OPENMETEO,
         sheetState: SheetState,
         show: Boolean,
     ) {

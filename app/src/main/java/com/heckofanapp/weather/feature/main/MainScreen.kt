@@ -173,7 +173,7 @@ fun MainScreen(
                 weatherViewModel.updateSourceForLocation(activeLocation, it)
             }
         },
-        selectedSource = activeLocation?.source ?: WeatherSource.OPEN,
+        selectedSource = activeLocation?.source ?: WeatherSource.OPENMETEO,
         sheetState = sheetState,
         show = viewModel.uiState.value.isWeatherSourcesForLocationSheetOpen,
     )

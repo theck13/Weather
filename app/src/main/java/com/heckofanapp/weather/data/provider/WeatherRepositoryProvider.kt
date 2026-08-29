@@ -51,7 +51,7 @@ class WeatherRepositoryProvider @Inject constructor(
             WeatherSource.METEO -> meteoFranceRepository
             WeatherSource.METEOAM -> meteoAmRepository
             WeatherSource.NWS -> nwsRepository
-            WeatherSource.OPEN -> openMeteoRepository
+            WeatherSource.OPENMETEO -> openMeteoRepository
             WeatherSource.OPENWEATHER -> openWeatherRepository
             WeatherSource.PIRATE -> pirateRepository
             WeatherSource.SMHI -> smhiRepository

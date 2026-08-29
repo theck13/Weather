@@ -11,7 +11,7 @@ data class Location(
     val timezone: String,
     val countryCode: String?,
     val state: String,
-    val source: WeatherSource = WeatherSource.OPEN,
+    val source: WeatherSource = WeatherSource.OPENMETEO,
     val isFavorite: Boolean = false,
     val isPinned: Boolean = false,
     val isDefault: Boolean,
