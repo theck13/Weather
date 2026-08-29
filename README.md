@@ -451,21 +451,21 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 
 ## Sources
 
-- **AccuWeather (Global)**
-- **BMKG (Indonesia)**
-- **CNEMC (China)**
-- **DWD (Germany)**
-- **ECCC (Canada)**
-- **FMI (Finland)**
-- **Google (Global)**
-- **NWS (United States)**
-- **Met (Norway)**
-- **Meteo (France)**
-- **Meteo AM (Italy)**
-- **Open Meteo (Global)**
-- **Open Weather (Global)**
-- **Pirate (Global)**
-- **SMHI (Sweden)**
+- **[AccuWeather (Global)](https://www.accuweather.com/)**
+- **[BMKG (Indonesia)](https://www.bmkg.go.id/)**
+- **[CNEMC (China)](https://www.cnemc.cn/)**
+- **[DWD (Germany)](https://brightsky.dev)**
+- **[ECCC (Canada)](https://app.weather.gc.ca/)**
+- **[FMI (Finland)](https://en.ilmatieteenlaitos.fi/)**
+- **[Google (Global)](https://developers.google.com/maps/documentation/weather)**
+- **[NWS (United States)](https://www.weather.gov/documentation/services-web-api)**
+- **[Met (Norway)](https://api.met.no/)**
+- **[Meteo (France)](https://meteofrance.com/)**
+- **[Meteo AM (Italy)](https://www.meteoam.it/)**
+- **[Open Meteo (Global)](https://open-meteo.com/)**
+- **[Open Weather (Global)](https://openweathermap.org/)**
+- **[Pirate (Global)](https://pirateweather.net/)**
+- **[SMHI (Sweden)](https://opendata.smhi.se)**
 
 ## Translations
 
