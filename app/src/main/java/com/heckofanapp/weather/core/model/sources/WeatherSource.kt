@@ -66,6 +66,11 @@ enum class WeatherSource(
         displayName = "Open Meteo (Global)",
         fullName = "Open Meteo",
     ),
+    OPENWEATHER(
+        displayLink = "https://openweathermap.org/",
+        displayName = "Open Weather (Global)",
+        fullName = "Open Weather",
+    ),
     PIRATE(
         displayLink = "https://pirateweather.net/",
         displayName = "Pirate (Global)",
@@ -119,6 +124,7 @@ private val weatherSourcesGlobal = listOf(
     WeatherSource.MET,
     WeatherSource.METEO,
     WeatherSource.OPEN,
+    WeatherSource.OPENWEATHER,
     WeatherSource.PIRATE,
 )
 

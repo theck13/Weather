@@ -13,6 +13,7 @@ import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFra
 import com.heckofanapp.weather.core.network.sources.weather.metnorway.MetNorwayRepository
 import com.heckofanapp.weather.core.network.sources.weather.nws.NwsRepository
 import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoRepository
+import com.heckofanapp.weather.core.network.sources.weather.openweather.OpenWeatherRepository
 import com.heckofanapp.weather.core.network.sources.weather.pirate.PirateRepository
 import com.heckofanapp.weather.core.network.sources.weather.smhi.SmhiRepository
 import com.heckofanapp.weather.data.repository.WeatherRepository
@@ -33,6 +34,7 @@ class WeatherRepositoryProvider @Inject constructor(
     private val meteoAmRepository: MeteoAmRepository,
     private val googleRepository: GoogleRepository,
     private val pirateRepository: PirateRepository,
+    private val openWeatherRepository: OpenWeatherRepository,
 ) {
     fun getRepository(
         source: WeatherSource,
@@ -50,6 +52,7 @@ class WeatherRepositoryProvider @Inject constructor(
             WeatherSource.METEOAM -> meteoAmRepository
             WeatherSource.NWS -> nwsRepository
             WeatherSource.OPEN -> openMeteoRepository
+            WeatherSource.OPENWEATHER -> openWeatherRepository
             WeatherSource.PIRATE -> pirateRepository
             WeatherSource.SMHI -> smhiRepository
         }

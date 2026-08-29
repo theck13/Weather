@@ -24,6 +24,7 @@ val source_accu_weather = localProps.getProperty("SOURCE_ACCU_WEATHER") ?: Syste
 val source_geo_username = localProps.getProperty("SOURCE_GEO_USERNAME") ?: System.getenv("SOURCE_GEO_USERNAME") ?: ""
 val source_google_pixel = localProps.getProperty("SOURCE_GOOGLE_PIXEL") ?: System.getenv("SOURCE_GOOGLE_PIXEL") ?: ""
 val source_meteo_france = localProps.getProperty("SOURCE_METEO_FRANCE") ?: System.getenv("SOURCE_METEO_FRANCE") ?: ""
+val source_open_weather = localProps.getProperty("SOURCE_OPEN_WEATHER") ?: System.getenv("SOURCE_OPEN_WEATHER") ?: ""
 val source_pirate_booty = localProps.getProperty("SOURCE_PIRATE_BOOTY") ?: System.getenv("SOURCE_PIRATE_BOOTY") ?: ""
 
 val package_name = "${developer_domain}.weather"
@@ -85,6 +86,12 @@ android {
             "String",
             "SOURCE_METEO_FRANCE",
             "\"$source_meteo_france\""
+        )
+
+        buildConfigField(
+            "String",
+            "SOURCE_OPEN_WEATHER",
+            "\"$source_open_weather\""
         )
 
         buildConfigField(

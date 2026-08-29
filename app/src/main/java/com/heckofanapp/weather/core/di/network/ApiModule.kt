@@ -19,6 +19,7 @@ import com.heckofanapp.weather.core.network.sources.weather.meteofrance.MeteoFra
 import com.heckofanapp.weather.core.network.sources.weather.metnorway.MetNorwayApi
 import com.heckofanapp.weather.core.network.sources.weather.nws.NwsApi
 import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoApi
+import com.heckofanapp.weather.core.network.sources.weather.openweather.OpenWeatherApi
 import com.heckofanapp.weather.core.network.sources.weather.pirate.PirateApi
 import com.heckofanapp.weather.core.network.sources.weather.smhi.SmhiApi
 import dagger.Module
@@ -104,6 +105,10 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideOpenMeteoSearchApi(): OpenMeteoSearchApi = OpenMeteoSearchApi.create()
+
+    @Provides
+    @Singleton
+    fun provideOpenWeatherApi(): OpenWeatherApi = OpenWeatherApi.create()
 
     @Provides
     @Singleton

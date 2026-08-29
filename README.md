@@ -463,6 +463,7 @@ Weather inspired by [Pixel Weather](https://play.google.com/store/apps/details?i
 - **Meteo (France)**
 - **Meteo AM (Italy)**
 - **Open Meteo (Global)**
+- **Open Weather (Global)**
 - **Pirate (Global)**
 - **SMHI (Sweden)**
 

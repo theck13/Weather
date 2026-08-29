@@ -26,6 +26,8 @@ import com.heckofanapp.weather.core.network.sources.weather.nws.NwsApi
 import com.heckofanapp.weather.core.network.sources.weather.nws.NwsRepository
 import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoApi
 import com.heckofanapp.weather.core.network.sources.weather.openmeteo.OpenMeteoRepository
+import com.heckofanapp.weather.core.network.sources.weather.openweather.OpenWeatherApi
+import com.heckofanapp.weather.core.network.sources.weather.openweather.OpenWeatherRepository
 import com.heckofanapp.weather.core.network.sources.weather.pirate.PirateApi
 import com.heckofanapp.weather.core.network.sources.weather.pirate.PirateRepository
 import com.heckofanapp.weather.core.network.sources.weather.smhi.SmhiApi
@@ -150,6 +152,15 @@ object WeatherRepositoryModule {
         api: OpenMeteoApi,
         weatherDao: WeatherDao,
     ): OpenMeteoRepository = OpenMeteoRepository(dao, weatherDao, api)
+
+    @Provides
+    @Singleton
+    fun provideOpenWeatherRepository(
+        dao: LocationsDao,
+        api: OpenWeatherApi,
+        weatherDao: WeatherDao,
+        openMeteoApi: OpenMeteoApi,
+    ): OpenWeatherRepository = OpenWeatherRepository(dao, weatherDao, api, openMeteoApi)
 
     @Provides
     @Singleton
