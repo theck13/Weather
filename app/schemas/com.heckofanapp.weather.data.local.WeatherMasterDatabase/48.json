@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 48,
-    "identityHash": "1a8354fd6b1418d0639d035175b9f0aa",
+    "identityHash": "e2e2bc57141529d7e28e55a6c7e83993",
     "entities": [
       {
         "tableName": "weather_locations",
@@ -327,7 +327,7 @@
       },
       {
         "tableName": "weather_daily",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locationId` TEXT NOT NULL, `temperatureMin` REAL, `temperatureMax` REAL, `windSpeed` REAL, `windDirection` TEXT, `rainSum` REAL NOT NULL, `snowfallSum` REAL, `ultravioletAverage` REAL, `weatherCondition` TEXT NOT NULL, `time` INTEGER NOT NULL, `precipitationProbabilityMax` INTEGER, `pressureMsl` REAL, `visibility` INTEGER, `humidity` REAL, `dewPoint` REAL, `sunrise` INTEGER NOT NULL, `sunset` INTEGER NOT NULL, `moonrise` INTEGER NOT NULL, `moonset` INTEGER NOT NULL, `moonPhase` TEXT NOT NULL, `dawn` INTEGER NOT NULL, `dusk` INTEGER NOT NULL, PRIMARY KEY(`locationId`, `time`), FOREIGN KEY(`locationId`) REFERENCES `weather_locations`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locationId` TEXT NOT NULL, `temperatureMin` REAL, `temperatureMax` REAL, `windSpeed` REAL, `windDirection` TEXT, `rainSum` REAL NOT NULL, `snowfallSum` REAL, `uvIndexMax` REAL, `weatherCondition` TEXT NOT NULL, `time` INTEGER NOT NULL, `precipitationProbabilityMax` INTEGER, `pressureMsl` REAL, `visibility` INTEGER, `humidity` REAL, `dewPoint` REAL, `sunrise` INTEGER NOT NULL, `sunset` INTEGER NOT NULL, `moonrise` INTEGER NOT NULL, `moonset` INTEGER NOT NULL, `moonPhase` TEXT NOT NULL, `dawn` INTEGER NOT NULL, `dusk` INTEGER NOT NULL, PRIMARY KEY(`locationId`, `time`), FOREIGN KEY(`locationId`) REFERENCES `weather_locations`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "locationId",
@@ -367,8 +367,8 @@
             "affinity": "REAL"
           },
           {
-            "fieldPath": "ultravioletAverage",
-            "columnName": "ultravioletAverage",
+            "fieldPath": "uvIndexMax",
+            "columnName": "uvIndexMax",
             "affinity": "REAL"
           },
           {
@@ -851,7 +851,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a8354fd6b1418d0639d035175b9f0aa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e2e2bc57141529d7e28e55a6c7e83993')"
     ]
   }
 }

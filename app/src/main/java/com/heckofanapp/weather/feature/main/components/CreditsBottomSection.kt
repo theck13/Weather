@@ -32,7 +32,7 @@ fun CreditsBottomSection(
     onClick: () -> Unit,
     weather: Weather?,
 ) {
-    val source = weather?.location?.source?.displayName ?: WeatherSource.OPENMETEO.displayName
+    val source = weather?.location?.source?.displayName ?: WeatherSource.OPENWEATHER.displayName
 
     Gap(
         vertical = SpaceDefault / 2,

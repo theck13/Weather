@@ -96,7 +96,7 @@ val MIGRATION_40_41 = object : Migration(
         NwsGridPointsEntity::class,
         GithubEntity::class
     ],
-    version = 47,
+    version = 48,
 )
 abstract class WeatherMasterDatabase : RoomDatabase() {
 
@@ -150,6 +150,7 @@ abstract class WeatherMasterDatabase : RoomDatabase() {
                     MIGRATION_40_41,
                     MIGRATION_41_42,
                     MIGRATION_45_46,
+                    MIGRATION_47_48,
                 ).build().also {
                     INSTANCE = it
                 }
@@ -158,8 +159,8 @@ abstract class WeatherMasterDatabase : RoomDatabase() {
 }
 
 val MIGRATION_41_42 = object : Migration(
-    endVersion = 41,
-    startVersion = 42,
+    endVersion = 42,
+    startVersion = 41,
 ) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(
@@ -186,6 +187,23 @@ val MIGRATION_45_46 = object : Migration(
         // Preserve current implicit order (default-first, then insertion) for existing users
         db.execSQL(
             "UPDATE weather_locations SET sortOrder = rowid"
+        )
+    }
+}
+
+val MIGRATION_47_48 = object : Migration(
+    endVersion = 48,
+    startVersion = 47,
+) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        /**
+         * Room stores WeatherSource as its enum name, so renaming OPEN to OPENMETEO
+         * stranded the old text in existing rows and crashed reads of weather_locations.
+         * The names are written as literals rather than referencing the enum so that a
+         * future rename cannot silently change what this migration does.
+         */
+        db.execSQL(
+            "UPDATE weather_locations SET source = 'OPENMETEO' WHERE source = 'OPEN'"
         )
     }
 }
