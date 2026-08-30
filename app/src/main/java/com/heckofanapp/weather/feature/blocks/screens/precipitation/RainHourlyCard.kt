@@ -161,9 +161,9 @@ fun RainHourlyCard(
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,
                             text = formatLocalizedNumber(
-                                decimalPlaces = 1,
+                                decimalPlaces = if (unit == PrecipitationUnit.IN) 2 else 1,
                                 locale = getCurrentAppLocale(),
-                                number = formatter(item.rain) ?: 0.0,
+                                number = formatter(item.rain) ?: 0.00,
                             ),
                         )
 

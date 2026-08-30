@@ -43,8 +43,8 @@ fun SnowHourlyCard(
     unit: PrecipitationUnit,
     context: Context,
 ) {
-    val max = data.maxOf { it.snowfall ?: 0.0 }
-    val min = data.minOf { it.snowfall ?: 0.0 }
+    val max = data.maxOf { it.snowfall ?: 0.00 }
+    val min = data.minOf { it.snowfall ?: 0.00 }
     // Snowfall is CM.  Rain in MM.  So, base differs from RainHourlyCard.
     val formatter: (Double) -> Double? = {
         PrecipitationUnit.CM.convert(
@@ -106,7 +106,7 @@ fun SnowHourlyCard(
                     key = { "${data[it].time}_$it" },
                 ) { index ->
                     val item = data[index]
-                    val snow = item.snowfall ?: 0.0
+                    val snow = item.snowfall ?: 0.00
                     val percentage = ((snow.minus(min)).div((max - min))).times(100)
                     val probability = item.precipitationProbability
                     val barColor = barColorsSnow(snow)
@@ -163,9 +163,9 @@ fun SnowHourlyCard(
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,
                             text = formatLocalizedNumber(
-                                decimalPlaces = 1,
+                                decimalPlaces = if (unit == PrecipitationUnit.IN) 2 else 1,
                                 locale = getCurrentAppLocale(),
-                                number = formatter(snow) ?: 0.0,
+                                number = formatter(snow) ?: 0.00,
                             ),
                         )
 
