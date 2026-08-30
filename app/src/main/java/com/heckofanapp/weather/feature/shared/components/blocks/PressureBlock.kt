@@ -48,7 +48,7 @@ fun PressureBlock(
         from = pressure!!,
         to = units.pressure,
     )
-    val pressureHpa = pressure!!.roundToInt()
+    val pressureHpa = pressure.roundToInt()
 
     val progressDrawable = when {
         pressureHpa < 980 -> R.drawable.il_pressure_progress_low
@@ -113,7 +113,7 @@ fun PressureBlock(
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.displayMedium,
                     text = formatLocalizedNumber(
-                        decimalPlaces = 2,
+                        decimalPlaces = if (units.pressure == PressureUnit.INHG) 2 else 0,
                         locale = getCurrentAppLocale(),
                         number = pressureConverted ?: 0.00,
                     ),
