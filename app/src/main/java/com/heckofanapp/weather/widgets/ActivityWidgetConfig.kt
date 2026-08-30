@@ -18,6 +18,8 @@ import com.heckofanapp.weather.widgets.card.WidgetCardReceiver
 import com.heckofanapp.weather.widgets.card.ui.WidgetCardConfig
 import com.heckofanapp.weather.widgets.daily.WidgetDailyReceiver
 import com.heckofanapp.weather.widgets.daily.ui.WidgetDailyConfig
+import com.heckofanapp.weather.widgets.froggy.WidgetFroggyReceiver
+import com.heckofanapp.weather.widgets.froggy.ui.WidgetFroggyConfig
 import com.heckofanapp.weather.widgets.hourly.WidgetHourlyReceiver
 import com.heckofanapp.weather.widgets.hourly.ui.WidgetHourlyConfig
 import com.heckofanapp.weather.widgets.transparent.WidgetTransparentReceiver
@@ -87,6 +89,14 @@ class ActivityWidgetConfig : ComponentActivity() {
 
                         WidgetDailyReceiver::class.java.name -> {
                             WidgetDailyConfig(
+                                onDone = {
+                                    onDone(it)
+                                },
+                            )
+                        }
+
+                        WidgetFroggyReceiver::class.java.name -> {
+                            WidgetFroggyConfig(
                                 onDone = {
                                     onDone(it)
                                 },

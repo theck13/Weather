@@ -197,15 +197,17 @@ fun WeatherCondition.toFroggy(
         WeatherCondition.LIGHT_RAIN -> R.drawable.im_froggy_light_rain
         WeatherCondition.LIGHT_SNOW -> R.drawable.im_froggy_snow
         WeatherCondition.MOSTLY_CLEAR -> if (isDay) R.drawable.im_froggy_mostly_clear_day else R.drawable.im_froggy_mostly_clear_night
-        WeatherCondition.NO_CONDITION_FOUND -> R.drawable.il_weather_unavailable
+        WeatherCondition.NO_CONDITION_FOUND -> R.drawable.im_froggy_no_condition_found
         WeatherCondition.OVERCAST -> R.drawable.im_froggy_overcast
         WeatherCondition.PARTLY_CLOUDY -> R.drawable.im_froggy_partly_cloudy
         WeatherCondition.RAIN -> R.drawable.im_froggy_rain
+        WeatherCondition.RAIN_WITH_SNOW, WeatherCondition.RAIN_THEN_SNOW -> R.drawable.im_froggy_mixed_rain_snow
         WeatherCondition.SNOW -> R.drawable.im_froggy_snow
+        WeatherCondition.SNOW_WITH_RAIN, WeatherCondition.SNOW_THEN_RAIN -> R.drawable.im_froggy_mixed_rain_snow
         WeatherCondition.THUNDERSTORM -> R.drawable.im_froggy_thunder
-        WeatherCondition.VERY_COLD -> R.drawable.il_weather_unavailable // WILL NEVER HAPPEN WITH FROGGY
-        WeatherCondition.VERY_HOT -> R.drawable.il_weather_unavailable // WILL NEVER HAPPEN WITH FROGGY
+        WeatherCondition.VERY_COLD -> R.drawable.im_froggy_no_condition_found // WILL NEVER HAPPEN WITH FROGGY
+        WeatherCondition.VERY_HOT -> R.drawable.im_froggy_no_condition_found // WILL NEVER HAPPEN WITH FROGGY
 
-        else -> R.drawable.il_weather_unavailable
+        else -> R.drawable.im_froggy_no_condition_found
     }
 }

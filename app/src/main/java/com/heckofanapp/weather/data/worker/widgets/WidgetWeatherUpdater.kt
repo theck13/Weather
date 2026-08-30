@@ -10,6 +10,7 @@ import com.heckofanapp.weather.widgets.WeatherWidgetStateDefinition
 import com.heckofanapp.weather.widgets.WidgetConfig
 import com.heckofanapp.weather.widgets.card.WidgetCard
 import com.heckofanapp.weather.widgets.daily.WidgetDaily
+import com.heckofanapp.weather.widgets.froggy.WidgetFroggy
 import com.heckofanapp.weather.widgets.hourly.WidgetHourly
 import com.heckofanapp.weather.widgets.pill.WidgetPill
 import com.heckofanapp.weather.widgets.summary.WidgetSummary
@@ -18,12 +19,13 @@ import com.heckofanapp.weather.widgets.transparent.WidgetTransparent
 class WeatherWidgetUpdater(
     private val context: Context,
 ) {
-    private val pill = WidgetPill()
-    private val summary = WidgetSummary()
-    private val widget = WidgetHourly()
-    private val widgetClockDaily = WidgetDaily()
-    private val widgetGlance = WidgetTransparent()
-    private val widgetHorizontal = WidgetCard()
+    private val widgetCard = WidgetCard()
+    private val widgetDaily = WidgetDaily()
+    private val widgetFroggy = WidgetFroggy()
+    private val widgetHourly = WidgetHourly()
+    private val widgetPill = WidgetPill()
+    private val widgetSummary = WidgetSummary()
+    private val widgetTransparent = WidgetTransparent()
 
     suspend fun update(
         json: String,
@@ -56,37 +58,43 @@ class WeatherWidgetUpdater(
             ids = manager.getGlanceIds(
                 provider = WidgetCard::class.java,
             ),
-            widget = widgetHorizontal,
+            widget = widgetCard,
         )
         updateWidgets(
             ids = manager.getGlanceIds(
                 provider = WidgetDaily::class.java,
             ),
-            widget = widgetClockDaily,
+            widget = widgetDaily,
+        )
+        updateWidgets(
+            ids = manager.getGlanceIds(
+                provider = WidgetFroggy::class.java,
+            ),
+            widget = widgetFroggy,
         )
         updateWidgets(
             ids = manager.getGlanceIds(
                 provider = WidgetHourly::class.java,
             ),
-            widget = widget,
+            widget = widgetHourly,
         )
         updateWidgets(
             ids = manager.getGlanceIds(
                 provider = WidgetPill::class.java,
             ),
-            widget = pill,
+            widget = widgetPill,
         )
         updateWidgets(
             ids = manager.getGlanceIds(
                 provider = WidgetSummary::class.java,
             ),
-            widget = summary,
+            widget = widgetSummary,
         )
         updateWidgets(
             ids = manager.getGlanceIds(
                 provider = WidgetTransparent::class.java,
             ),
-            widget = widgetGlance,
+            widget = widgetTransparent,
         )
     }
 

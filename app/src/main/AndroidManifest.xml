@@ -138,6 +138,26 @@
         </receiver>
 
         <receiver
+            android:name=".widgets.froggy.WidgetFroggyReceiver"
+            android:exported="true"
+            android:label="@string/widget_froggy">
+
+            <intent-filter>
+
+                <action
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
+                </action>
+
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_froggy">
+            </meta-data>
+
+        </receiver>
+
+        <receiver
             android:name=".widgets.hourly.WidgetHourlyReceiver"
             android:exported="true"
             android:label="@string/widget_hourly">

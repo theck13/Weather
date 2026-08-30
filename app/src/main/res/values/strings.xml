@@ -503,6 +503,7 @@
 
     <string name="widget_card">Card</string>
     <string name="widget_daily">Daily</string>
+    <string name="widget_froggy">Froggy</string>
     <string name="widget_hourly">Hourly</string>
     <string name="widget_pill">Pill</string>
     <string name="widget_summary">Summary</string>

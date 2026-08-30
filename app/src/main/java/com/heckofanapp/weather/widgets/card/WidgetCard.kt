@@ -38,8 +38,7 @@ class WidgetCard : GlanceAppWidget() {
     override val sizeMode = SizeMode.Responsive(
         sizes = WidgetSizePoints.SIZES,
     )
-    override val stateDefinition =
-        WeatherWidgetStateDefinition
+    override val stateDefinition = WeatherWidgetStateDefinition
 
     override suspend fun provideGlance(
         context: Context,

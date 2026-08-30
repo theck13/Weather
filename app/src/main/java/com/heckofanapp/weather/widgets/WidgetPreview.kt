@@ -32,6 +32,7 @@ import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
 import com.heckofanapp.weather.widgets.card.ui.WidgetCardPreview
 import com.heckofanapp.weather.widgets.daily.ui.WidgetDailyPreview
+import com.heckofanapp.weather.widgets.froggy.ui.WidgetFroggyPreview
 import com.heckofanapp.weather.widgets.hourly.ui.WidgetHourlyPreview
 import com.heckofanapp.weather.widgets.model.WidgetVariant
 import com.heckofanapp.weather.widgets.transparent.ui.WidgetTransparentPreview
@@ -66,6 +67,23 @@ fun PreviewWidgetDaily() {
             dailyCount = 5.00f,
             fontSize = 1.00f,
             format = "EEE d MMM",
+            iconSize = 1.00f,
+            textTheme = WidgetThemeText.SYSTEM,
+            widgetTheme = WidgetTheme.SYSTEM,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewWidgetFroggy() {
+    Column(
+        modifier = Modifier.padding(
+            all = SpaceDefault,
+        ),
+    ) {
+        WidgetFroggyPreview(
+            fontSize = 1.00f,
             iconSize = 1.00f,
             textTheme = WidgetThemeText.SYSTEM,
             widgetTheme = WidgetTheme.SYSTEM,

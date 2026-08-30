@@ -45,8 +45,7 @@ class WidgetTransparent : GlanceAppWidget() {
         sizes = WidgetSizePoints.SIZES
 
     )
-    override val stateDefinition =
-        WeatherWidgetStateDefinition
+    override val stateDefinition = WeatherWidgetStateDefinition
 
     @SuppressLint("RestrictedApi")
     override suspend fun provideGlance(
