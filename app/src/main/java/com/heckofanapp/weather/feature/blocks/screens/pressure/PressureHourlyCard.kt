@@ -30,8 +30,10 @@ import com.heckofanapp.weather.core.ui.barColorsPressure
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.Symbol
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
+import com.heckofanapp.weather.core.utils.formatters.formatLocalizedNumber
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
+import com.heckofanapp.weather.core.utils.locale.getCurrentAppLocale
 import com.heckofanapp.weather.feature.shared.components.Header
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -43,6 +45,12 @@ fun PressureHourlyCard(
     unit: PressureUnit,
     zoneId: String,
 ) {
+    val formatter: (Double) -> Double? = {
+        PressureUnit.HPA.convert(
+            from = it,
+            to = unit,
+        )
+    }
     val preferences = LocalAppPrefs.current
     val pressure = data.map { it.pressureMsl }
     val time: (Long) -> String = {
@@ -100,7 +108,7 @@ fun PressureHourlyCard(
                     val item = data[index]
                     val chartMinimum = 980.0
                     val chartMaximum = 1040.0
-                    val percentage = ((item.pressureMsl!!.roundToInt() - chartMinimum) / (chartMaximum - chartMinimum)).coerceIn(0.0, 1.0)
+                    val percentage = ((item.pressureMsl!! - chartMinimum) / (chartMaximum - chartMinimum)).coerceIn(0.0, 1.0)
                     val previousPressure = if (index > 0) pressure[index - 1] else item.pressureMsl
                     val pressureDifference = item.pressureMsl - previousPressure!!
                     val pressureIcon =
@@ -171,7 +179,11 @@ fun PressureHourlyCard(
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,
-                            text = item.pressureMsl.roundToInt().toString(),
+                            text = formatLocalizedNumber(
+                                decimalPlaces = if (unit == PressureUnit.INHG) 2 else 0,
+                                locale = getCurrentAppLocale(),
+                                number = formatter(item.pressureMsl) ?: 0.00,
+                            ),
                         )
 
                         Text(
