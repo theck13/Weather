@@ -405,7 +405,7 @@
     <string name="moon_phases">Phases</string>
     <string name="moon_phase_prevailing">Prevailing</string>
     <string name="moon_phase_proportion">Proportion</string>
-    <string name="percentage">%1$d%%</string>
+    <string name="percentage">%1$s%%</string>
     <plurals name="phase_days">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
