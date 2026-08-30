@@ -19,25 +19,79 @@ import com.heckofanapp.weather.core.model.weather.WindUnit.KT
 import com.heckofanapp.weather.core.model.weather.WindUnit.MPH
 import com.heckofanapp.weather.core.model.weather.WindUnit.MPS
 
-enum class TemperatureUnit {
-    CELSIUS,
-    FAHRENHEIT;
+enum class DistanceUnit {
+    KM,
+    MI,
+    M;
 
     fun convert(
         from: Double?,
-        to: TemperatureUnit,
+        to: DistanceUnit,
+    ): Double? {
+        if (from == null) return null
+        if (this == to) return from
+        val meters = when (this) {
+            M -> from
+            KM -> from * 1000
+            MI -> from * 1609
+        }
+
+        return when (to) {
+            M -> meters
+            KM -> meters / 1000
+            MI -> meters / 1609
+        }
+    }
+}
+
+enum class PrecipitationUnit {
+    CM,
+    IN,
+    MM;
+
+    fun convert(
+        from: Double?,
+        to: PrecipitationUnit,
     ): Double? {
         if (from == null) return null
         if (this == to) return from
 
-        val celsius = when (this) {
-            CELSIUS -> from
-            FAHRENHEIT -> (from - 32) * 5 / 9
+        val mm = when (this) {
+            CM -> from * 10
+            IN -> from * 25.4
+            MM -> from
         }
 
         return when (to) {
-            CELSIUS -> celsius
-            FAHRENHEIT -> (celsius * 9 / 5) + 32
+            CM -> mm / 10
+            IN -> mm / 25.4
+            MM -> mm
+        }
+    }
+}
+
+enum class PressureUnit {
+    HPA,
+    INHG,
+    MMHG;
+
+    fun convert(
+        from: Double?,
+        to: PressureUnit,
+    ): Double? {
+        if (from == null) return null
+        if (this == to) return from
+
+        val hpa = when (this) {
+            HPA -> from
+            INHG -> from * 33.8639
+            MMHG -> from * 1.33322
+        }
+
+        return when (to) {
+            HPA -> hpa
+            INHG -> hpa * 0.02953
+            MMHG -> hpa * 0.75006
         }
     }
 }
@@ -112,113 +166,26 @@ enum class WindUnit {
     }
 }
 
-enum class PressureUnit {
-    HPA,
-    INHG,
-    MMHG;
+enum class TemperatureUnit {
+    CELSIUS,
+    FAHRENHEIT;
 
     fun convert(
         from: Double?,
-        to: PressureUnit,
+        to: TemperatureUnit,
     ): Double? {
         if (from == null) return null
         if (this == to) return from
 
-        val hpa = when (this) {
-            HPA -> from
-            INHG -> from * 33.8639
-            MMHG -> from * 1.33322
+        val celsius = when (this) {
+            CELSIUS -> from
+            FAHRENHEIT -> (from - 32) * 5 / 9
         }
 
         return when (to) {
-            HPA -> hpa
-            INHG -> hpa * 0.02953
-            MMHG -> hpa * 0.75006
+            CELSIUS -> celsius
+            FAHRENHEIT -> (celsius * 9 / 5) + 32
         }
-    }
-}
-
-enum class DistanceUnit {
-    KM,
-    MI,
-    M;
-
-    fun convert(
-        from: Double?,
-        to: DistanceUnit,
-    ): Double? {
-        if (from == null) return null
-        if (this == to) return from
-        val meters = when (this) {
-            M -> from
-            KM -> from * 1000
-            MI -> from * 1609
-        }
-
-        return when (to) {
-            M -> meters
-            KM -> meters / 1000
-            MI -> meters / 1609
-        }
-    }
-}
-
-enum class PrecipitationUnit {
-    CM,
-    IN,
-    MM;
-
-    fun convert(
-        from: Double?,
-        to: PrecipitationUnit,
-    ): Double? {
-        if (from == null) return null
-        if (this == to) return from
-
-        val mm = when (this) {
-            CM -> from * 10
-            IN -> from * 25.4
-            MM -> from
-        }
-
-        return when (to) {
-            CM -> mm / 10
-            IN -> mm / 25.4
-            MM -> mm
-        }
-    }
-}
-
-fun TemperatureUnit.toName(
-    context: Context,
-): String {
-    return when (this) {
-        CELSIUS -> context.getString(R.string.unit_temperature_celsius)
-        FAHRENHEIT -> context.getString(R.string.unit_temperature_fahrenheit)
-    }
-}
-
-fun WindUnit.toName(
-    context: Context,
-    inShort: Boolean = false,
-): String {
-    return when (this) {
-        BFT -> context.getString(if (inShort) R.string.unit_wind_bft_short else R.string.unit_wind_bft)
-        KPH -> context.getString(if (inShort) R.string.unit_wind_kph_short else R.string.unit_wind_kph)
-        KT -> context.getString(if (inShort) R.string.unit_wind_kt_short else R.string.unit_wind_kt)
-        MPH -> context.getString(if (inShort) R.string.unit_wind_mph_short else R.string.unit_wind_mph)
-        MPS -> context.getString(if (inShort) R.string.unit_wind_mps_short else R.string.unit_wind_mps)
-    }
-}
-
-fun PressureUnit.toName(
-    context: Context,
-    inShort: Boolean = false,
-): String {
-    return when (this) {
-        HPA -> context.getString(if (inShort) R.string.unit_pressure_hpa_short else R.string.unit_pressure_hpa)
-        INHG -> context.getString(if (inShort) R.string.unit_pressure_inhg_short else R.string.unit_pressure_inhg)
-        MMHG -> context.getString(if (inShort) R.string.unit_pressure_mmhg_short else R.string.unit_pressure_mmhg)
     }
 }
 
@@ -241,5 +208,38 @@ fun PrecipitationUnit.toName(
         CM -> context.getString(if (inShort) R.string.unit_precipitation_cm_short else R.string.unit_precipitation_cm)
         IN -> context.getString(if (inShort) R.string.unit_precipitation_inch_short else R.string.unit_precipitation_inch)
         MM -> context.getString(if (inShort) R.string.unit_precipitation_mm_short else R.string.unit_precipitation_mm)
+    }
+}
+
+fun PressureUnit.toName(
+    context: Context,
+    inShort: Boolean = false,
+): String {
+    return when (this) {
+        HPA -> context.getString(if (inShort) R.string.unit_pressure_hpa_short else R.string.unit_pressure_hpa)
+        INHG -> context.getString(if (inShort) R.string.unit_pressure_inhg_short else R.string.unit_pressure_inhg)
+        MMHG -> context.getString(if (inShort) R.string.unit_pressure_mmhg_short else R.string.unit_pressure_mmhg)
+    }
+}
+
+fun TemperatureUnit.toName(
+    context: Context,
+): String {
+    return when (this) {
+        CELSIUS -> context.getString(R.string.unit_temperature_celsius)
+        FAHRENHEIT -> context.getString(R.string.unit_temperature_fahrenheit)
+    }
+}
+
+fun WindUnit.toName(
+    context: Context,
+    inShort: Boolean = false,
+): String {
+    return when (this) {
+        BFT -> context.getString(if (inShort) R.string.unit_wind_bft_short else R.string.unit_wind_bft)
+        KPH -> context.getString(if (inShort) R.string.unit_wind_kph_short else R.string.unit_wind_kph)
+        KT -> context.getString(if (inShort) R.string.unit_wind_kt_short else R.string.unit_wind_kt)
+        MPH -> context.getString(if (inShort) R.string.unit_wind_mph_short else R.string.unit_wind_mph)
+        MPS -> context.getString(if (inShort) R.string.unit_wind_mps_short else R.string.unit_wind_mps)
     }
 }
