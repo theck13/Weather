@@ -55,22 +55,22 @@ fun widgetWeatherMapper(
     val daily = weather.daily
         .take(6)
         .map {
-            val maxTemperature = TemperatureUnit.CELSIUS.convert(
-                from = it.temperatureMaximum,
-                to = units.temperature,
-            )?.roundToInt()
-            val minTemperature = TemperatureUnit.CELSIUS.convert(
-                from = it.temperatureMinimum,
-                to = units.temperature,
-            )?.roundToInt()
             val icon = it.weatherCondition.toIcon(
                 targetTimeMilli = System.currentTimeMillis(),
             )
+            val temperatureMaximum = TemperatureUnit.CELSIUS.convert(
+                from = it.temperatureMaximum,
+                to = units.temperature,
+            )?.roundToInt()
+            val temperatureMinimum = TemperatureUnit.CELSIUS.convert(
+                from = it.temperatureMinimum,
+                to = units.temperature,
+            )?.roundToInt()
 
             WidgetDailyItem(
                 icon = icon,
-                temperatureMaximum = "${maxTemperature}°",
-                temperatureMinimum = "${minTemperature}°",
+                temperatureMaximum = "${temperatureMaximum ?: "—"}°",
+                temperatureMinimum = "${temperatureMinimum ?: "—"}°",
                 time = toWeekdayString(
                     timeMilli = it.time,
                     zoneId = timezone,
