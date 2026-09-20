@@ -3,7 +3,9 @@ package com.heckofanapp.weather.core.utils.weather.astronomy
 import com.heckofanapp.weather.core.model.astro.MoonTimings
 import com.heckofanapp.weather.core.model.astro.SunTimings
 import com.heckofanapp.weather.core.model.astro.getMoonPhase
+import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.normalizeToDay
 import com.heckofanapp.weather.core.utils.extensions.DateTimeExtensions.secondsToMilliseconds
+import com.heckofanapp.weather.core.utils.formatters.getCurrentTimeFor
 import com.heckofanapp.weather.core.utils.formatters.safeZoneId
 import org.shredzone.commons.suncalc.MoonIllumination
 import org.shredzone.commons.suncalc.MoonTimes
@@ -44,7 +46,25 @@ fun getMoonTimings(
     latitude: Double,
     longitude: Double,
 ): List<MoonTimings> {
-    return timeMilli.map {
+    val currentTime = getCurrentTimeFor(zoneId)
+    val startingDay = Instant.ofEpochMilli(timeMilli.first())
+        .atZone(safeZoneId(zoneId))
+        .toLocalDate()
+    val today = Instant.ofEpochMilli(currentTime)
+        .atZone(safeZoneId(zoneId))
+        .toLocalDate()
+
+    /**
+     * Some data sources do not provide current day once it is already near end.
+     * Check if today's date exists in returned data, and add it when missing.
+     */
+    val millis = if (startingDay.isAfter(today)) {
+        listOf(currentTime.normalizeToDay(zoneId)) + timeMilli
+    } else {
+        timeMilli
+    }
+
+    return millis.map {
         val date = Instant.ofEpochMilli(it)
             .atZone(
                 safeZoneId(
