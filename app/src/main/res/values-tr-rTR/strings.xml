@@ -72,7 +72,7 @@
     <string name="setting_distance_unit">Uzaklık birimi</string>
     <string name="setting_precipitation_unit">Yağış birimi</string>
     <string name="unit_temperature_celsius">Santigrat</string>
-    <string name="unit_temperature_fahrenheit">Fahrenheit</string>
+    <string name="unit_temperature_fahrenheit">Fahrenhayt (°F)</string>
     <string name="unit_wind_mps">metre/saniye</string>
     <string name="unit_wind_mph">mil/saat</string>
     <string name="unit_wind_kph">kilometre/saat</string>
