@@ -1,9 +1,6 @@
 package com.heckofanapp.weather.feature.settings.about
 
 import androidx.annotation.ArrayRes
-import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
-import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
@@ -25,13 +20,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -57,6 +46,8 @@ import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.ui.navigation.NavigationRoutes
 import com.heckofanapp.weather.core.ui.snackbar.SnackbarManager
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
+import com.heckofanapp.weather.feature.shared.ui.RefreshButton
+import com.heckofanapp.weather.feature.shared.ui.RefreshButtonShape
 import kotlinx.coroutines.launch
 
 @Composable
@@ -282,55 +273,16 @@ private fun AboutVersion(
                 )
             },
             trailingContent = {
-                IconButton(
+                RefreshButton(
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         disabledContainerColor = MaterialTheme.colorScheme.tertiary,
                     ),
-                    enabled = isRefreshing.not(),
-                    onClick = onClickRefresh,
-                    shapes = IconButtonDefaults.shapes(),
-                ) {
-                    // Detect refreshing change from true to false synchronously
-                    // during composition so icon animates only on refresh done,
-                    // not on initial load.
-                    val wasRefreshing = remember { mutableStateOf(isRefreshing) }
-                    val isRefreshed = wasRefreshing.value && isRefreshing.not()
-
-                    SideEffect {
-                        wasRefreshing.value = isRefreshing
-                    }
-
-                    if (isRefreshing) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(
-                                size = SpaceDefault,
-                            ),
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            strokeWidth = 2.dp,
-                        )
-                    } else {
-                        val iconRefresh = AnimatedImageVector.animatedVectorResource(R.drawable.av_refresh_24)
-
-                        // Start un-drawn only when just finished refreshing, then flip
-                        // to end state so painter animates once.
-                        var atEnd by remember { mutableStateOf(isRefreshed.not()) }
-                        LaunchedEffect(Unit) {
-                            if (isRefreshed) {
-                                atEnd = true
-                            }
-                        }
-
-                        Icon(
-                            contentDescription = stringResource(R.string.refresh_locations),
-                            painter = rememberAnimatedVectorPainter(
-                                animatedImageVector = iconRefresh,
-                                atEnd = atEnd,
-                            ),
-                            tint = MaterialTheme.colorScheme.onTertiary,
-                        )
-                    }
-                }
+                    colorTint = MaterialTheme.colorScheme.onTertiary,
+                    isRefreshing = isRefreshing,
+                    onRefresh = onClickRefresh,
+                    shape = RefreshButtonShape.SquareToCircle,
+                )
             }
         )
     }
