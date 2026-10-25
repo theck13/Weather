@@ -1,6 +1,7 @@
 package com.heckofanapp.weather.core.network.github
 
 import com.google.gson.annotations.SerializedName
+import com.heckofanapp.weather.REPOSITORY_RELEASES
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -19,7 +20,7 @@ data class GithubRepoDataJson(
 )
 
 interface GithubApi {
-    @GET("theck13/Weather/releases")
+    @GET(REPOSITORY_RELEASES)
     suspend fun fetchGithubRepos(): Response<List<GithubRepoDataJson>>
 
     companion object {

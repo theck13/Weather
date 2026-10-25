@@ -34,6 +34,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.BuildConfig
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.REPOSITORY_ISSUES_NEW
+import com.heckofanapp.weather.REPOSITORY_RELEASES_LATEST
 import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
@@ -105,7 +107,7 @@ fun AboutScreen(
                             currentTag = "v${packageInfo.versionName}",
                             onAction = {
                                 uriHandler.openUri(
-                                    uri = "https://github.com/theck13/Weather/releases/latest",
+                                    uri = REPOSITORY_RELEASES_LATEST,
                                 )
                             },
                         )
@@ -184,7 +186,7 @@ fun AboutScreen(
                             )
                         },
                         onClick = {
-                            uriHandler.openUri("https://github.com/theck13/Weather/releases/latest")
+                            uriHandler.openUri(REPOSITORY_RELEASES_LATEST)
                         },
                         title = stringResource(R.string.about_changelog),
                         trailing = {
@@ -200,7 +202,7 @@ fun AboutScreen(
                             )
                         },
                         onClick = {
-                            uriHandler.openUri("https://github.com/theck13/Weather/issues/new")
+                            uriHandler.openUri(REPOSITORY_ISSUES_NEW)
                         },
                         title = stringResource(R.string.about_create_issue),
                         trailing = {

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.REPOSITORY_RELEASES_LATEST
 import com.heckofanapp.weather.core.model.domain.airquality.AirQuality
 import com.heckofanapp.weather.core.model.domain.location.Location
 import com.heckofanapp.weather.core.model.domain.weather.Weather
@@ -50,7 +51,7 @@ data class MainScreenUiState(
     val isWeatherSourcesForLocationSheetOpen: Boolean = false,
     val isWeatherSourcesInfoForLocationSheetOpen: Boolean = false,
     val isNewVersionAvailable: Boolean = false,
-    val lastestVersionUrl: String = "https://github.com/theck13/Weather/releases/latest"
+    val lastestVersionUrl: String = REPOSITORY_RELEASES_LATEST
 )
 
 @OptIn(

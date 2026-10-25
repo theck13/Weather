@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.heckofanapp.weather.R
+import com.heckofanapp.weather.REPOSITORY_ISSUES_TEMPLATE
 import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.model.sources.WeatherSource
 import com.heckofanapp.weather.core.ui.components.NavigateBackButton
@@ -101,7 +102,7 @@ fun WeatherSourcesScreen(
                         horizontal = SpaceDefault,
                     ),
                     onClick = {
-                        uriHandler.openUri("https://github.com/theck13/Weather/issues/new?template=new_source.yaml")
+                        uriHandler.openUri(REPOSITORY_ISSUES_TEMPLATE)
                     },
                     shapes = ButtonDefaults.shapes(),
                 ) {
