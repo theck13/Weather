@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:height="108dp"
-    android:viewportHeight="108"
-    android:viewportWidth="108"
+    android:viewportHeight="@integer/viewport_size"
+    android:viewportWidth="@integer/viewport_size"
     android:width="108dp"
     tools:ignore="VectorPath">
 
@@ -14,7 +14,7 @@
         android:pathData="M54 105C25.8776 105 3 82.1198 3 54 3 25.8776 25.8776 3 54 3 82.1198 3 105 25.8776 105 54 105 82.1198 82.1198 105 54 105"
         android:strokeColor="@color/background"
         android:strokeMiterLimit="10"
-        android:strokeWidth="6">
+        android:strokeWidth="@integer/stroke_width">
     </path>
 
     <path

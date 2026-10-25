@@ -17,15 +17,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +45,9 @@ import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
 import com.heckofanapp.weather.core.utils.weather.cache.isWeatherDailyDomainSafe
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 internal fun CelestialBlock(
@@ -57,6 +64,12 @@ internal fun CelestialBlock(
         CelestialType.Moon -> daily.moonPhase.icon
         CelestialType.Sun -> R.drawable.ic_rise_set_sun
     }
+    val events = getEvents(
+        index = index,
+        type = type,
+        weather = weather,
+    )
+    val heightHorizon = 0.40f
     val image = painterResource(drawable)
     val is24Hr = state.timeFormat == "24"
     val formatter: (Long) -> String = {
@@ -69,7 +82,17 @@ internal fun CelestialBlock(
             zoneId = weather.location.timezone,
         )
     }
-    val timeNow = System.currentTimeMillis()
+    val strokeWidth = integerResource(R.integer.stroke_width)
+    val timeNow by produceState(
+        initialValue = System.currentTimeMillis(),
+    ) {
+        while (true) {
+            delay(
+                duration = 1.minutes,
+            )
+            value = System.currentTimeMillis()
+        }
+    }
     val timeRise =
         when (type) {
             CelestialType.Moon -> daily.moonrise
@@ -80,11 +103,7 @@ internal fun CelestialBlock(
             CelestialType.Moon -> daily.moonset
             CelestialType.Sun -> daily.sunset
         }
-
-    val progress = ((timeNow - timeRise).toFloat() / (timeSet - timeRise)).coerceIn(
-        maximumValue = 1.00f,
-        minimumValue = 0.00f,
-    )
+    val viewportSize = integerResource(R.integer.viewport_size)
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -121,18 +140,29 @@ internal fun CelestialBlock(
                     )
                     .fillMaxSize(),
             ) {
-                val height = size.height
-                val width = size.width
+                val sizeHeight = size.height
+                val sizeIcon = 64.00f
+                val sizeStroke = sizeIcon * strokeWidth / viewportSize
+                val sizeWidth = size.width
 
+                // Extended past both edges by half icon so icon is completely off at ends.
                 val path = Path().apply {
                     moveTo(
+                        x = -sizeIcon / 2.00f,
+                        y = sizeHeight / 1.45f,
+                    )
+                    lineTo(
                         x = 0.00f,
-                        y = height / 1.45f,
+                        y = sizeHeight / 1.45f,
                     )
                     cubicTo(
-                        width * 0.38f, height / 2.00f,
-                        width * 0.38f, height / 15.00f,
-                        width * 0.98f, height / 1.40f,
+                        sizeWidth * 0.38f, sizeHeight / 2.00f,
+                        sizeWidth * 0.38f, sizeHeight / 15.00f,
+                        sizeWidth * 0.98f, sizeHeight / 1.40f,
+                    )
+                    lineTo(
+                        x = sizeWidth + sizeIcon / 2.00f,
+                        y = sizeHeight / 1.40f,
                     )
                 }
 
@@ -147,18 +177,24 @@ internal fun CelestialBlock(
                         path = path,
                     )
                 }
-                val position = pathMeasure.getPosition(pathMeasure.length * progress)
-                val iconSize = 64.00f
+                val position = getPosition(
+                    events = events,
+                    horizonY = sizeHeight * (1 - heightHorizon),
+                    pathMeasure = pathMeasure,
+                    sizeIcon = sizeIcon,
+                    sizeStroke = sizeStroke,
+                    timeNow = timeNow,
+                )
 
                 translate(
-                    left = position.x - iconSize / 2.00f,
-                    top = position.y - iconSize / 2.00f,
+                    left = position.x - sizeIcon / 2.00f,
+                    top = position.y - sizeIcon / 2.00f,
                 ) {
                     with(image) {
                         draw(
                             size = Size(
-                                height = iconSize,
-                                width = iconSize,
+                                height = sizeIcon,
+                                width = sizeIcon,
                             ),
                         )
                     }
@@ -181,7 +217,7 @@ internal fun CelestialBlock(
                         alignment = Alignment.BottomCenter,
                     )
                     .fillMaxHeight(
-                        fraction = 0.40f,
+                        fraction = heightHorizon,
                     )
                     .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.surfaceContainer.copy(
@@ -287,4 +323,158 @@ internal enum class CelestialType(
         icon = R.drawable.ic_sunny_24,
         title = R.string.weather_sun,
     ),
+}
+
+internal data class CelestialEvent(
+    val kind: CelestialEventKind,
+    val time: Long,
+)
+
+internal enum class CelestialEventKind {
+    End,
+    Rise,
+    Set,
+    Start,
+}
+
+/**
+ * Get sorted start/rise/set/end events for yesterday, today, and tomorrow.
+ *
+ * Both rise and set of one day need not belong to same pass (moon often sets in morning and rises
+ * in evening) so neighboring days are needed to bracket now.  Missing times (zero or negative) are
+ * dropped.  When yesterday or tomorrow is not in forecast, today's events are shifted by one solar
+ * or lunar day instead.
+ *
+ * Sun start is dawn and end is dusk.  Moon mimics that by starting before moonrise by same duration
+ * as dawn before sunrise, and ending after moonset by same duration as dusk after sunset.
+ */
+internal fun getEvents(
+    index: Int,
+    type: CelestialType,
+    weather: Weather,
+): List<CelestialEvent> {
+    val events = mutableListOf<CelestialEvent>()
+    val period = when (type) {
+        CelestialType.Moon -> (24.hours + 50.minutes).inWholeMilliseconds
+        CelestialType.Sun -> 24.hours.inWholeMilliseconds
+    }
+    val today = (index - 1..index + 1)
+    val twilightFallback = 30.minutes.inWholeMilliseconds
+
+    today.forEach { day ->
+        val daily = weather.daily[day.coerceIn(0, weather.daily.lastIndex)]
+        val offset = when {
+            day < 0 -> -period
+            day > weather.daily.lastIndex -> period
+            else -> 0L
+        }
+        val timeRise = when (type) {
+            CelestialType.Moon -> daily.moonrise
+            CelestialType.Sun -> daily.sunrise
+        }
+        val timeSet = when (type) {
+            CelestialType.Moon -> daily.moonset
+            CelestialType.Sun -> daily.sunset
+        }
+
+        val durationEnd = (daily.dusk - daily.sunset).takeIf { daily.dusk > 0 && it > 0 } ?: twilightFallback
+        val durationStart = (daily.sunrise - daily.dawn).takeIf { daily.dawn > 0 && it > 0 } ?: twilightFallback
+
+        if (timeRise > 0) {
+            events += CelestialEvent(
+                kind = CelestialEventKind.Start,
+                time = timeRise - durationStart + offset,
+            )
+            events += CelestialEvent(
+                kind = CelestialEventKind.Rise,
+                time = timeRise + offset,
+            )
+        }
+
+        if (timeSet > 0) {
+            events += CelestialEvent(
+                kind = CelestialEventKind.Set,
+                time = timeSet + offset,
+            )
+            events += CelestialEvent(
+                kind = CelestialEventKind.End,
+                time = timeSet + durationEnd + offset,
+            )
+        }
+    }
+
+    return events.sortedBy { it.time }
+}
+
+/**
+ * Get position of sun/moon icon on arc.
+ *
+ * Both start and end map to ends of arc, which are past edges so icon is completely off.  Both rise
+ * and set map to where top edge of icon touches horizon (top of rise/set panel).  So, icon is fully
+ * below horizon until rise and after set.  Icon always moves along arc between consecutive events,
+ * and stays off between end and next start.
+ */
+internal fun getPosition(
+    events: List<CelestialEvent>,
+    horizonY: Float,
+    pathMeasure: PathMeasure,
+    sizeIcon: Float,
+    sizeStroke: Float,
+    timeNow: Long,
+): Offset {
+    val length = pathMeasure.length
+    val steps = 200
+
+    val isAboveHorizon: (Float) -> Boolean = {
+        pathMeasure.getPosition(it).y <= horizonY + sizeIcon / 2.00f - sizeStroke
+    }
+
+    val getCrossing: (Float, Float) -> Float = { below, above ->
+        var distanceAbove = above
+        var distanceBelow = below
+
+        repeat(20) {
+            val distanceMiddle = (distanceAbove + distanceBelow) / 2.00f
+
+            if (isAboveHorizon(distanceMiddle)) distanceAbove = distanceMiddle else distanceBelow = distanceMiddle
+        }
+
+        distanceAbove
+    }
+
+    val samples = (0..steps).map { length * it / steps }
+    val indexRise = samples.indexOfFirst(isAboveHorizon)
+    val indexSet = samples.indexOfLast(isAboveHorizon)
+
+    val riseDistance = when {
+        indexRise <= 0 -> 0.00f
+        else -> getCrossing(samples[indexRise - 1], samples[indexRise])
+    }
+    val setDistance = when {
+        indexSet < 0 || indexSet == steps -> length
+        else -> getCrossing(samples[indexSet + 1], samples[indexSet])
+    }
+
+    val distanceOf: (CelestialEventKind) -> Float = {
+        when (it) {
+            CelestialEventKind.End -> length
+            CelestialEventKind.Rise -> riseDistance
+            CelestialEventKind.Set -> setDistance
+            CelestialEventKind.Start -> 0.00f
+        }
+    }
+
+    val eventPrevious = events.lastOrNull { it.time <= timeNow }
+    val eventNext = events.firstOrNull { it.time > timeNow }
+
+    val distance = when {
+        eventPrevious == null -> 0.00f
+        eventNext == null || eventPrevious.kind == CelestialEventKind.End -> length
+        else -> {
+            val fraction = (timeNow - eventPrevious.time).toFloat() / (eventNext.time - eventPrevious.time).coerceAtLeast(1)
+            distanceOf(eventPrevious.kind) + (distanceOf(eventNext.kind) - distanceOf(eventPrevious.kind)) * fraction
+        }
+    }
+
+    return pathMeasure.getPosition(distance)
 }
