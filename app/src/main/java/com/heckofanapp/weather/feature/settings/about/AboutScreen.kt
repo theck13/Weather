@@ -1,6 +1,9 @@
 package com.heckofanapp.weather.feature.settings.about
 
 import androidx.annotation.ArrayRes
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
@@ -21,10 +25,17 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,7 +53,6 @@ import com.heckofanapp.weather.core.ui.components.NavigateBackButton
 import com.heckofanapp.weather.core.ui.components.SettingSection
 import com.heckofanapp.weather.core.ui.components.SettingTile
 import com.heckofanapp.weather.core.ui.components.SettingsTileIcon
-import com.heckofanapp.weather.core.ui.components.Symbol
 import com.heckofanapp.weather.core.ui.components.TopBarScaffold
 import com.heckofanapp.weather.core.ui.navigation.NavigationRoutes
 import com.heckofanapp.weather.core.ui.snackbar.SnackbarManager
@@ -56,6 +66,7 @@ fun AboutScreen(
     val appName = stringResource(R.string.app_name)
     val context = LocalContext.current
     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+    val resources = LocalResources.current
     val scope = rememberCoroutineScope()
     val uriHandler = LocalUriHandler.current
     val viewModel: AboutScreenViewModel = hiltViewModel()
@@ -85,8 +96,6 @@ fun AboutScreen(
                 space = SpaceDefault,
             ),
         ) {
-            val resources = context.resources
-
             AboutVersion(
                 description = "${packageInfo.versionName} (${packageInfo.versionCode})",
                 isRefreshing = isLoadingNewVersion,
@@ -264,7 +273,9 @@ private fun AboutVersion(
             },
             supportingContent = {
                 Text(
-                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(
+                        alpha = 0.70f,
+                    ),
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                     text = description,
@@ -274,11 +285,22 @@ private fun AboutVersion(
                 IconButton(
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
+                        disabledContainerColor = MaterialTheme.colorScheme.tertiary,
                     ),
                     enabled = isRefreshing.not(),
                     onClick = onClickRefresh,
                     shapes = IconButtonDefaults.shapes(),
                 ) {
+                    // Detect refreshing change from true to false synchronously
+                    // during composition so icon animates only on refresh done,
+                    // not on initial load.
+                    val wasRefreshing = remember { mutableStateOf(isRefreshing) }
+                    val isRefreshed = wasRefreshing.value && isRefreshing.not()
+
+                    SideEffect {
+                        wasRefreshing.value = isRefreshing
+                    }
+
                     if (isRefreshing) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(
@@ -288,9 +310,24 @@ private fun AboutVersion(
                             strokeWidth = 2.dp,
                         )
                     } else {
-                        Symbol(
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            icon = R.drawable.ic_refresh_24,
+                        val iconRefresh = AnimatedImageVector.animatedVectorResource(R.drawable.av_refresh_24)
+
+                        // Start un-drawn only when just finished refreshing, then flip
+                        // to end state so painter animates once.
+                        var atEnd by remember { mutableStateOf(isRefreshed.not()) }
+                        LaunchedEffect(Unit) {
+                            if (isRefreshed) {
+                                atEnd = true
+                            }
+                        }
+
+                        Icon(
+                            contentDescription = stringResource(R.string.refresh_locations),
+                            painter = rememberAnimatedVectorPainter(
+                                animatedImageVector = iconRefresh,
+                                atEnd = atEnd,
+                            ),
+                            tint = MaterialTheme.colorScheme.onTertiary,
                         )
                     }
                 }
