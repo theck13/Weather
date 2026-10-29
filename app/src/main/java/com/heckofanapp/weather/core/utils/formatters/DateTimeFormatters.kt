@@ -5,7 +5,6 @@ import com.heckofanapp.weather.R
 import com.heckofanapp.weather.core.utils.locale.getCurrentAppLocale
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.zone.ZoneRulesException
 import java.util.concurrent.TimeUnit
@@ -94,7 +93,3 @@ fun toWeekdayString(
     val zonedDateTime = instant.atZone(safeZoneId(zoneId))
     return formatter.format(zonedDateTime)
 }
-
-fun getCurrentTimeFor(
-    zoneId: String,
-): Long = ZonedDateTime.now(safeZoneId(zoneId)).toInstant().toEpochMilli()
