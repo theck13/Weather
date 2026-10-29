@@ -80,7 +80,7 @@ fun WeatherCondition.toIcon(
         WeatherCondition.LIGHT_RAIN -> if (isDay) R.drawable.il_weather_light_rain_day else R.drawable.il_weather_light_rain_night
         WeatherCondition.LIGHT_SNOW -> if (isDay) R.drawable.il_weather_light_snow_day else R.drawable.il_weather_light_snow_night
         WeatherCondition.MOSTLY_CLEAR -> if (isDay) R.drawable.il_weather_mostly_clear_day else R.drawable.il_weather_mostly_clear_night
-        WeatherCondition.NO_CONDITION_FOUND -> R.drawable.il_weather_unavailable
+        WeatherCondition.NO_CONDITION_FOUND -> R.drawable.il_weather_unknown
         WeatherCondition.OVERCAST -> R.drawable.il_weather_overcast
         WeatherCondition.PARTLY_CLOUDY -> if (isDay) R.drawable.il_weather_partly_cloudy_day else R.drawable.il_weather_partly_cloudy_night
         WeatherCondition.RAIN -> R.drawable.il_weather_rain
