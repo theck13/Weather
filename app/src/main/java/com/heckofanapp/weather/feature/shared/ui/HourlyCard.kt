@@ -35,6 +35,7 @@ import com.heckofanapp.weather.core.ui.components.WeatherIconBox
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import com.heckofanapp.weather.core.utils.weather.cache.isWeatherHourlyDomainSafe
 import com.heckofanapp.weather.core.utils.weather.forecast.findMatchingDaily
 import com.heckofanapp.weather.core.utils.weather.forecast.findMatchingHourly
@@ -227,7 +228,7 @@ private fun TemperatureWithShape(
             Text(
                 color = if (isNow) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium,
-                text = "${temperature?.roundToInt() ?: "-"}°",
+                text = temperature?.roundToInt().toTemperatureString(),
             )
         }
     }

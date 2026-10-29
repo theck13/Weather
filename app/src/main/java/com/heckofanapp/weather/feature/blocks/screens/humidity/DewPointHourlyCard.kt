@@ -30,6 +30,7 @@ import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import com.heckofanapp.weather.feature.shared.components.Header
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -145,7 +146,7 @@ fun DewPointHourlyCard(
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,
-                            text = "${formatter(item.dewPoint)?.roundToInt()}°",
+                            text = formatter(item.dewPoint)?.roundToInt().toTemperatureString(),
                         )
 
                         Text(

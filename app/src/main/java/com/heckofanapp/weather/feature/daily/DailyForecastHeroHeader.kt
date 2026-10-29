@@ -24,6 +24,7 @@ import com.heckofanapp.weather.core.model.weather.toLabel
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.WeatherIconBox
 import com.heckofanapp.weather.core.utils.formatters.toDateString
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import kotlin.math.roundToInt
 
 @Composable
@@ -41,12 +42,12 @@ fun DailyForecastHeroHeader(
         TemperatureUnit.CELSIUS.convert(
             from = daily.temperatureMaximum,
             to = units.temperature,
-        )?.roundToInt() ?: "-"
+        )?.roundToInt()
     val temperatureMinimum =
         TemperatureUnit.CELSIUS.convert(
             from = daily.temperatureMinimum,
             to = units.temperature,
-        )?.roundToInt() ?: "-"
+        )?.roundToInt()
 
     Column(
         modifier = Modifier.padding(
@@ -98,7 +99,7 @@ fun DailyForecastHeroHeader(
                     fontSize = 64.sp,
                     fontWeight = FontWeight.W900,
                     style = MaterialTheme.typography.displayLarge,
-                    text = "${temperatureMaximum}°",
+                    text = temperatureMaximum.toTemperatureString(),
                 )
 
                 Gap(
@@ -110,7 +111,7 @@ fun DailyForecastHeroHeader(
                     fontSize = 64.sp,
                     fontWeight = FontWeight.W900,
                     style = MaterialTheme.typography.displayLarge,
-                    text = "${temperatureMinimum}°",
+                    text = temperatureMinimum.toTemperatureString(),
                 )
             }
 

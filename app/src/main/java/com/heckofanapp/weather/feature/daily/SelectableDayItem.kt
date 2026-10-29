@@ -21,6 +21,7 @@ import com.heckofanapp.weather.core.model.weather.WeatherCondition
 import com.heckofanapp.weather.core.model.weather.toIconPair
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.WeatherIconBox
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 
 @Composable
 fun SelectableDayItem(
@@ -28,8 +29,8 @@ fun SelectableDayItem(
     isSelected: Boolean,
     motionScheme: MotionScheme,
     onSelect: () -> Unit,
-    temperatureMaximum: String,
-    temperatureMinimum: String,
+    temperatureMaximum: Int?,
+    temperatureMinimum: Int?,
     weekday: String,
 ) {
     val animatedShape by animateDpAsState(
@@ -71,12 +72,12 @@ fun SelectableDayItem(
                 Text(
                     color = selectedOnSurface,
                     style = MaterialTheme.typography.bodyLarge,
-                    text = "${temperatureMaximum}°",
+                    text = temperatureMaximum.toTemperatureString(),
                 )
                 Text(
                     color = selectedOnSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge,
-                    text = "${temperatureMinimum}°",
+                    text = temperatureMinimum.toTemperatureString(),
                 )
             }
 

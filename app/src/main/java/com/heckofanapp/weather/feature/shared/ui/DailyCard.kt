@@ -28,6 +28,7 @@ import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.components.WeatherIconBox
 import com.heckofanapp.weather.core.ui.navigation.NavigationRoutes
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import com.heckofanapp.weather.core.utils.formatters.toWeekdayString
 import com.heckofanapp.weather.core.utils.weather.cache.isWeatherDailyDomainSafe
 import com.heckofanapp.weather.feature.shared.components.Header
@@ -128,11 +129,11 @@ private fun DailyItem(
     val maxTemp = TemperatureUnit.CELSIUS.convert(
         from = maxTemp,
         to = units.temperature,
-    )?.roundToInt() ?: "-"
+    )?.roundToInt()
     val minTemp = TemperatureUnit.CELSIUS.convert(
         from = minTemp,
         to = units.temperature,
-    )?.roundToInt() ?: "-"
+    )?.roundToInt()
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
@@ -159,12 +160,12 @@ private fun DailyItem(
                 Text(
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyLarge,
-                    text = "${maxTemp}°",
+                    text = maxTemp.toTemperatureString(),
                 )
                 Text(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge,
-                    text = "${minTemp}°",
+                    text = minTemp.toTemperatureString(),
                 )
             }
 

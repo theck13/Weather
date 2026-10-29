@@ -51,13 +51,11 @@ fun DailyDaysHeader(
                     from = it.temperatureMaximum,
                     to = units.temperature,
                 )?.roundToInt()
-                    ?: "-"
             val temperatureMinimum =
                 TemperatureUnit.CELSIUS.convert(
                     from = it.temperatureMinimum,
                     to = units.temperature,
                 )?.roundToInt()
-                    ?: "-"
 
             if (index == 0) {
                 Gap(
@@ -72,8 +70,8 @@ fun DailyDaysHeader(
                 onSelect = {
                     onSelect(index)
                 },
-                temperatureMaximum = temperatureMaximum.toString(),
-                temperatureMinimum = temperatureMinimum.toString(),
+                temperatureMaximum = temperatureMaximum,
+                temperatureMinimum = temperatureMinimum,
                 weekday = day,
             )
 

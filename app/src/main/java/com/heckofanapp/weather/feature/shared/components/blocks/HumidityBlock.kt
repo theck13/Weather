@@ -36,6 +36,7 @@ import com.heckofanapp.weather.core.model.weather.TemperatureUnit
 import com.heckofanapp.weather.core.ui.components.Gap
 import com.heckofanapp.weather.core.ui.theme.ShadowElevation
 import com.heckofanapp.weather.core.ui.theme.onSurfaceDim
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import com.heckofanapp.weather.feature.shared.components.Header
 import kotlin.math.roundToInt
 
@@ -51,7 +52,7 @@ fun HumidityBlock(
     val dewPoint = TemperatureUnit.CELSIUS.convert(
         from = if (isDaily) weather.daily[dailyIndex].dewPoint else weather.current.dewPoint,
         to = units.temperature,
-    )?.roundToInt() ?: "-"
+    )?.roundToInt()
     val humidity =
         if (isDaily) {
             weather.daily[dailyIndex].humidity?.roundToInt()
@@ -163,7 +164,7 @@ fun HumidityBlock(
                 contentAlignment = Alignment.BottomCenter,
             ) {
                 DewPointRow(
-                    dewPoint = dewPoint.toString(),
+                    dewPoint = dewPoint,
                 )
             }
         }
@@ -172,7 +173,7 @@ fun HumidityBlock(
 
 @Composable
 private fun DewPointRow(
-    dewPoint: String?,
+    dewPoint: Int?,
 ) {
     val size = 36.dp
 
@@ -197,7 +198,7 @@ private fun DewPointRow(
                 Text(
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    text = "${dewPoint ?: "-"}°",
+                    text = dewPoint.toTemperatureString(),
                 )
             }
         }

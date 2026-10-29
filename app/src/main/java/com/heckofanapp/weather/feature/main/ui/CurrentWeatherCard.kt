@@ -27,6 +27,7 @@ import com.heckofanapp.weather.core.model.weather.toIcon
 import com.heckofanapp.weather.core.model.weather.toLabel
 import com.heckofanapp.weather.core.ui.components.WeatherIconBox
 import com.heckofanapp.weather.core.utils.formatters.getLastUpdatedTimeString
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import kotlin.math.roundToInt
 
 @Composable
@@ -107,7 +108,7 @@ private fun CurrentWeatherFroggy(
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 64.sp,
                 fontWeight = FontWeight.Medium,
-                text = "${currentTemp?.roundToInt() ?: "-"}°",
+                text = currentTemp?.roundToInt().toTemperatureString(),
             )
 
             WeatherIconBox(
@@ -180,7 +181,7 @@ fun CurrentWeatherPixel(
         Text(
             color = MaterialTheme.colorScheme.primary,
             fontSize = 128.sp,
-            text = "${currentTemp?.roundToInt() ?: "-"}°",
+            text = currentTemp?.roundToInt().toTemperatureString(),
         )
 
         FeelsMaxMinLayout(
@@ -254,18 +255,18 @@ private fun FeelsMaxMinTemps(
     Text(
         color = color,
         style = style,
-        text = stringResource(R.string.temp_feels_like, "${temperatureFeels?.roundToInt() ?: "-"}°"),
+        text = stringResource(R.string.temp_feels_like, temperatureFeels?.roundToInt().toTemperatureString()),
     )
 
     Text(
         color = color,
         style = style,
-        text = stringResource(R.string.temp_max, "${temperatureMaximum?.roundToInt() ?: "-"}°"),
+        text = stringResource(R.string.temp_max, temperatureMaximum?.roundToInt().toTemperatureString()),
     )
 
     Text(
         color = color,
         style = style,
-        text = stringResource(R.string.temp_min, "${temperatureMinimum?.roundToInt() ?: "-"}°"),
+        text = stringResource(R.string.temp_min, temperatureMinimum?.roundToInt().toTemperatureString()),
     )
 }

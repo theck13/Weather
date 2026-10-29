@@ -10,6 +10,7 @@ import com.heckofanapp.weather.core.model.weather.toLabel
 import com.heckofanapp.weather.core.prefs.PreferencesHelper
 import com.heckofanapp.weather.core.utils.formatters.to12HourTimeString
 import com.heckofanapp.weather.core.utils.formatters.to24HourTimeString
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 import com.heckofanapp.weather.core.utils.formatters.toWeekdayString
 import com.heckofanapp.weather.core.utils.weather.computing.summary.computeDaySummary
 import com.heckofanapp.weather.core.utils.weather.forecast.findHourlyIndexForTime
@@ -69,8 +70,8 @@ fun widgetWeatherMapper(
 
             WidgetDailyItem(
                 icon = icon,
-                temperatureMaximum = "${temperatureMaximum ?: "—"}°",
-                temperatureMinimum = "${temperatureMinimum ?: "—"}°",
+                temperatureMaximum = temperatureMaximum.toTemperatureString(),
+                temperatureMinimum = temperatureMinimum.toTemperatureString(),
                 time = toWeekdayString(
                     timeMilli = it.time,
                     zoneId = timezone,
@@ -106,7 +107,7 @@ fun widgetWeatherMapper(
 
             WidgetHourlyItem(
                 icon = icon,
-                temperature = "${temperature}°",
+                temperature = temperature.toTemperatureString(),
                 time = formattedTime,
             )
         }
@@ -115,7 +116,7 @@ fun widgetWeatherMapper(
         currentCondition = currentCondition,
         currentFrog = currentFrogIcon,
         currentIcon = currentIcon,
-        currentTemp = "${currentTemperature}°",
+        currentTemp = currentTemperature.toTemperatureString(),
         daily = daily,
         hourly = hourly,
         locationName = weather.location.name,

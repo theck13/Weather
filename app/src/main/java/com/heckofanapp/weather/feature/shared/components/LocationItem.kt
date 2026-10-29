@@ -34,6 +34,7 @@ import com.heckofanapp.weather.SpaceDefault
 import com.heckofanapp.weather.core.ui.components.Symbol
 import com.heckofanapp.weather.core.ui.components.WeatherIconBox
 import com.heckofanapp.weather.core.ui.theme.ShapeRadius
+import com.heckofanapp.weather.core.utils.formatters.toTemperatureString
 
 @Composable
 fun LocationItem(
@@ -187,7 +188,7 @@ fun LocationItem(
                             Text(
                                 color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.displaySmall,
-                                text = "${temperature ?: "-"}°",
+                                text = temperature.toTemperatureString(),
                             )
                         }
                     }
