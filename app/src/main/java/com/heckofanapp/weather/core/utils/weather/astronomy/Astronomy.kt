@@ -46,6 +46,8 @@ fun getMoonTimings(
     latitude: Double,
     longitude: Double,
 ): List<MoonTimings> {
+    if (timeMilli.isEmpty()) return emptyList()
+
     val currentTime = getCurrentTimeFor(zoneId)
     val startingDay = Instant.ofEpochMilli(timeMilli.first())
         .atZone(safeZoneId(zoneId))
